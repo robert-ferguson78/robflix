@@ -9,7 +9,7 @@ const meta = {
   decorators: [
     (Story: React.FC) => <MemoryRouter initialEntries={["/"]}><Story /></MemoryRouter>,
   ],
-}satisfies Meta<typeof SiteHeader>;;
+}satisfies Meta<typeof SiteHeader>;
 
 export default meta;
 
