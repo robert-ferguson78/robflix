@@ -1,7 +1,6 @@
 import React, { useState, MouseEvent } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
@@ -11,18 +10,13 @@ import Menu from "@mui/material/Menu";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-
-const styles = {
-    title: {
-      flexGrow: 1,
-    },
-  };
+import logo from "../../images/robflix.png";
 
 const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
 
 const SiteHeader: React.FC = () => {
   const navigate = useNavigate();
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement|null>(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const open = Boolean(anchorEl);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
@@ -45,14 +39,17 @@ const SiteHeader: React.FC = () => {
 
   return (
     <>
-      <AppBar position="fixed" elevation={0} color="primary">
+      <AppBar
+        position="fixed"
+        elevation={0}
+        sx={{ bgcolor: "rgb(20, 20, 20)" }}
+      >
         <Toolbar>
-          <Typography variant="h4" sx={styles.title}>
-            TMDB Client
-          </Typography>
-          <Typography variant="h6" sx={styles.title}>
-            All you ever wanted to know about Movies!
-          </Typography>
+          <img
+            src={logo}
+            alt="ROBFLIX"
+            style={{ maxWidth: "100px", marginRight: "20px" }}
+          />
           {isMobile ? (
             <>
               <IconButton
@@ -62,6 +59,7 @@ const SiteHeader: React.FC = () => {
                 onClick={handleMenu}
                 color="inherit"
                 size="large"
+                sx={{ marginLeft: "auto" }}
               >
                 <MenuIcon />
               </IconButton>
