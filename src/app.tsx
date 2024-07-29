@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Navigate, Routes } from "react-router-dom";
 import HomePage from "./pages/homePage";
+import LoginPage from "./pages/loginPage";
 import MoviePage from "./pages/movieDetailsPage";
 import FavouriteMoviesPage from "./pages/favouriteMoviesPage";
 import MovieReviewPage from "./pages/movieReviewPage";
@@ -9,7 +10,6 @@ import SiteHeader from './components/siteHeader'
 import MoviesContextProvider from "./contexts/moviesContext";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { ReactQueryDevtools } from 'react-query/devtools';
-import { Auth } from "./components/authUser/auth";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,7 +26,6 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <SiteHeader />
-        <Auth />
         <MoviesContextProvider>
           <Routes>
             <Route path="/reviews/form" element={<AddMovieReviewPage/>} />
@@ -36,6 +35,7 @@ const App = () => {
             <Route path="/movies/upcoming" element={<UpcomingPage />} />
             <Route path="/" element={<HomePage />} />
             <Route path="*" element={<Navigate to="/" />} />
+            <Route path="/login" element={<LoginPage />} />
           </Routes>
         </MoviesContextProvider>
       </BrowserRouter>
