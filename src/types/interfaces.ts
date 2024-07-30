@@ -76,3 +76,22 @@ export interface BaseMovieProps {
     rating: number,
     movieId: number,
   }
+
+  export interface AuthContextType {
+    currentUser: UserId | null;
+  }
+
+  export interface User {
+    uid: string;
+    email: string | null;
+  }
+
+  export interface UserId {
+    uid: string;
+  }
+
+  export interface PrivateRouteProps {
+    element: React.ComponentType; // The component to render if the user is authenticated
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any; // Allow additional prop types to be passed to the PrivateRoute component
+  }
