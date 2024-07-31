@@ -1,9 +1,14 @@
-import React from "react";
-import ReactDOM from 'react-dom/client';
+import React from 'react';
+import ReactDOM from 'react-dom';
 import App from './app';
+import { AuthProvider } from './contexts/authContext';
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+ReactDOM.render(
   <React.StrictMode>
-    <App />
+    {/* make the authentication context available to all components within App */}
+    <AuthProvider>
+      <App />
+    </AuthProvider>
   </React.StrictMode>,
+  document.getElementById('root')
 );

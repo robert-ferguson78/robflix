@@ -10,8 +10,14 @@ import SiteHeader from './components/siteHeader';
 import MoviesContextProvider from "./contexts/moviesContext";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { ReactQueryDevtools } from 'react-query/devtools';
-import PrivateRoute from './components/privateRoutes';
 import { AuthProvider } from './contexts/authContext';
+import withAuth from './hoc/withAuth';
+
+// Wrap components with withAuth HOC (Higher Order Component) to create new components that require authentication
+const AddMovieReviewPageWithAuth = withAuth(AddMovieReviewPage);
+const MovieReviewPageWithAuth = withAuth(MovieReviewPage);
+const FavouriteMoviesPageWithAuth = withAuth(FavouriteMoviesPage);
+const MoviePageWithAuth = withAuth(MoviePage);
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,18 +32,15 @@ const queryClient = new QueryClient({
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Provide the Auth context to the application */}
       <AuthProvider>
         <BrowserRouter>
           <SiteHeader />
           <MoviesContextProvider>
             <Routes>
-              {/* Private routes require authentication */}
-              <Route path="/reviews/form" element={<PrivateRoute element={AddMovieReviewPage} />} />
-              <Route path="/reviews/:id" element={<PrivateRoute element={MovieReviewPage} />} />
-              <Route path="/movies/favourites" element={<PrivateRoute element={FavouriteMoviesPage} />} />
-              <Route path="/movies/:id" element={<PrivateRoute element={MoviePage} />} />
-              {/* Public routes */}
+              <Route path="/reviews/form" element={<AddMovieReviewPageWithAuth />} />
+              <Route path="/reviews/:id" element={<MovieReviewPageWithAuth />} />
+              <Route path="/movies/favourites" element={<FavouriteMoviesPageWithAuth />} />
+              <Route path="/movies/:id" element={<MoviePageWithAuth />} />
               <Route path="/movies/upcoming" element={<UpcomingPage />} />
               <Route path="/" element={<HomePage />} />
               <Route path="*" element={<Navigate to="/" />} />
