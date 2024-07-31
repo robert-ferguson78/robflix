@@ -11,7 +11,7 @@ import { DiscoverMovies } from "../types/interfaces";
 import { useQuery } from "react-query"; // caching
 import Spinner from "../components/spinner";
 import AddToPlaylistIcon from "../components/cardIcons/addToPlaylist";
-import { filterUpcomingMovies } from "../util";
+// import { filterUpcomingMovies } from "../util";
 
 const titleFiltering = {
   name: "title",
@@ -49,8 +49,8 @@ const upcomingMoviesPage: React.FC = () => {
   };
 
   const movies = data ? data.results : [];
-  const upcomingMoviesFiltered = filterUpcomingMovies(movies);
-  const displayedMovies = filterFunction(upcomingMoviesFiltered);
+  // const upcomingMoviesFiltered = filterUpcomingMovies(movies);
+  const displayedMovies = filterFunction(movies);
 
   return (
     <>
