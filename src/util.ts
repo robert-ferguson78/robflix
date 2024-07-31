@@ -1,6 +1,7 @@
 import truncate from "lodash/truncate";
 import { createContext, useContext } from 'react';
 import { AuthContextType } from "./types/interfaces";
+import { BaseMovieProps } from "./types/interfaces";
 
 export const excerpt = (string: string) => {
     return truncate(string, {
@@ -21,4 +22,9 @@ export const useAuth = (): AuthContextType => {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
+};
+
+export const filterUpcomingMovies = (movies: BaseMovieProps[]) => {
+  const today = new Date();
+  return movies.filter(movie => new Date(movie.release_date) >= today);
 };

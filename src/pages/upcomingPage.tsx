@@ -11,6 +11,7 @@ import { DiscoverMovies } from "../types/interfaces";
 import { useQuery } from "react-query"; // caching
 import Spinner from "../components/spinner";
 import AddToPlaylistIcon from "../components/cardIcons/addToPlaylist";
+import { filterUpcomingMovies } from "../util";
 
 const titleFiltering = {
   name: "title",
@@ -38,7 +39,6 @@ const upcomingMoviesPage: React.FC = () => {
     return <h1>{error.message}</h1>;
   }
 
-
   const changeFilterValues = (type: string, value: string) => {
     const changedFilter = { name: type, value: value };
     const updatedFilterSet =
@@ -49,23 +49,25 @@ const upcomingMoviesPage: React.FC = () => {
   };
 
   const movies = data ? data.results : [];
-  const displayedMovies = filterFunction(movies);
+  const upcomingMoviesFiltered = filterUpcomingMovies(movies);
+  const displayedMovies = filterFunction(upcomingMoviesFiltered);
 
   return (
     <>
-    <PageTemplate
-      title="Upcoming Movies"
-      movies={displayedMovies}
-      action={(movie: BaseMovieProps) => {
-        return <AddToPlaylistIcon {...movie} />
-      }}
-    />
-    <MovieFilterUI
-      onFilterValuesChange={changeFilterValues}
-      titleFilter={filterValues[0].value}
-      genreFilter={filterValues[1].value}
-    />
-  </>
+      <PageTemplate
+        title="Upcoming Movies"
+        movies={displayedMovies}
+        action={(movie: BaseMovieProps) => {
+          return <AddToPlaylistIcon {...movie} />
+        }}
+      />
+      <MovieFilterUI
+        onFilterValuesChange={changeFilterValues}
+        titleFilter={filterValues[0].value}
+        genreFilter={filterValues[1].value}
+      />
+    </>
   );
 };
+
 export default upcomingMoviesPage;
