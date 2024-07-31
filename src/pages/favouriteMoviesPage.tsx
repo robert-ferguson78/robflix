@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import PageTemplate from "../components/templateMovieListPage";
 import { MoviesContext } from "../contexts/moviesContext";
 import { useQueries } from "react-query";
@@ -26,14 +26,48 @@ const genreFiltering = {
 };
 
 const FavouriteMoviesPage: React.FC = () => {
-  const { favourites: movieIds } = useContext(MoviesContext); // Remove userId from context
+  useContext(MoviesContext);
   const { filterValues, setFilterValues, filterFunction } = useFiltering(
     [titleFiltering, genreFiltering]
   );
 
-  // Create an array of queries and run them in parallel.
+  const [localFavourites, setLocalFavourites] = useState<number[]>([]);
+
+  useEffect(() => {
+    const fetchFavouriteMovies = async () => {
+      let storedFavourites = JSON.parse(localStorage.getItem("favouriteMovies") || "[]");
+
+      if (storedFavourites.length === 0) {
+        const userId = auth.currentUser?.uid;
+        if (userId) {
+          // Fetch the favourite movies from Firestore
+          const favouriteMovies = await userFirestoreStore.getFavouriteMovies(userId);
+          storedFavourites = favouriteMovies.map((favMovieId: string) => Number(favMovieId));
+          localStorage.setItem("favouriteMovies", JSON.stringify(storedFavourites));
+        }
+      }
+
+      setLocalFavourites(storedFavourites);
+    };
+
+    fetchFavouriteMovies();
+  }, []);
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const storedFavourites = JSON.parse(localStorage.getItem("favouriteMovies") || "[]");
+      setLocalFavourites(storedFavourites);
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
+
   const favouriteMovieQueries = useQueries(
-    movieIds.map((movieId) => {
+    localFavourites.map((movieId) => {
       return {
         queryKey: ["movie", movieId],
         queryFn: () => getMovie(movieId.toString()),
@@ -41,7 +75,6 @@ const FavouriteMoviesPage: React.FC = () => {
     })
   );
 
-  // Check if any of the parallel queries is still loading.
   const isLoading = favouriteMovieQueries.find((m) => m.isLoading === true);
 
   if (isLoading) {
@@ -49,9 +82,7 @@ const FavouriteMoviesPage: React.FC = () => {
   }
 
   const allFavourites = favouriteMovieQueries.map((q) => q.data);
-  const displayedMovies = allFavourites
-    ? filterFunction(allFavourites)
-    : [];
+  const displayedMovies = allFavourites ? filterFunction(allFavourites) : [];
 
   const changeFilterValues = (type: string, value: string) => {
     const changedFilter = { name: type, value: value };
@@ -60,16 +91,9 @@ const FavouriteMoviesPage: React.FC = () => {
     setFilterValues(updatedFilterSet);
   };
 
-  const addFavourite = async (movieId: string) => {
-    const userId = auth.currentUser?.uid; // Get the authenticated user's ID
-    if (userId) {
-      await userFirestoreStore.addFavouriteMovie(userId, movieId); // Add the movie to Firestore
-    }
-  };
-
   return (
     <>
-       <PageTemplate
+      <PageTemplate
         title="Favourite Movies"
         movies={displayedMovies}
         action={(movie) => {
@@ -77,7 +101,6 @@ const FavouriteMoviesPage: React.FC = () => {
             <>
               <RemoveFromFavourites {...movie} />
               <WriteReview {...movie} />
-              <button onClick={() => addFavourite(movie.id.toString())}>Add to Firestore Favourites</button>
             </>
           );
         }}
