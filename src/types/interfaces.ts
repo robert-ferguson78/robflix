@@ -84,6 +84,7 @@ export interface BaseMovieProps {
   export interface User {
     uid: string;
     email: string | null;
+    favourites: number[];
   }
 
   export interface UserId {

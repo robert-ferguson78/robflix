@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import React, { useContext } from "react";
 import PageTemplate from "../components/templateMovieListPage";
 import { MoviesContext } from "../contexts/moviesContext";
 import { useQueries } from "react-query";
@@ -11,6 +11,8 @@ import MovieFilterUI, {
 } from "../components/movieFilterUI";
 import RemoveFromFavourites from "../components/cardIcons/removeFromFavourites";
 import WriteReview from "../components/cardIcons/writeReview";
+import { userFirestoreStore } from "../models/user-firestore-store";
+import { auth } from "../firebase/firebaseConfig";
 
 const titleFiltering = {
   name: "title",
@@ -24,7 +26,7 @@ const genreFiltering = {
 };
 
 const FavouriteMoviesPage: React.FC = () => {
-  const { favourites: movieIds } = useContext(MoviesContext);
+  const { favourites: movieIds } = useContext(MoviesContext); // Remove userId from context
   const { filterValues, setFilterValues, filterFunction } = useFiltering(
     [titleFiltering, genreFiltering]
   );
@@ -58,6 +60,13 @@ const FavouriteMoviesPage: React.FC = () => {
     setFilterValues(updatedFilterSet);
   };
 
+  const addFavourite = async (movieId: string) => {
+    const userId = auth.currentUser?.uid; // Get the authenticated user's ID
+    if (userId) {
+      await userFirestoreStore.addFavouriteMovie(userId, movieId); // Add the movie to Firestore
+    }
+  };
+
   return (
     <>
        <PageTemplate
@@ -68,6 +77,7 @@ const FavouriteMoviesPage: React.FC = () => {
             <>
               <RemoveFromFavourites {...movie} />
               <WriteReview {...movie} />
+              <button onClick={() => addFavourite(movie.id.toString())}>Add to Firestore Favourites</button>
             </>
           );
         }}
