@@ -25,15 +25,18 @@ const genreFiltering = {
   condition: genreFilter,
 };
 
-const upcomingMoviesPage: React.FC = () => {
+const UpcomingMoviesPage: React.FC = () => {
   const [page, setPage] = useState(1);
 
-  const fetchUpcomingMovies = (page = 1) => upcomingMovies(page);
+  const fetchUpcomingMovies = (page = 1) => {
+    console.log(`Fetching upcoming movies for page ${page} at ${new Date().toLocaleTimeString()}`);
+    return upcomingMovies(page);
+  };
 
-  const { isLoading, isError, error, data, isFetching, isPreviousData } = useQuery<DiscoverMovies, Error>({
+  const { isLoading, isError, error, data, isFetching } = useQuery<DiscoverMovies, Error>({
     queryKey: ["upcoming", page],
     queryFn: () => fetchUpcomingMovies(page),
-    keepPreviousData: true
+    staleTime: 300000 // 5 minutes cache before data is considered stale
   });
 
   const { filterValues, setFilterValues, filterFunction } = useFiltering(
@@ -85,11 +88,11 @@ const upcomingMoviesPage: React.FC = () => {
         </button>
         <button
           onClick={() => {
-            if (!isPreviousData && data?.total_pages && page < data.total_pages) {
+            if (!isFetching && data?.total_pages && page < data.total_pages) {
               setPage((old) => old + 1);
             }
           }}
-          disabled={isPreviousData || (data && page >= data.total_pages)}
+          disabled={isFetching || (data && page >= data.total_pages)}
         >
           Next Page
         </button>
@@ -99,4 +102,4 @@ const upcomingMoviesPage: React.FC = () => {
   );
 };
 
-export default upcomingMoviesPage;
+export default UpcomingMoviesPage;
