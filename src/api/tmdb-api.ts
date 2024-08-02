@@ -63,9 +63,20 @@ export const getMovieReviews = (id: string | number) => { //movie id can be stri
     });
 };
 
-export const upcomingMovies = () => {
-  return fetch(
-    `https://api.themoviedb.org/3/movie/upcoming?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US&page=2`
-  )
-    .then(res => res.json())
+export const upcomingMovies = async (page: number = 1) => {
+  try {
+    const response = await fetch(
+      `https://api.themoviedb.org/3/movie/upcoming?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US&page=${page}`
+    );
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch upcoming movies:", error);
+    throw error;
+  }
 };

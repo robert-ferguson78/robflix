@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PageTemplate from '../components/templateMovieListPage';
 import { BaseMovieProps } from "../types/interfaces";
 import { upcomingMovies } from "../api/tmdb-api";
@@ -8,7 +8,7 @@ import MovieFilterUI, {
   genreFilter,
 } from "../components/movieFilterUI";
 import { DiscoverMovies } from "../types/interfaces";
-import { useQuery } from "react-query"; // caching
+import { useQuery } from "@tanstack/react-query"; // updated import
 import Spinner from "../components/spinner";
 import AddToPlaylistIcon from "../components/cardIcons/addToPlaylist";
 // import { filterUpcomingMovies } from "../util";
@@ -26,7 +26,16 @@ const genreFiltering = {
 };
 
 const upcomingMoviesPage: React.FC = () => {
-  const { data, error, isLoading, isError } = useQuery<DiscoverMovies, Error>("upcoming", upcomingMovies); // caching
+  const [page, setPage] = useState(1);
+
+  const fetchUpcomingMovies = (page = 1) => upcomingMovies(page);
+
+  const { isLoading, isError, error, data, isFetching, isPreviousData } = useQuery<DiscoverMovies, Error>({
+    queryKey: ["upcoming", page],
+    queryFn: () => fetchUpcomingMovies(page),
+    keepPreviousData: true
+  });
+
   const { filterValues, setFilterValues, filterFunction } = useFiltering(
     [titleFiltering, genreFiltering]
   );
@@ -66,6 +75,26 @@ const upcomingMoviesPage: React.FC = () => {
         titleFilter={filterValues[0].value}
         genreFilter={filterValues[1].value}
       />
+      <div>
+        <span>Current Page: {page}</span>
+        <button
+          onClick={() => setPage((old) => Math.max(old - 1, 1))}
+          disabled={page === 1}
+        >
+          Previous Page
+        </button>
+        <button
+          onClick={() => {
+            if (!isPreviousData && data?.total_pages && page < data.total_pages) {
+              setPage((old) => old + 1);
+            }
+          }}
+          disabled={isPreviousData || (data && page >= data.total_pages)}
+        >
+          Next Page
+        </button>
+        {isFetching ? <span> Loading...</span> : null}
+      </div>
     </>
   );
 };
