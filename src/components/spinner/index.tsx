@@ -16,7 +16,6 @@ const CircularIndeterminate: React.FC = ()=> {
     return (
         <div style={styles.root}>
             <CircularProgress />
-            <CircularProgress />
         </div>
     );
 }
