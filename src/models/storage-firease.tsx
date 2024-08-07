@@ -5,7 +5,13 @@ import { storage } from "../firebase/firebaseConfig";
 export const uploadImage = async (file: File): Promise<string> => {
     try {
         console.log('Starting image upload...');
-        const storageRef = ref(storage, `images/${file.name}`);
+        
+        // Extract file name and prepend timestamp
+        const timestamp = Date.now();
+        const fileName = file.name;
+        const uniqueFileName = `${timestamp}_${fileName}`;
+        
+        const storageRef = ref(storage, `images/${uniqueFileName}`);
         console.log('Storage reference created:', storageRef);
 
         const snapshot = await uploadBytes(storageRef, file);

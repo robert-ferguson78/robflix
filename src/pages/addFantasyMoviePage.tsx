@@ -39,7 +39,9 @@ const AddFantasyMoviePage = () => {
     const [releaseDate, setReleaseDate] = useState('');
     const [overview, setOverview] = useState('');
     const [posterFile, setPosterFile] = useState<File | null>(null);
+    const [posterPreview, setPosterPreview] = useState<string | null>(null);
     const [actors, setActors] = useState([{ name: '', biography: '', profileFile: null as File | null }]);
+    const [actorPreviews, setActorPreviews] = useState<(string | null)[]>([]);
     const [userUid, setUserUid] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
@@ -58,26 +60,38 @@ const AddFantasyMoviePage = () => {
 
     const handleActorChange = (index: number, field: ActorField, value: string | File | null) => {
         const newActors = [...actors];
-        // checking for file upload to assert type
+        const newActorPreviews = [...actorPreviews];
+
         if (field === 'profileFile') {
             newActors[index][field] = value as File | null;
+            newActorPreviews[index] = value ? URL.createObjectURL(value as File) : null;
         } else {
             newActors[index][field] = value as string;
         }
+
         setActors(newActors);
+        setActorPreviews(newActorPreviews);
     };
 
     const handleGenreChange = (event: SelectChangeEvent<string[]>) => {
         setGenres(event.target.value as string[]);
     };
 
+    const handlePosterChange = (file: File | null) => {
+        setPosterFile(file);
+        setPosterPreview(file ? URL.createObjectURL(file) : null);
+    };
+
     const addActorField = () => {
         setActors([...actors, { name: '', biography: '', profileFile: null }]);
+        setActorPreviews([...actorPreviews, null]);
     };
 
     const removeActorField = (index: number) => {
         const newActors = actors.filter((_, i) => i !== index);
+        const newActorPreviews = actorPreviews.filter((_, i) => i !== index);
         setActors(newActors);
+        setActorPreviews(newActorPreviews);
     };
 
     const handleSubmit = async (event: React.FormEvent) => {
@@ -163,7 +177,9 @@ const AddFantasyMoviePage = () => {
             setReleaseDate('');
             setOverview('');
             setPosterFile(null);
+            setPosterPreview(null);
             setActors([{ name: '', biography: '', profileFile: null }]);
+            setActorPreviews([null]);
             
             setSuccessMessage('Fantasy movie and actor information added successfully!');
             setTimeout(() => setSuccessMessage(''), 2000);
@@ -249,9 +265,14 @@ const AddFantasyMoviePage = () => {
                     <input
                         type="file"
                         hidden
-                        onChange={(e) => setPosterFile(e.target.files ? e.target.files[0] : null)}
+                        onChange={(e) => handlePosterChange(e.target.files ? e.target.files[0] : null)}
                     />
                 </Button>
+                {posterPreview && (
+                    <Box sx={{ mt: 2 }}>
+                        <img src={posterPreview} alt="Poster Preview" style={{ width: '100%' }} />
+                    </Box>
+                )}
                 <Typography variant="h6" component="h2" gutterBottom sx={{ mt: 1 }}>
                     Add Actor Information
                 </Typography>
@@ -288,6 +309,11 @@ const AddFantasyMoviePage = () => {
                                 onChange={(e) => handleActorChange(index, 'profileFile', e.target.files ? e.target.files[0] : null)}
                             />
                         </Button>
+                        {actorPreviews[index] && (
+                            <Box sx={{ mt: 2 }}>
+                                <img src={actorPreviews[index]} alt="Actor Profile Preview" style={{ width: '100%' }} />
+                            </Box>
+                        )}
                         <IconButton onClick={() => removeActorField(index)} disabled={actors.length === 1} sx={{ mt: 1 }}>
                             <DeleteIcon /> Remove Actor
                         </IconButton>
