@@ -46,7 +46,7 @@ const FantasyMovieDetails: React.FC<FantasyMovieProps> = (movie) => {
         <>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
-                    <Typography variant="h2" component="h1" style={styles.title}>
+                    <Typography variant="h2" component="h1" sx={styles.title}>
                         {movie.title}
                     </Typography>
                 </Grid>
