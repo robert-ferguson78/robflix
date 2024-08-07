@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, Container, Typography, Box, IconButton, CircularProgress, Snackbar, Select, MenuItem, InputLabel, FormControl, Checkbox, ListItemText } from '@mui/material';
+import { TextField, Button, Container, Typography, Box, IconButton, CircularProgress, Snackbar, Select, MenuItem, InputLabel, FormControl, Checkbox, ListItemText, SelectChangeEvent } from '@mui/material';
 import { uploadImage } from '../models/storage-firease';
 import { fantasyMovieFirestoreStore } from '../models/fantasy-movie-firestore-store';
 import { Add as AddIcon, Delete as DeleteIcon, Theaters as TheatersIcon } from '@mui/icons-material';
 import { auth } from '../firebase/firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
-
 
 const allowedGenres = [
     { id: "0", name: "All" },
@@ -28,7 +27,9 @@ const allowedGenres = [
     { id: 53, name: "Thriller" },
     { id: 10752, name: "War" },
     { id: 37, name: "Western" },
-  ];
+];
+
+type ActorField = 'name' | 'biography' | 'profileFile';
 
 const AddFantasyMoviePage = () => {
     const [title, setTitle] = useState('');
@@ -55,13 +56,18 @@ const AddFantasyMoviePage = () => {
         return () => unsubscribe();
     }, []);
 
-    const handleActorChange = (index: number, field: string, value: any) => {
+    const handleActorChange = (index: number, field: ActorField, value: string | File | null) => {
         const newActors = [...actors];
-        newActors[index][field] = value;
+        // checking for file upload to assert type
+        if (field === 'profileFile') {
+            newActors[index][field] = value as File | null;
+        } else {
+            newActors[index][field] = value as string;
+        }
         setActors(newActors);
     };
 
-    const handleGenreChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const handleGenreChange = (event: SelectChangeEvent<string[]>) => {
         setGenres(event.target.value as string[]);
     };
 
