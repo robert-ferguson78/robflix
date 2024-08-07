@@ -96,3 +96,19 @@ export interface BaseMovieProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any; // Allow additional prop types to be passed to the PrivateRoute component
   }
+
+  export interface FantasyMovieProps {
+    runtime: number;
+    overview: string;
+    posterUrl: string;
+    title: string;
+    genres: string[];
+    production: string;
+    releaseDate: string;
+    userUid: string;
+    id: string;
+  }
+
+  export interface FantasyMovieCardProps {
+    movies: FantasyMovieProps;
+  }

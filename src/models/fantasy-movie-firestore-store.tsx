@@ -67,5 +67,13 @@ export const fantasyMovieFirestoreStore = {
         const actorsSnapshot = await getDocs(actorsRef);
         const actorsList = actorsSnapshot.docs.map(doc => doc.data());
         return actorsList;
+    },
+
+    // Function to get all fantasy movies
+    getAllFantasyMovies: async function() {
+        const moviesRef = collection(firestore, collectionName);
+        const moviesSnapshot = await getDocs(moviesRef);
+        const moviesList = moviesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        return moviesList;
     }
 };

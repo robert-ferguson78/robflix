@@ -7,6 +7,8 @@ import MovieReviewPage from "./pages/movieReviewPage";
 import AddMovieReviewPage from './pages/addMovieReviewPage';
 import UpcomingPage from "./pages/upcomingPage";
 import AddFantasyMoviePage from "./pages/addFantasyMoviePage";
+import FantasyMoviesPage from "./pages/fantasyMoviePage";
+import FantasyMovieDetailsPage from "./pages/fantasyMovieDetailsPage";
 import SiteHeader from './components/siteHeader';
 import MoviesContextProvider from "./contexts/moviesContext";
 import { QueryClientProvider, QueryClient } from "react-query";
@@ -18,8 +20,9 @@ import withAuth from './hoc/withAuth';
 const AddMovieReviewPageWithAuth = withAuth(AddMovieReviewPage);
 const MovieReviewPageWithAuth = withAuth(MovieReviewPage);
 const FavouriteMoviesPageWithAuth = withAuth(FavouriteMoviesPage);
-const MoviePageWithAuth = withAuth(MoviePage);
 const AddFantasyMoviePageWithAuth = withAuth(AddFantasyMoviePage);
+const FantasyMoviesPageWithAuth = withAuth(FantasyMoviesPage);
+const FantasyMovieDetailsPageWithAuth = withAuth(FantasyMovieDetailsPage);
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -42,8 +45,10 @@ const App = () => {
               <Route path="/reviews/form" element={<AddMovieReviewPageWithAuth />} />
               <Route path="/reviews/:id" element={<MovieReviewPageWithAuth />} />
               <Route path="/movies/favourites" element={<FavouriteMoviesPageWithAuth />} />
-              <Route path="/movies/:id" element={<MoviePageWithAuth />} />
+              <Route path="/movies/:id" element={<MoviePage />} />
               <Route path="/movies/fantasy-movie-upload" element={<AddFantasyMoviePageWithAuth />} />
+              <Route path="/movies/fantasy-movies" element={<FantasyMoviesPageWithAuth />} />
+              <Route path="/movies/fantasy-movies/:id" element={<FantasyMovieDetailsPageWithAuth />} />
               <Route path="/movies/upcoming" element={<UpcomingPage />} />
               <Route path="/" element={<HomePage />} />
               <Route path="*" element={<Navigate to="/" />} />
