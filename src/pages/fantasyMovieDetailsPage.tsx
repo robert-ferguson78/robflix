@@ -12,9 +12,11 @@ const FantasyMovieDetailsPage: React.FC = () => {
 
   const { data: movie, error, isLoading, isError } = useQuery<FantasyMovieProps, Error>(
     ["fantasyMovie", id],
-    () => {
+    async () => {
       console.log("Fetching movie details for id:", id);
-      return fantasyMovieFirestoreStore.getFantasyMovie(id || "");
+      const movieData = await fantasyMovieFirestoreStore.getFantasyMovie(id || "");
+      console.log("Fetched movie data:", movieData);
+      return { ...movieData, id: id || "" } as FantasyMovieProps;
     }
   );
 
@@ -31,15 +33,11 @@ const FantasyMovieDetailsPage: React.FC = () => {
     return <h1>{(error as Error).message}</h1>;
   }
 
-  return (
-    <>
-      {movie ? (
-        <FantasyMovieDetails {...movie} />
-      ) : (
-        <p>Waiting for movie details</p>
-      )}
-    </>
-  );
+  if (!movie) {
+    return <p>Waiting for movie details</p>;
+  }
+
+  return <FantasyMovieDetails {...movie} />;
 };
 
 export default FantasyMovieDetailsPage;
