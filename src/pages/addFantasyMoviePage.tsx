@@ -1,15 +1,39 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, Container, Typography, Box, IconButton, CircularProgress, Snackbar } from '@mui/material';
+import { TextField, Button, Container, Typography, Box, IconButton, CircularProgress, Snackbar, Select, MenuItem, InputLabel, FormControl, Checkbox, ListItemText } from '@mui/material';
 import { uploadImage } from '../models/storage-firease';
 import { fantasyMovieFirestoreStore } from '../models/fantasy-movie-firestore-store';
 import { Add as AddIcon, Delete as DeleteIcon, Theaters as TheatersIcon } from '@mui/icons-material';
 import { auth } from '../firebase/firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
 
+
+const allowedGenres = [
+    { id: "0", name: "All" },
+    { id: 28, name: "Action" },
+    { id: 12, name: "Adventure" },
+    { id: 16, name: "Animation" },
+    { id: 35, name: "Comedy" },
+    { id: 80, name: "Crime" },
+    { id: 99, name: "Documentary" },
+    { id: 18, name: "Drama" },
+    { id: 10751, name: "Family" },
+    { id: 14, name: "Fantasy" },
+    { id: 36, name: "History" },
+    { id: 27, name: "Horror" },
+    { id: 10402, name: "Music" },
+    { id: 9648, name: "Mystery" },
+    { id: 10749, name: "Romance" },
+    { id: 878, name: "Science Fiction" },
+    { id: 10770, name: "TV Movie" },
+    { id: 53, name: "Thriller" },
+    { id: 10752, name: "War" },
+    { id: 37, name: "Western" },
+  ];
+
 const AddFantasyMoviePage = () => {
     const [title, setTitle] = useState('');
     const [runtime, setRuntime] = useState('');
-    const [genres, setGenres] = useState('');
+    const [genres, setGenres] = useState<string[]>([]);
     const [production, setProduction] = useState('');
     const [releaseDate, setReleaseDate] = useState('');
     const [overview, setOverview] = useState('');
@@ -37,6 +61,10 @@ const AddFantasyMoviePage = () => {
         setActors(newActors);
     };
 
+    const handleGenreChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+        setGenres(event.target.value as string[]);
+    };
+
     const addActorField = () => {
         setActors([...actors, { name: '', biography: '', profileFile: null }]);
     };
@@ -51,7 +79,7 @@ const AddFantasyMoviePage = () => {
         setLoading(true);
     
         // Check required fields
-        if (!title || !runtime || !genres || !production || !releaseDate || !overview || !userUid) {
+        if (!title || !runtime || genres.length === 0 || !production || !releaseDate || !overview || !userUid) {
             alert('Please fill out all required fields.');
             setLoading(false);
             return;
@@ -78,7 +106,7 @@ const AddFantasyMoviePage = () => {
             const movieData = {
                 title,
                 runtime: Number(runtime),
-                genres: genres.split(',').map(genre => genre.trim()),
+                genres,
                 production,
                 releaseDate,
                 overview,
@@ -124,7 +152,7 @@ const AddFantasyMoviePage = () => {
             console.log('Clearing the form...');
             setTitle('');
             setRuntime('');
-            setGenres('');
+            setGenres([]);
             setProduction('');
             setReleaseDate('');
             setOverview('');
@@ -163,14 +191,24 @@ const AddFantasyMoviePage = () => {
                     value={runtime}
                     onChange={(e) => setRuntime(e.target.value)}
                 />
-                <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    label="Genres (comma separated)"
+                <FormControl fullWidth margin="normal" required>
+                    <InputLabel id="genre-label">Genres</InputLabel>
+                    <Select
+                    labelId="genre-label"
+                    id="genre-select"
+                    multiple
                     value={genres}
-                    onChange={(e) => setGenres(e.target.value)}
-                />
+                    onChange={handleGenreChange}
+                    renderValue={(selected) => (selected as string[]).join(', ')}
+                >
+                    {allowedGenres.map((genre) => (
+                        <MenuItem key={genre.id} value={genre.name}>
+                            <Checkbox checked={genres.indexOf(genre.name) > -1} />
+                            <ListItemText primary={genre.name} />
+                        </MenuItem>
+                    ))}
+                </Select>
+                </FormControl>
                 <TextField
                     margin="normal"
                     required
