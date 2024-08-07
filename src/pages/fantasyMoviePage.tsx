@@ -27,7 +27,7 @@ const fetchAllFantasyMovies = async (): Promise<FantasyMovieProps[]> => {
   try {
     const movies = await fantasyMovieFirestoreStore.getAllFantasyMovies();
     console.log("fetchAllFantasyMovies: Fetched movies:", movies);
-    return movies;
+    return movies as FantasyMovieProps[];
   } catch (error) {
     console.error("fetchAllFantasyMovies: Failed to fetch fantasy movies:", error);
     throw error;
