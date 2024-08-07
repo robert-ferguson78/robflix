@@ -10,14 +10,14 @@ import Typography from "@mui/material/Typography";
 import CalendarIcon from "@mui/icons-material/CalendarTodayTwoTone";
 import Grid from "@mui/material/Grid";
 import img from '../../images/film-poster-placeholder.png';
-import { FantasyMovieCardProps } from "../../types/interfaces";
+import { FantasyMovieCardProp } from "../../types/interfaces";
 
 const styles = {
   card: { maxWidth: 345 },
   media: { height: 500 },
 };
 
-const FantasyMovieCard: React.FC<FantasyMovieCardProps> = ({ movies }) => {
+const FantasyMovieCard: React.FC<FantasyMovieCardProp> = ({ movies }) => {
   return (
     <Card sx={styles.card}>
       <CardHeader

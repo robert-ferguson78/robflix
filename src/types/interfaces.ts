@@ -110,5 +110,10 @@ export interface BaseMovieProps {
   }
 
   export interface FantasyMovieCardProps {
+    movies: FantasyMovieProps[];
+    title?: string;
+  }
+
+  export interface FantasyMovieCardProp {
     movies: FantasyMovieProps;
   }
