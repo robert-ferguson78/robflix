@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from "react";//update existing import
+import React, { ChangeEvent, useState } from "react";
 import { FilterOption, GenreData } from "../../types/interfaces";
 import { SelectChangeEvent } from "@mui/material";
 import Card from "@mui/material/Card";
@@ -29,14 +29,14 @@ const styles = {
 };
 
 interface FilterMoviesCardProps {
-  onUserInput: (f: FilterOption, s: string)  => void;
+  onUserInput: (f: FilterOption, s: string) => void;
   titleFilter: string;
   genreFilter: string;
 }
 
-
 const FilterMoviesCard: React.FC<FilterMoviesCardProps> = ({ titleFilter, genreFilter, onUserInput }) => {
   const { data, error, isLoading, isError } = useQuery<GenreData, Error>("genres", getGenres);
+  const [sortOption, setSortOption] = useState<string>("");
 
   if (isLoading) {
     return <Spinner />;
@@ -49,67 +49,84 @@ const FilterMoviesCard: React.FC<FilterMoviesCardProps> = ({ titleFilter, genreF
     genres.unshift({ id: "0", name: "All" });
   }
 
-  console.log("Genres structure:", genres);
-
   const handleChange = (e: SelectChangeEvent, type: FilterOption, value: string) => {
-    e.preventDefault()
-      onUserInput(type, value)
+    e.preventDefault();
+    onUserInput(type, value);
   };
 
   const handleTextChange = (e: ChangeEvent<HTMLInputElement>) => {
-    handleChange(e, "title", e.target.value)
-  }
+    handleChange(e as unknown as SelectChangeEvent, "title", e.target.value);
+  };
 
   const handleGenreChange = (e: SelectChangeEvent) => {
-    handleChange(e, "genre", e.target.value)
+    handleChange(e, "genre", e.target.value);
+  };
+
+  const handleSortChange = (e: SelectChangeEvent) => {
+    setSortOption(e.target.value);
+    handleChange(e, "sort", e.target.value);
   };
 
   return (
     <>
-    <Card sx={styles.root} variant="outlined">
-      <CardContent>
-        <Typography variant="h5" component="h1">
-          <FilterAltIcon fontSize="large" />
-          Filter the movies.
-        </Typography>
-        <TextField
-          sx={styles.formControl}
-          id="filled-search"
-          label="Search field"
-          type="search"
-          value={titleFilter}
-          variant="filled"
-          onChange={handleTextChange}
-        />
-        <FormControl sx={styles.formControl}>
-          <InputLabel id="genre-label">Genre</InputLabel>
-          <Select
-            labelId="genre-label"
-            id="genre-select"
-            value={genreFilter}
-            onChange={handleGenreChange}
-          >
-            {genres.map((genre) => {
-              return (
-                <MenuItem key={genre.id} value={genre.id}>
-                  {genre.name}
-                </MenuItem>
-              );
-            })}
-          </Select>
-        </FormControl>
-      </CardContent>
-    </Card>
-    <Card sx={styles.root} variant="outlined">
+      <Card sx={styles.root} variant="outlined">
+        <CardContent>
+          <Typography variant="h5" component="h1">
+            <FilterAltIcon fontSize="large" />
+            Filter the movies.
+          </Typography>
+          <TextField
+            sx={styles.formControl}
+            id="filled-search"
+            label="Search field"
+            type="search"
+            value={titleFilter}
+            variant="filled"
+            onChange={handleTextChange}
+          />
+          <FormControl sx={styles.formControl}>
+            <InputLabel id="genre-label">Genre</InputLabel>
+            <Select
+              labelId="genre-label"
+              id="genre-select"
+              value={genreFilter}
+              onChange={handleGenreChange}
+            >
+              {genres.map((genre) => {
+                return (
+                  <MenuItem key={genre.id} value={genre.id}>
+                    {genre.name}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+        </CardContent>
+      </Card>
+      <Card sx={styles.root} variant="outlined">
         <CardContent>
           <Typography variant="h5" component="h1">
             <SortIcon fontSize="large" />
             Sort the movies.
           </Typography>
+          <FormControl sx={styles.formControl}>
+            <InputLabel id="sort-label">Sort By</InputLabel>
+            <Select
+              labelId="sort-label"
+              id="sort-select"
+              value={sortOption}
+              onChange={handleSortChange}
+            >
+              <MenuItem value="name">Name (Alphabetical)</MenuItem>
+              <MenuItem value="highRating">High Rating</MenuItem>
+              <MenuItem value="lowRating">Low Rating</MenuItem>
+              <MenuItem value="releaseDate">Release Date</MenuItem>
+            </Select>
+          </FormControl>
         </CardContent>
       </Card>
-      </>
+    </>
   );
-}
+};
 
 export default FilterMoviesCard;

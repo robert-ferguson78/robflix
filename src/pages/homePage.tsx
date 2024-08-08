@@ -3,32 +3,56 @@ import PageTemplate from '../components/templateMovieListPage';
 import { BaseMovieProps } from "../types/interfaces";
 import { getMovies } from "../api/tmdb-api";
 import useFiltering from "../hooks/useFiltering";
-import MovieFilterUI, {
-  titleFilter,
-  genreFilter,
-} from "../components/movieFilterUI";
+import MovieFilterUI, { titleFilter, genreFilter } from "../components/movieFilterUI";
 import { DiscoverMovies } from "../types/interfaces";
 import { useQuery } from "react-query";
 import Spinner from "../components/spinner";
-import AddToFavouritesIcon from '../components/cardIcons/addToFavourites'
+import AddToFavouritesIcon from '../components/cardIcons/addToFavourites';
 
-const titleFiltering = {
-  name: "title",
-  value: "",
-  condition: titleFilter,
-};
-const genreFiltering = {
-  name: "genre",
-  value: "0",
-  condition: genreFilter,
-};
+const createFilters = () => {
+  const titleFiltering = {
+    name: "title",
+    value: "",
+    condition: titleFilter,
+    type: 'filter',
+  };
 
+  const genreFiltering = {
+    name: "genre",
+    value: "0",
+    condition: genreFilter,
+    type: 'filter',
+  };
+
+  const sortFiltering = {
+    name: "sort",
+    value: "name", // Set a default sort value
+    condition: (movies: BaseMovieProps[], value: string) => {
+      console.log("Sorting movies by:", value);
+      if (!Array.isArray(movies)) return [];
+      
+      switch (value) {
+        case "name":
+          return movies.sort((a, b) => a.title.localeCompare(b.title));
+        case "highRating":
+          return movies.sort((a, b) => b.vote_average - a.vote_average);
+        case "lowRating":
+          return movies.sort((a, b) => a.vote_average - b.vote_average);
+        case "releaseDate":
+          return movies.sort((a, b) => new Date(b.release_date).getTime() - new Date(a.release_date).getTime());
+        default:
+          return movies;
+      }
+    },
+    type: 'sort',
+  };
+
+  return [titleFiltering, genreFiltering, sortFiltering];
+};
 
 const HomePage: React.FC = () => {
   const { data, error, isLoading, isError } = useQuery<DiscoverMovies, Error>("discover", getMovies);
-  const { filterValues, setFilterValues, filterFunction } = useFiltering(
-    [titleFiltering, genreFiltering]
-  );
+  const { filterValues, setFilterValues, filterFunction } = useFiltering(createFilters());
 
   if (isLoading) {
     return <Spinner />;
@@ -37,35 +61,46 @@ const HomePage: React.FC = () => {
   if (isError) {
     return <h1>{error.message}</h1>;
   }
-  
 
   const changeFilterValues = (type: string, value: string) => {
-    const changedFilter = { name: type, value: value };
-    const updatedFilterSet =
-      type === "title"
-        ? [changedFilter, filterValues[1]]
-        : [filterValues[0], changedFilter];
+    const updatedFilterSet = filterValues.map(filter => 
+      filter.name === type ? { ...filter, value } : filter
+    );
     setFilterValues(updatedFilterSet);
   };
 
-  const movies = data ? data.results : [];
+  const movies = data?.results ?? [];
+  console.log("Movies before filtering:", movies);
+  console.log("Filter values:", filterValues);
+
+  // Log each filter value
+  filterValues.forEach(filter => {
+    console.log(`Filter type: ${filter.name}, Filter value: ${filter.value}`);
+  });
+
+  // Log the sort filter value specifically
+  const sortFilter = filterValues.find(filter => filter.name === "sort");
+  console.log("Sort filter value:", sortFilter?.value);
+
+  // Log inside filterFunction
   const displayedMovies = filterFunction(movies);
+  console.log("Displayed Movies after filtering:", displayedMovies);
 
   return (
     <>
       <PageTemplate
         title="Discover Movies"
         movies={displayedMovies}
-        action={(movie: BaseMovieProps) => {
-          return <AddToFavouritesIcon {...movie} />
-        }}
+        action={(movie: BaseMovieProps) => <AddToFavouritesIcon {...movie} />}
       />
       <MovieFilterUI
         onFilterValuesChange={changeFilterValues}
         titleFilter={filterValues[0].value}
         genreFilter={filterValues[1].value}
+        sortFilter={filterValues[2].value}
       />
     </>
   );
 };
+
 export default HomePage;
