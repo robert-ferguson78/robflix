@@ -3,7 +3,7 @@ import PageTemplate from '../components/templateMovieListPage';
 import { BaseMovieProps } from "../types/interfaces";
 import { getMovies } from "../api/tmdb-api";
 import useFiltering from "../hooks/useFiltering";
-import MovieFilterUI, { titleFilter, genreFilter } from "../components/movieFilterUI";
+import MovieFilterUI, { titleFilter, genreFilter, sortFilter } from "../components/movieFilterUI";
 import { DiscoverMovies } from "../types/interfaces";
 import { useQuery } from "react-query";
 import Spinner from "../components/spinner";
@@ -14,37 +14,21 @@ const createFilters = () => {
     name: "title",
     value: "",
     condition: titleFilter,
-    type: 'filter',
+    type: 'filter' as const,
   };
 
   const genreFiltering = {
     name: "genre",
     value: "0",
     condition: genreFilter,
-    type: 'filter',
+    type: 'filter' as const,
   };
 
   const sortFiltering = {
     name: "sort",
     value: "name", // Set a default sort value
-    condition: (movies: BaseMovieProps[], value: string) => {
-      console.log("Sorting movies by:", value);
-      if (!Array.isArray(movies)) return [];
-      
-      switch (value) {
-        case "name":
-          return movies.sort((a, b) => a.title.localeCompare(b.title));
-        case "highRating":
-          return movies.sort((a, b) => b.vote_average - a.vote_average);
-        case "lowRating":
-          return movies.sort((a, b) => a.vote_average - b.vote_average);
-        case "releaseDate":
-          return movies.sort((a, b) => new Date(b.release_date).getTime() - new Date(a.release_date).getTime());
-        default:
-          return movies;
-      }
-    },
-    type: 'sort',
+    condition: sortFilter,
+    type: 'sort' as const,
   };
 
   return [titleFiltering, genreFiltering, sortFiltering];
@@ -97,7 +81,7 @@ const HomePage: React.FC = () => {
         onFilterValuesChange={changeFilterValues}
         titleFilter={filterValues[0].value}
         genreFilter={filterValues[1].value}
-        sortFilter={filterValues[2].value}
+        sortOption={filterValues[2].value}
       />
     </>
   );

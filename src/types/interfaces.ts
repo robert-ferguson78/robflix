@@ -117,3 +117,17 @@ export interface BaseMovieProps {
   export interface FantasyMovieCardProp {
     movies: FantasyMovieProps;
   }
+
+  export interface MovieFilterUIProps {
+      onFilterValuesChange: (f: string, s: string) => void;
+      titleFilter: string;
+      genreFilter: string;
+      sortOption: string;
+  }
+
+  export interface FilterMoviesCardProps {
+    onUserInput: (f: FilterOption, s: string) => void;
+    titleFilter: string;
+    genreFilter: string;
+  }
+  

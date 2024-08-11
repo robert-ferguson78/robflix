@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useState } from "react";
-import { FilterOption, GenreData } from "../../types/interfaces";
+import { FilterOption, GenreData, FilterMoviesCardProps } from "../../types/interfaces";
 import { SelectChangeEvent } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -28,15 +28,9 @@ const styles = {
   },
 };
 
-interface FilterMoviesCardProps {
-  onUserInput: (f: FilterOption, s: string) => void;
-  titleFilter: string;
-  genreFilter: string;
-}
-
-const FilterMoviesCard: React.FC<FilterMoviesCardProps> = ({ titleFilter, genreFilter, onUserInput }) => {
+const FilterMoviesCard: React.FC<FilterMoviesCardProps> = ({ titleFilter, genreFilter, sortOption, onUserInput }) => {
   const { data, error, isLoading, isError } = useQuery<GenreData, Error>("genres", getGenres);
-  const [sortOption, setSortOption] = useState<string>("");
+  const [sortOptionState, setSortOptionState] = useState<string>(sortOption);
 
   if (isLoading) {
     return <Spinner />;
@@ -63,8 +57,9 @@ const FilterMoviesCard: React.FC<FilterMoviesCardProps> = ({ titleFilter, genreF
   };
 
   const handleSortChange = (e: SelectChangeEvent) => {
-    setSortOption(e.target.value);
+    setSortOptionState(e.target.value);
     handleChange(e, "sort", e.target.value);
+    console.log("Sort option selected:", e.target.value); // Debugging log
   };
 
   return (
@@ -114,12 +109,12 @@ const FilterMoviesCard: React.FC<FilterMoviesCardProps> = ({ titleFilter, genreF
             <Select
               labelId="sort-label"
               id="sort-select"
-              value={sortOption}
+              value={sortOptionState}
               onChange={handleSortChange}
             >
-              <MenuItem value="name">Name (Alphabetical)</MenuItem>
-              <MenuItem value="highRating">High Rating</MenuItem>
-              <MenuItem value="lowRating">Low Rating</MenuItem>
+              <MenuItem value="name">A-Z</MenuItem>
+              <MenuItem value="highRating">Rating High</MenuItem>
+              <MenuItem value="lowRating">Rating Low</MenuItem>
               <MenuItem value="releaseDate">Release Date</MenuItem>
             </Select>
           </FormControl>
