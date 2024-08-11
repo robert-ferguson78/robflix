@@ -46,8 +46,9 @@ const SiteHeader: React.FC = () => {
   const menuOptions = [
     { id: 1, label: "Home", path: "/" },
     { id: 2, label: "Upcoming", path: "/movies/upcoming" },
-    { id: 3, label: "Favorites", path: "/movies/favourites" },
-    { id: 4, label: "Add Fantasy Movie", path: "/movies/fantasy-movie-upload" },
+    { id: 3, label: "Add Movie Review", path: "/reviews/form" },
+    { id: 4, label: "Favorites", path: "/movies/favourites" },
+    { id: 6, label: "Add Fantasy Movie", path: "/movies/fantasy-movie-upload" },
     { id: 5, label: "Fantasy Movies", path: "/movies/fantasy-movies" },
   ];
 

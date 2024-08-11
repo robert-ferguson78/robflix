@@ -5,7 +5,7 @@ import { getMovies } from "../api/tmdb-api";
 import useFiltering from "../hooks/useFiltering";
 import { titleFilter, genreFilter, sortFilter } from "../filters";
 import MovieFilterUI from "../components/movieFilterUI";
-import { DiscoverMovies, MovieFilterUIProps } from "../types/interfaces";
+import { DiscoverMovies } from "../types/interfaces";
 import { useQuery } from "react-query";
 import Spinner from "../components/spinner";
 import AddToFavouritesIcon from '../components/cardIcons/addToFavourites';
