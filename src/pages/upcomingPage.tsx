@@ -3,26 +3,37 @@ import PageTemplate from '../components/templateMovieListPage';
 import { BaseMovieProps } from "../types/interfaces";
 import { upcomingMovies } from "../api/tmdb-api";
 import useFiltering from "../hooks/useFiltering";
-import MovieFilterUI, {
-  titleFilter,
-  genreFilter,
-} from "../components/movieFilterUI";
+import { titleFilter, genreFilter, sortFilter } from "../filters";
+import MovieFilterUI from "../components/movieFilterUI";
 import { DiscoverMovies } from "../types/interfaces";
 import { useQuery } from "@tanstack/react-query"; // updated import
 import Spinner from "../components/spinner";
 import AddToPlaylistIcon from "../components/cardIcons/addToPlaylist";
 // import { filterUpcomingMovies } from "../util";
 
-const titleFiltering = {
-  name: "title",
-  value: "",
-  condition: titleFilter,
-};
+const createFilters = () => {
+  const titleFiltering = {
+    name: "title",
+    value: "",
+    condition: titleFilter,
+    type: 'filter' as const,
+  };
 
-const genreFiltering = {
-  name: "genre",
-  value: "0",
-  condition: genreFilter,
+  const genreFiltering = {
+    name: "genre",
+    value: "0",
+    condition: genreFilter,
+    type: 'filter' as const,
+  };
+
+  const sortFiltering = {
+    name: "sort",
+    value: "name", // Set a default sort value
+    condition: sortFilter,
+    type: 'sort' as const,
+  };
+
+  return [titleFiltering, genreFiltering, sortFiltering];
 };
 
 const UpcomingMoviesPage: React.FC = () => {
@@ -39,9 +50,7 @@ const UpcomingMoviesPage: React.FC = () => {
     staleTime: 300000 // 5 minutes cache before data is considered stale
   });
 
-  const { filterValues, setFilterValues, filterFunction } = useFiltering(
-    [titleFiltering, genreFiltering]
-  );
+  const { filterValues, setFilterValues, filterFunction } = useFiltering(createFilters());
 
   if (isLoading) {
     return <Spinner />;
@@ -52,11 +61,9 @@ const UpcomingMoviesPage: React.FC = () => {
   }
 
   const changeFilterValues = (type: string, value: string) => {
-    const changedFilter = { name: type, value: value };
-    const updatedFilterSet =
-      type === "title"
-        ? [changedFilter, filterValues[1]]
-        : [filterValues[0], changedFilter];
+    const updatedFilterSet = filterValues.map(filter => 
+      filter.name === type ? { ...filter, value } : filter
+    );
     setFilterValues(updatedFilterSet);
   };
 
@@ -77,6 +84,7 @@ const UpcomingMoviesPage: React.FC = () => {
         onFilterValuesChange={changeFilterValues}
         titleFilter={filterValues[0].value}
         genreFilter={filterValues[1].value}
+        sortOption={filterValues[2].value}
       />
       <div>
         <span>Current Page: {page}</span>

@@ -3,23 +3,34 @@ import FantasyTemplateMoviePage from '../components/fantasyTemplateMoviePage';
 import { FantasyMovieProps } from "../types/interfaces";
 import { fantasyMovieFirestoreStore } from "../models/fantasy-movie-firestore-store";
 import useFiltering from "../hooks/useFiltering";
-import MovieFilterUI, {
-  titleFilter,
-  genreFilter,
-} from "../components/movieFilterUI";
+import { titleFilter, genreFilter, sortFilter } from "../filters";
+import MovieFilterUI from "../components/movieFilterUI";
 import { useQuery } from "@tanstack/react-query";
 import Spinner from "../components/spinner";
 
-const titleFiltering = {
-  name: "title",
-  value: "",
-  condition: titleFilter,
-};
+const createFilters = () => {
+  const titleFiltering = {
+    name: "title",
+    value: "",
+    condition: titleFilter,
+    type: 'filter' as const,
+  };
 
-const genreFiltering = {
-  name: "genre",
-  value: "0",
-  condition: genreFilter,
+  const genreFiltering = {
+    name: "genre",
+    value: "0",
+    condition: genreFilter,
+    type: 'filter' as const,
+  };
+
+  const sortFiltering = {
+    name: "sort",
+    value: "name", // Set a default sort value
+    condition: sortFilter,
+    type: 'sort' as const,
+  };
+
+  return [titleFiltering, genreFiltering, sortFiltering];
 };
 
 const fetchAllFantasyMovies = async (): Promise<FantasyMovieProps[]> => {
@@ -43,9 +54,7 @@ const AllFantasyMoviesPage: React.FC = () => {
     staleTime: 300000 // 5 minutes cache before data is considered stale
   });
 
-  const { filterValues, setFilterValues, filterFunction } = useFiltering(
-    [titleFiltering, genreFiltering]
-  );
+  const { filterValues, setFilterValues, filterFunction } = useFiltering(createFilters());
 
   console.log("AllFantasyMoviesPage: isLoading:", isLoading);
   console.log("AllFantasyMoviesPage: isError:", isError);
@@ -83,6 +92,7 @@ const AllFantasyMoviesPage: React.FC = () => {
         onFilterValuesChange={changeFilterValues}
         titleFilter={filterValues[0].value}
         genreFilter={filterValues[1].value}
+        sortOption={filterValues[2].value}
       />
       <div>
         <span>Current Page: {page}</span>
