@@ -3,6 +3,7 @@ import HomePage from "./pages/homePage";
 import LoginPage from "./pages/loginPage";
 import MoviePage from "./pages/movieDetailsPage";
 import FavouriteMoviesPage from "./pages/favouriteMoviesPage";
+import PlaylistMoviesPage from "./pages/playlistMoviesPage";
 import MovieReviewPage from "./pages/movieReviewPage";
 import AddMovieReviewPage from './pages/addMovieReviewPage';
 import UpcomingPage from "./pages/upcomingPage";
@@ -20,6 +21,7 @@ import withAuth from './hoc/withAuth';
 const AddMovieReviewPageWithAuth = withAuth(AddMovieReviewPage);
 const MovieReviewPageWithAuth = withAuth(MovieReviewPage);
 const FavouriteMoviesPageWithAuth = withAuth(FavouriteMoviesPage);
+const PlaylistMoviesPageWithAuth = withAuth(PlaylistMoviesPage);
 const AddFantasyMoviePageWithAuth = withAuth(AddFantasyMoviePage);
 const FantasyMoviesPageWithAuth = withAuth(FantasyMoviesPage);
 const FantasyMovieDetailsPageWithAuth = withAuth(FantasyMovieDetailsPage);
@@ -45,6 +47,7 @@ const App = () => {
               <Route path="/reviews/form/:movieId" element={<AddMovieReviewPageWithAuth />} />
               <Route path="/reviews/:id" element={<MovieReviewPageWithAuth />} />
               <Route path="/movies/favourites" element={<FavouriteMoviesPageWithAuth />} />
+              <Route path="/movies/playlist" element={<PlaylistMoviesPageWithAuth />} />
               <Route path="/movies/:id" element={<MoviePage />} />
               <Route path="/movies/fantasy-movie-upload" element={<AddFantasyMoviePageWithAuth />} />
               <Route path="/movies/fantasy-movies" element={<FantasyMoviesPageWithAuth />} />

@@ -9,7 +9,7 @@ import { DiscoverMovies } from "../types/interfaces";
 import { useQuery } from "@tanstack/react-query"; // updated import
 import Spinner from "../components/spinner";
 import AddToPlaylistIcon from "../components/cardIcons/addToPlaylist";
-// import { filterUpcomingMovies } from "../util";
+import AddToFavouritesIcon from '../components/cardIcons/addToFavourites';
 
 const createFilters = () => {
   const titleFiltering = {
@@ -68,7 +68,6 @@ const UpcomingMoviesPage: React.FC = () => {
   };
 
   const movies = data ? data.results : [];
-  // const upcomingMoviesFiltered = filterUpcomingMovies(movies);
   const displayedMovies = filterFunction(movies);
 
   return (
@@ -76,9 +75,12 @@ const UpcomingMoviesPage: React.FC = () => {
       <PageTemplate
         title="Upcoming Movies"
         movies={displayedMovies}
-        action={(movie: BaseMovieProps) => {
-          return <AddToPlaylistIcon {...movie} />
-        }}
+        action={(movie: BaseMovieProps) => (
+          <>
+            <AddToPlaylistIcon {...movie} />
+            <AddToFavouritesIcon {...movie} />
+          </>
+        )}
       />
       <MovieFilterUI
         onFilterValuesChange={changeFilterValues}
