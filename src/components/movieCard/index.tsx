@@ -15,7 +15,6 @@ import img from '../../images/film-poster-placeholder.png';
 import { BaseMovieProps } from "../../types/interfaces";
 import Avatar from "@mui/material/Avatar";
 import { MoviesContext } from "../../contexts/moviesContext";
-import { Height } from "@mui/icons-material";
 
 const styles = {
   card: { maxWidth: 450 },
