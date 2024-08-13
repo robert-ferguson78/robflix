@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import React, {MouseEvent, useContext} from "react";
+import React, { useContext, useEffect } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -15,10 +15,11 @@ import img from '../../images/film-poster-placeholder.png';
 import { BaseMovieProps } from "../../types/interfaces";
 import Avatar from "@mui/material/Avatar";
 import { MoviesContext } from "../../contexts/moviesContext";
+import { Height } from "@mui/icons-material";
 
 const styles = {
-  card: { maxWidth: 345 },
-  media: { height: 500 },
+  card: { maxWidth: 450 },
+  media: { objectFit: "contain", Height: "auto" },
   avatar: {
     backgroundColor: "rgb(255, 0, 0)",
   },
@@ -29,16 +30,18 @@ interface MovieCardProps {
   action: (m: BaseMovieProps) => React.ReactNode;
 }
 
-const MovieCard: React.FC<MovieCardProps> = ({movie, action}) => {
+const MovieCard: React.FC<MovieCardProps> = ({ movie, action }) => {
   const { favourites, addToFavourites } = useContext(MoviesContext);
 
-  const isFavourite = favourites.find((id) => id === movie.id) ? true : false; //NEW
+  const isFavourite = favourites.includes(movie.id);
+
+  useEffect(() => {}, [addToFavourites]);
 
   return (
     <Card sx={styles.card}>
       <CardHeader
         avatar={
-          isFavourite ? ( //CHANGED
+          isFavourite ? (
             <Avatar sx={styles.avatar}>
               <FavoriteIcon />
             </Avatar>
@@ -52,6 +55,7 @@ const MovieCard: React.FC<MovieCardProps> = ({movie, action}) => {
       />
       <CardMedia
         sx={styles.media}
+        component="img"
         image={
           movie.poster_path
             ? `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
