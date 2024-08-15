@@ -9,7 +9,9 @@ import { MovieDetailsProps } from "../../types/interfaces";
 import NavigationIcon from "@mui/icons-material/Navigation";
 import Fab from "@mui/material/Fab";
 import Drawer from "@mui/material/Drawer";
+import Grid from "@mui/material/Grid";
 import MovieReviews from '../movieReviews'
+import { styled } from '@mui/material/styles';
 
 const styles = {
     chipSet: {
@@ -29,7 +31,24 @@ const styles = {
         top: 50,
         right: 2,
     },
+    gridContainer: {
+        padding: "15px",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    gridItem: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        textAlign: "center",
+    },
 };
+
+const StyledImg = styled('img')({
+    width: 'auto',
+    height: 'auto',
+    maxHeight: '50px',
+});
 
 const MovieDetails: React.FC<MovieDetailsProps> = (movie) => {
 
@@ -67,6 +86,20 @@ const MovieDetails: React.FC<MovieDetailsProps> = (movie) => {
                 />
                 <Chip label={`Released: ${movie.release_date}`} />
             </Paper>
+            <Grid container spacing={5} sx={styles.gridContainer} wrap="wrap">
+                {movie.production_companies.map((company) => (
+                    <Grid item key={company.id} sx={styles.gridItem}>
+                        {company.logo_path && (
+                            <StyledImg
+                                src={`https://image.tmdb.org/t/p/w500/${company.logo_path}`}
+                                alt={company.name}
+                            />
+                        )}
+                        <Typography variant="body1" sx={{ maxWidth: '200px' }}>{company.name}</Typography>
+                        <Typography variant="body2">{company.origin_country}</Typography>
+                    </Grid>
+                ))}
+            </Grid>
             <Fab
                 color="secondary"
                 variant="extended"
