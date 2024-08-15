@@ -46,11 +46,10 @@ const SiteHeader: React.FC = () => {
   const menuOptions = [
     { id: 1, label: "Home", path: "/" },
     { id: 2, label: "Upcoming", path: "/movies/upcoming" },
-    { id: 3, label: "Add Movie Review", path: "/reviews/form" },
-    { id: 4, label: "Favorites", path: "/movies/favourites" },
-    { id: 5, label: "Must Watch", path: "/movies/playlist" },
-    { id: 6, label: "Add Fantasy Movie", path: "/movies/fantasy-movie-upload" },
-    { id: 7, label: "Fantasy Movies", path: "/movies/fantasy-movies" },
+    { id: 3, label: "Favorites", path: "/movies/favourites" },
+    { id: 4, label: "Must Watch", path: "/movies/playlist" },
+    { id: 5, label: "Add Fantasy Movie", path: "/movies/fantasy-movie-upload" },
+    { id: 6, label: "Fantasy Movies", path: "/movies/fantasy-movies" },
   ];
 
   const handleMenuSelect = (pageURL: string) => {
