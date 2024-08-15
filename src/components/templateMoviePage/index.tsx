@@ -91,7 +91,7 @@ const TemplateMoviePage: React.FC<TemplateMoviePageProps> = ({ movie, children }
                     <Grid item xs={4}>
                         <img
                             src={`https://image.tmdb.org/t/p/w500/${featuredImage.file_path}`}
-                            alt={'Featured Image'}
+                            alt={`Featured ${movie.title} Poster`}
                             style={{ width: '100%', height: 'auto' }}
                         />
                     </Grid>
@@ -118,7 +118,7 @@ const TemplateMoviePage: React.FC<TemplateMoviePageProps> = ({ movie, children }
                                     <div key={image.file_path}>
                                         <img
                                             src={`https://image.tmdb.org/t/p/w500/${image.file_path}`}
-                                            alt={'Image alternative'}
+                                            alt={`More Featured ${movie.title} Posters`}
                                             style={{ width: '100%', height: 'auto' }}
                                         />
                                     </div>

@@ -92,11 +92,9 @@ const MovieDetails: React.FC<MovieDetailsProps> = (movie) => {
                         {company.logo_path && (
                             <StyledImg
                                 src={`https://image.tmdb.org/t/p/w500/${company.logo_path}`}
-                                alt={company.name}
+                                alt={`${company.name} (${company.origin_country})`}
                             />
                         )}
-                        <Typography variant="body1" sx={{ maxWidth: '200px' }}>{company.name}</Typography>
-                        <Typography variant="body2">{company.origin_country}</Typography>
                     </Grid>
                 ))}
             </Grid>
