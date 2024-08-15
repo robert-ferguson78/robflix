@@ -131,3 +131,8 @@ export interface FilterMoviesCardProps {
   genreFilter: string;
   sortOption: string;
 }
+
+export interface Poster {
+  file_path: string;
+  vote_count: number;
+}

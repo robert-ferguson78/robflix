@@ -1,3 +1,5 @@
+import { Poster } from "../types/interfaces";
+
 export const getMovies = () => {
   return fetch(
     `https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US&include_adult=false&include_video=false&page=1`
@@ -13,7 +15,7 @@ export const getMovies = () => {
 
 export const getMovie = (id: string) => {
   return fetch(
-    `https://api.themoviedb.org/3/movie/${id}?api_key=${import.meta.env.VITE_TMDB_KEY}`
+    `https://api.themoviedb.org/3/movie/${id}?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US&&append_to_response=videos`
   ).then((response) => {
     if (!response.ok) {
       throw new Error(`Failed to get movie data. Response status: ${response.status}`);
@@ -40,7 +42,7 @@ export const getGenres = () => {
 
 export const getMovieImages = (id: string | number) => {
   return fetch(
-    `https://api.themoviedb.org/3/movie/${id}/images?api_key=${import.meta.env.VITE_TMDB_KEY}`
+    `https://api.themoviedb.org/3/movie/${id}/images?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US&include_image_language=en`
   ).then((response) => {
     if (!response.ok) {
       throw new Error("failed to fetch images");
@@ -49,6 +51,32 @@ export const getMovieImages = (id: string | number) => {
   }).then((json) => json.posters)
     .catch((error) => {
       throw error
+    });
+};
+
+export const getFeaturedMovieImage = (id: string | number) => {
+  return fetch(
+    `https://api.themoviedb.org/3/movie/${id}/images?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US&include_image_language=en`
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("failed to fetch images");
+      }
+      return response.json();
+    })
+    .then((json) => {
+      const posters = json.posters;
+      if (posters.length === 0) {
+        throw new Error("No posters found");
+      }
+      // Assuming the featured poster is the one with the highest vote count
+      const featuredPoster = posters.reduce((prev: Poster, current: Poster) => {
+        return (prev.vote_count > current.vote_count) ? prev : current;
+      });
+      return featuredPoster;
+    })
+    .catch((error) => {
+      throw error;
     });
 };
 
