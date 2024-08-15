@@ -63,6 +63,20 @@ export const getMovieReviews = (id: string | number) => { //movie id can be stri
     });
 };
 
+export const getReviewById = (reviewId: string) => {
+  return fetch(
+    `https://api.themoviedb.org/3/review/${reviewId}?api_key=${import.meta.env.VITE_TMDB_KEY}`
+  ).then((response) => {
+    if (!response.ok) {
+      throw new Error(`Failed to get review data. Response status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .catch((error) => {
+    throw error;
+  });
+};
+
 export const upcomingMovies = async (page: number = 1) => {
   try {
     const response = await fetch(
