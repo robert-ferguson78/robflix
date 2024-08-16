@@ -1,26 +1,43 @@
 import React, { MouseEvent, useContext } from "react";
 import { MoviesContext } from "../../contexts/moviesContext";
+import { TVShowsContext } from "../../contexts/tvShowsContext"; // Import TVShowsContext
 import IconButton from "@mui/material/IconButton";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { BaseMovieProps } from "../../types/interfaces";
+import { AddToFavouritesIconProps, BaseMovieProps, BaseTVShowProps } from "../../types/interfaces";
 import { userFirestoreStore } from "../../models/user-firestore-store";
 import { auth } from "../../firebase/firebaseConfig";
 
-const AddToFavouritesIcon: React.FC<BaseMovieProps> = (movie) => {
-  const context = useContext(MoviesContext);
+const AddToFavouritesIcon: React.FC<AddToFavouritesIconProps> = (props) => {
+  const { type, media } = props;
+  const moviesContext = useContext(MoviesContext);
+  const tvShowsContext = useContext(TVShowsContext); // Use TVShowsContext
 
   const onUserSelect = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    context.addToFavourites(movie);
+
+    if (type === "movie") {
+      moviesContext.addToFavourites(media as BaseMovieProps);
+    } else if (type === "show") {
+      tvShowsContext.addToFavourites(media as BaseTVShowProps);
+    }
 
     const userId = auth.currentUser?.uid; // Get the authenticated user's ID
     if (userId) {
-      await userFirestoreStore.addFavouriteMovie(userId, movie.id.toString()); // Add the movie to Firestore
+      if (type === "movie") {
+        await userFirestoreStore.addFavouriteMovie(userId, media.id.toString()); // Add the movie to Firestore
+      } else if (type === "show") {
+        await userFirestoreStore.addFavouriteTVShow(userId, media.id.toString()); // Add the TV show to Firestore
+      }
     }
 
     // Add to local storage
-    const storedFavourites = JSON.parse(localStorage.getItem("favouriteMovies") || "[]");
-    localStorage.setItem("favouriteMovies", JSON.stringify([...storedFavourites, movie.id]));
+    if (type === "movie") {
+      const storedFavourites = JSON.parse(localStorage.getItem("favouriteMovies") || "[]");
+      localStorage.setItem("favouriteMovies", JSON.stringify([...storedFavourites, media.id]));
+    } else if (type === "show") {
+      const storedFavourites = JSON.parse(localStorage.getItem("favouriteTVShows") || "[]");
+      localStorage.setItem("favouriteTVShows", JSON.stringify([...storedFavourites, media.id]));
+    }
   };
 
   return (

@@ -5,15 +5,15 @@ import TVShowList from "../tvShowsList";
 import { BaseTVShowProps } from "../../types/interfaces";
 
 interface TemplateTVShowListPageProps {
-  title: string;
+  name: string;
   shows: BaseTVShowProps[];
   action: (show: BaseTVShowProps) => JSX.Element;
 }
 
-const TemplateTVShowListPage: React.FC<TemplateTVShowListPageProps> = ({ title, shows, action }) => {
+const TemplateTVShowListPage: React.FC<TemplateTVShowListPageProps> = ({ name, shows, action }) => {
   return (
     <>
-      <Header title={title} />
+      <Header name={name} />
       <Grid container spacing={5}>
         <TVShowList shows={shows} action={action} />
       </Grid>

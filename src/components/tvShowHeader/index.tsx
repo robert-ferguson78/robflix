@@ -4,7 +4,6 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import HomeIcon from "@mui/icons-material/Home";
 import { BaseTVShowProps } from "../../types/interfaces";
 import Avatar from "@mui/material/Avatar";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -40,10 +39,6 @@ const TVShowHeader: React.FC<BaseTVShowProps> = (show) => {
         }
       <Typography variant="h4" component="h3">
         {show.name}{" "}
-        <a href={show.homepage}>
-          <HomeIcon color="primary"  fontSize="large"/>
-        </a>
-
       </Typography>
       <IconButton aria-label="go forward">
         <ArrowForwardIcon color="primary" fontSize="large" />

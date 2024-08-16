@@ -193,9 +193,19 @@ export interface DiscoverTVShows {
 }
 
 export interface TVShowFilterUIProps {
+  onFilterValuesChange: (type: string, value: string) => void;
   onUserInput: (type: string, value: string) => void;
   titleFilter: string;
   genreFilter: string;
   sortOption: string;
   resetFilters: () => void;
+}
+
+// general interfaces
+
+export type BaseMediaProps = BaseMovieProps | BaseTVShowProps;
+
+export interface AddToFavouritesIconProps {
+  type: "movie" | "show";
+  media: BaseMediaProps;
 }

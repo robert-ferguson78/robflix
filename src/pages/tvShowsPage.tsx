@@ -51,10 +51,12 @@ const TVShowsPage: React.FC = () => {
   }, []);
 
   if (isLoading) {
+    console.log("Loading data...");
     return <Spinner />;
   }
 
   if (isError) {
+    console.error("Error fetching data:", error);
     return <h1>{error.message}</h1>;
   }
 
@@ -85,12 +87,12 @@ const TVShowsPage: React.FC = () => {
   return (
     <>
       <TemplateTVShowListPage
-        title="Discover TV Shows"
+        name="Discover TV Shows"
         shows={displayedShows}
         action={(show: BaseTVShowProps) => (
           <>
             <AddToPlaylistIcon {...show} />
-            <AddToFavouritesIcon {...show} />
+            <AddToFavouritesIcon type="show" media={show} />
           </>
         )}
       />

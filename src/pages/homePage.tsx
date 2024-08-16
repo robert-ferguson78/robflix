@@ -80,7 +80,7 @@ const HomePage: React.FC = () => {
         action={(movie: BaseMovieProps) => (
           <>
             <AddToPlaylistIcon {...movie} />
-            <AddToFavouritesIcon {...movie} />
+            <AddToFavouritesIcon type="movie" media={movie} />
           </>
         )}
       />
