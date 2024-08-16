@@ -1,9 +1,12 @@
-import React, { useState, useCallback } from "react";
-import { BaseMovieProps, Review } from "../types/interfaces";
+import React, { useState, useCallback, useEffect } from "react";
+import { BaseMovieProps, Review, Genre } from "../types/interfaces";
+import { getMovies, getTVGenres } from "../api/tmdb-api";
 
 interface MovieContextInterface {
     favourites: number[];
     mustPlaylist: number[];
+    movies: BaseMovieProps[];
+    genres: Genre[];
     addToFavourites: (movie: BaseMovieProps) => void;
     removeFromFavourites: (movie: BaseMovieProps) => void;
     removeFromPlaylist: (movie: BaseMovieProps) => void;
@@ -14,6 +17,8 @@ interface MovieContextInterface {
 const initialContextState: MovieContextInterface = {
     favourites: [],
     mustPlaylist: [],
+    movies: [],
+    genres: [],
     addToFavourites: () => {},
     removeFromFavourites: () => {},
     removeFromPlaylist: () => {},
@@ -27,9 +32,24 @@ const MoviesContextProvider: React.FC<React.PropsWithChildren> = ({ children }) 
     const [favourites, setFavourites] = useState<number[]>([]);
     const [myReviews, setMyReviews] = useState<Review[]>([]);
     const [mustPlaylist, setMustPlaylist] = useState<number[]>([]);
+    const [movies, setMovies] = useState<BaseMovieProps[]>([]);
+    const [genres, setGenres] = useState<Genre[]>([]);
+
+    useEffect(() => {
+        const fetchMoviesAndGenres = async () => {
+            try {
+                const moviesData = await getMovies();
+                const genresData = await getTVGenres();
+                setMovies(moviesData.results);
+                setGenres(genresData.genres);
+            } catch (error) {
+                console.error("Failed to fetch movies or genres:", error);
+            }
+        };
+        fetchMoviesAndGenres();
+    }, []);
 
     const addToFavourites = useCallback((movie: BaseMovieProps) => {
-        console.log("addToFavourites called with movie:", movie);
         setFavourites((prevFavourites) => {
             if (!prevFavourites.includes(movie.id)) {
                 return [...prevFavourites, movie.id];
@@ -39,22 +59,18 @@ const MoviesContextProvider: React.FC<React.PropsWithChildren> = ({ children }) 
     }, []);
 
     const removeFromFavourites = useCallback((movie: BaseMovieProps) => {
-        console.log("removeFromFavourites called with movie:", movie);
         setFavourites((prevFavourites) => prevFavourites.filter((mId) => mId !== movie.id));
     }, []);
 
     const removeFromPlaylist = useCallback((movie: BaseMovieProps) => {
-        console.log("removeFromPlaylist called with movie:", movie);
         setMustPlaylist((prevMustPlaylist) => prevMustPlaylist.filter((mId) => mId !== movie.id));
     }, []);
 
     const addReview = (movie: BaseMovieProps, review: Review) => {
-        console.log("addReview called with movie:", movie, "and review:", review);
         setMyReviews((prevReviews) => [...prevReviews, { ...review, movieId: movie.id }]);
     };
 
     const addToPlaylist = useCallback((movie: BaseMovieProps) => {
-        console.log("addToPlaylist called with movie:", movie);
         setMustPlaylist((prevMustPlaylist) => {
             if (!prevMustPlaylist.includes(movie.id)) {
                 return [...prevMustPlaylist, movie.id];
@@ -64,17 +80,17 @@ const MoviesContextProvider: React.FC<React.PropsWithChildren> = ({ children }) 
     }, []);
 
     return (
-        <MoviesContext.Provider
-            value={{
-                favourites,
-                mustPlaylist,
-                addToFavourites,
-                addToPlaylist,
-                removeFromFavourites,
-                removeFromPlaylist,
-                addReview,
-            }}
-        >
+        <MoviesContext.Provider value={{
+            favourites,
+            mustPlaylist,
+            movies,
+            genres,
+            addToFavourites,
+            removeFromFavourites,
+            removeFromPlaylist,
+            addReview,
+            addToPlaylist
+        }}>
             {children}
         </MoviesContext.Provider>
     );

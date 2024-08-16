@@ -1,5 +1,7 @@
 import { Poster } from "../types/interfaces";
 
+// Movie API calls
+
 export const getMovies = () => {
   return fetch(
     `https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US&include_adult=false&include_video=false&page=1`
@@ -121,4 +123,74 @@ export const upcomingMovies = async (page: number = 1) => {
     console.error("Failed to fetch upcoming movies:", error);
     throw error;
   }
+};
+
+// TV API calls
+
+export const fetchPopularTVShows = () => {
+  return fetch(
+    `https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US&include_adult=false&include_video=false&page=1`
+  ).then((response) => {
+    if (!response.ok)
+      throw new Error(`Unable to fetch TV shows. Response status: ${response.status}`);
+    return response.json();
+  })
+    .then((data) => {
+      console.log("Fetched TV shows data:", data);
+      return data.results;
+    })
+    .catch((error) => {
+      console.error("Error fetching TV shows:", error);
+      throw error;
+    });
+};
+
+export const fetchTVShow = (id: string) => {
+  return fetch(
+    `https://api.themoviedb.org/3/tv/${id}?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US`
+  ).then((response) => {
+    if (!response.ok) {
+      throw new Error(`Failed to get TV show data. Response status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .catch((error) => {
+    throw error;
+  });
+};
+
+export const getTVShows = () => {
+  return fetch(
+      `https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US&include_adult=false&include_video=false`
+    ).then((response) => {
+      if (!response.ok) {
+        throw new Error(`Failed to get TV show data. Response status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      throw error;
+    });
+};
+
+export const getTVGenres = () => {
+  return fetch(
+    `https://api.themoviedb.org/3/genre/tv/list?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US`
+  ).then((response) => {
+    if (!response.ok) {
+      throw new Error(`Failed to get TV show genres. Response status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then((data) => {
+    console.log("Fetched TV show genres data api:", data);
+    if (!data.genres || data.genres.length === 0) {
+      throw new Error("No genres found in the response.");
+    }
+    return data.genres;
+  })
+  .catch((error) => {
+    console.error("Error fetching TV show genres:", error);
+    throw error;
+  });
 };

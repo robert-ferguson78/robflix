@@ -10,6 +10,7 @@ import UpcomingPage from "./pages/upcomingPage";
 import AddFantasyMoviePage from "./pages/addFantasyMoviePage";
 import FantasyMoviesPage from "./pages/fantasyMoviePage";
 import FantasyMovieDetailsPage from "./pages/fantasyMovieDetailsPage";
+import TVShowsPage from "./pages/tvShowsPage";
 import SiteHeader from './components/siteHeader';
 import MoviesContextProvider from "./contexts/moviesContext";
 import { QueryClientProvider, QueryClient } from "react-query";
@@ -54,6 +55,7 @@ const App = () => {
               <Route path="/movies/fantasy-movies/:id" element={<FantasyMovieDetailsPageWithAuth />} />
               <Route path="/movies/upcoming" element={<UpcomingPage />} />
               <Route path="/" element={<HomePage />} />
+              <Route path="/tv-shows" element={<TVShowsPage />} />
               <Route path="*" element={<Navigate to="/" />} />
               <Route path="/login" element={<LoginPage />} />
             </Routes>

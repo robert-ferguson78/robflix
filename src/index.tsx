@@ -11,8 +11,8 @@ const container = document.getElementById('root');
 const root = ReactDOM.createRoot(container!); // Create a root.
 
 root.render(
+  // make the authentication context and query client available to all components within App
   <React.StrictMode>
-    {/* make the authentication context and query client available to all components within App */}
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <App />

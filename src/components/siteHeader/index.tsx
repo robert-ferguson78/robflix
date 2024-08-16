@@ -44,12 +44,13 @@ const SiteHeader: React.FC = () => {
   }, []);
 
   const menuOptions = [
-    { id: 1, label: "Home", path: "/" },
+    { id: 1, label: "Movies", path: "/" },
     { id: 2, label: "Upcoming", path: "/movies/upcoming" },
     { id: 3, label: "Favorites", path: "/movies/favourites" },
     { id: 4, label: "Must Watch", path: "/movies/playlist" },
     { id: 5, label: "Add Fantasy Movie", path: "/movies/fantasy-movie-upload" },
     { id: 6, label: "Fantasy Movies", path: "/movies/fantasy-movies" },
+    { id: 7, label: "TV", path: "/tv-shows" },
   ];
 
   const handleMenuSelect = (pageURL: string) => {

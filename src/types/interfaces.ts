@@ -1,3 +1,4 @@
+// Movie interfaces
 export interface Genre {
   id: number;
   name: string;
@@ -141,4 +142,60 @@ export interface FilterMoviesCardProps {
 export interface Poster {
   file_path: string;
   vote_count: number;
+}
+
+// TV show interfaces
+
+export interface BaseTVShowProps {
+  name: string;
+  id: number;
+  overview: string;
+  first_air_date: string;
+  vote_average: number;
+  popularity: number;
+  poster_path?: string;
+  genre_ids?: number[];
+  genres?: Genre[];
+}
+
+export interface BaseTVShowListProps {
+  shows: BaseTVShowProps[];
+  action: (show: BaseTVShowProps) => React.ReactNode;
+}
+
+export interface TVShowDetailsProps extends BaseTVShowProps {
+  genres: Genre[];
+  production_companies: {
+    id: number;
+    logo_path: string;
+    name: string;
+    origin_country: string;
+  }[];
+  seasons: {
+    season_number: number;
+    episode_count: number;
+    air_date: string;
+  }[];
+}
+
+export interface FilterTVShowsCardProps {
+  onUserInput: (type: string, value: string) => void;
+  titleFilter: string;
+  genreFilter: string;
+  sortOption: string;
+}
+
+export interface DiscoverTVShows {
+  page: number;
+  total_pages: number;
+  total_results: number;
+  results: BaseTVShowProps[];
+}
+
+export interface TVShowFilterUIProps {
+  onUserInput: (type: string, value: string) => void;
+  titleFilter: string;
+  genreFilter: string;
+  sortOption: string;
+  resetFilters: () => void;
 }
