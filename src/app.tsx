@@ -13,6 +13,7 @@ import FantasyMovieDetailsPage from "./pages/fantasyMovieDetailsPage";
 import TVShowsPage from "./pages/tvShowsPage";
 import SiteHeader from './components/siteHeader';
 import MoviesContextProvider from "./contexts/moviesContext";
+import TVShowsContextProvider from "./contexts/tvShowsContext"; 
 import { QueryClientProvider, QueryClient } from "react-query";
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { AuthProvider } from './contexts/authContext';
@@ -44,21 +45,23 @@ const App = () => {
         <BrowserRouter>
           <SiteHeader />
           <MoviesContextProvider>
-            <Routes>
-              <Route path="/reviews/form/:movieId" element={<AddMovieReviewPageWithAuth />} />
-              <Route path="/reviews/:id" element={<MovieReviewPageWithAuth />} />
-              <Route path="/movies/favourites" element={<FavouriteMoviesPageWithAuth />} />
-              <Route path="/movies/playlist" element={<PlaylistMoviesPageWithAuth />} />
-              <Route path="/movies/:id" element={<MoviePage />} />
-              <Route path="/movies/fantasy-movie-upload" element={<AddFantasyMoviePageWithAuth />} />
-              <Route path="/movies/fantasy-movies" element={<FantasyMoviesPageWithAuth />} />
-              <Route path="/movies/fantasy-movies/:id" element={<FantasyMovieDetailsPageWithAuth />} />
-              <Route path="/movies/upcoming" element={<UpcomingPage />} />
-              <Route path="/" element={<HomePage />} />
-              <Route path="/tv-shows" element={<TVShowsPage />} />
-              <Route path="*" element={<Navigate to="/" />} />
-              <Route path="/login" element={<LoginPage />} />
-            </Routes>
+            <TVShowsContextProvider> {/* Wrap TVShowsContextProvider here */}
+              <Routes>
+                <Route path="/reviews/form/:movieId" element={<AddMovieReviewPageWithAuth />} />
+                <Route path="/reviews/:id" element={<MovieReviewPageWithAuth />} />
+                <Route path="/movies/favourites" element={<FavouriteMoviesPageWithAuth />} />
+                <Route path="/movies/playlist" element={<PlaylistMoviesPageWithAuth />} />
+                <Route path="/movies/:id" element={<MoviePage />} />
+                <Route path="/movies/fantasy-movie-upload" element={<AddFantasyMoviePageWithAuth />} />
+                <Route path="/movies/fantasy-movies" element={<FantasyMoviesPageWithAuth />} />
+                <Route path="/movies/fantasy-movies/:id" element={<FantasyMovieDetailsPageWithAuth />} />
+                <Route path="/movies/upcoming" element={<UpcomingPage />} />
+                <Route path="/" element={<HomePage />} />
+                <Route path="/tv-shows" element={<TVShowsPage />} />
+                <Route path="*" element={<Navigate to="/" />} />
+                <Route path="/login" element={<LoginPage />} />
+              </Routes>
+            </TVShowsContextProvider>
           </MoviesContextProvider>
         </BrowserRouter>
       </AuthProvider>

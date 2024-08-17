@@ -9,13 +9,13 @@ import Avatar from "@mui/material/Avatar";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 
 const styles = {
-  root: {  
+  root: {
     display: "flex",
     justifyContent: "space-around",
     alignItems: "center",
     flexWrap: "wrap",
-    padding: 1.5,
-  },
+    marginBottom: 1.5,
+},
   avatar: {
     backgroundColor: "rgb(255, 0, 0)",
   },

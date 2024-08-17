@@ -10,14 +10,22 @@ interface TemplateTVShowListPageProps {
   action: (show: BaseTVShowProps) => JSX.Element;
 }
 
+const styles = {
+  root: { 
+    backgroundColor: "#bfbfbf",
+  }
+};
+
 const TemplateTVShowListPage: React.FC<TemplateTVShowListPageProps> = ({ name, shows, action }) => {
   return (
-    <>
-      <Header name={name} />
-      <Grid container spacing={5}>
-        <TVShowList shows={shows} action={action} />
+    <Grid container sx={styles.root}>
+      <Grid item xs={12}>
+        <Header name={name} />
       </Grid>
-    </>
+      <Grid item container spacing={5}>
+        <TVShowList action={action} shows={shows} />
+      </Grid>
+    </Grid>
   );
 };
 
