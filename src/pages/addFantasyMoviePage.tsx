@@ -38,10 +38,10 @@ const AddFantasyMoviePage = () => {
     const [production, setProduction] = useState('');
     const [releaseDate, setReleaseDate] = useState('');
     const [overview, setOverview] = useState('');
-    const [posterFile, setPosterFile] = useState<File | null>(null);
-    const [posterPreview, setPosterPreview] = useState<string | null>(null);
-    const [actors, setActors] = useState([{ name: '', biography: '', profileFile: null as File | null }]);
-    const [actorPreviews, setActorPreviews] = useState<(string | null)[]>([]);
+    const [posterFile, setPosterFile] = useState<File | undefined>(undefined);
+    const [posterPreview, setPosterPreview] = useState<string | undefined>(undefined);
+    const [actors, setActors] = useState([{ name: '', biography: '', profileFile: undefined as File | undefined }]);
+    const [actorPreviews, setActorPreviews] = useState<(string | undefined)[]>([]);
     const [userUid, setUserUid] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
@@ -58,13 +58,13 @@ const AddFantasyMoviePage = () => {
         return () => unsubscribe();
     }, []);
 
-    const handleActorChange = (index: number, field: ActorField, value: string | File | null) => {
+    const handleActorChange = (index: number, field: ActorField, value: string | File | undefined) => {
         const newActors = [...actors];
         const newActorPreviews = [...actorPreviews];
 
         if (field === 'profileFile') {
-            newActors[index][field] = value as File | null;
-            newActorPreviews[index] = value ? URL.createObjectURL(value as File) : null;
+            newActors[index][field] = value as File | undefined;
+            newActorPreviews[index] = value ? URL.createObjectURL(value as File) : undefined;
         } else {
             newActors[index][field] = value as string;
         }
@@ -77,14 +77,14 @@ const AddFantasyMoviePage = () => {
         setGenres(event.target.value as string[]);
     };
 
-    const handlePosterChange = (file: File | null) => {
+    const handlePosterChange = (file: File | undefined) => {
         setPosterFile(file);
-        setPosterPreview(file ? URL.createObjectURL(file) : null);
+        setPosterPreview(file ? URL.createObjectURL(file) : undefined);
     };
 
     const addActorField = () => {
-        setActors([...actors, { name: '', biography: '', profileFile: null }]);
-        setActorPreviews([...actorPreviews, null]);
+        setActors([...actors, { name: '', biography: '', profileFile: undefined }]);
+        setActorPreviews([...actorPreviews, undefined]);
     };
 
     const removeActorField = (index: number) => {
@@ -176,10 +176,10 @@ const AddFantasyMoviePage = () => {
             setProduction('');
             setReleaseDate('');
             setOverview('');
-            setPosterFile(null);
-            setPosterPreview(null);
-            setActors([{ name: '', biography: '', profileFile: null }]);
-            setActorPreviews([null]);
+            setPosterFile(undefined);
+            setPosterPreview(undefined);
+            setActors([{ name: '', biography: '', profileFile: undefined }]);
+            setActorPreviews([undefined]);
             
             setSuccessMessage('Fantasy movie and actor information added successfully!');
             setTimeout(() => setSuccessMessage(''), 2000);
@@ -265,7 +265,7 @@ const AddFantasyMoviePage = () => {
                     <input
                         type="file"
                         hidden
-                        onChange={(e) => handlePosterChange(e.target.files ? e.target.files[0] : null)}
+                        onChange={(e) => handlePosterChange(e.target.files ? e.target.files[0] : undefined)}
                     />
                 </Button>
                 {posterPreview && (
@@ -306,7 +306,7 @@ const AddFantasyMoviePage = () => {
                             <input
                                 type="file"
                                 hidden
-                                onChange={(e) => handleActorChange(index, 'profileFile', e.target.files ? e.target.files[0] : null)}
+                                onChange={(e) => handleActorChange(index, 'profileFile', e.target.files ? e.target.files[0] : undefined)}
                             />
                         </Button>
                         {actorPreviews[index] && (
