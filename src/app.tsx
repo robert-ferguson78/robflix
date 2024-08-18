@@ -11,6 +11,7 @@ import AddFantasyMoviePage from "./pages/addFantasyMoviePage";
 import FantasyMoviesPage from "./pages/fantasyMoviePage";
 import FantasyMovieDetailsPage from "./pages/fantasyMovieDetailsPage";
 import TVShowsPage from "./pages/tvShowsPage";
+import TVPage from "./pages/tvShowDetailsPage";
 import SiteHeader from './components/siteHeader';
 import MoviesContextProvider from "./contexts/moviesContext";
 import TVShowsContextProvider from "./contexts/tvShowsContext"; 
@@ -58,6 +59,7 @@ const App = () => {
                 <Route path="/movies/upcoming" element={<UpcomingPage />} />
                 <Route path="/" element={<HomePage />} />
                 <Route path="/tv-shows" element={<TVShowsPage />} />
+                <Route path="/tv-shows/:id" element={<TVPage />} />
                 <Route path="*" element={<Navigate to="/" />} />
                 <Route path="/login" element={<LoginPage />} />
               </Routes>

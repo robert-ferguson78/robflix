@@ -209,3 +209,8 @@ export interface AddToFavouritesIconProps {
   type: "movie" | "show";
   media: BaseMediaProps;
 }
+
+export interface TVShowImage {
+  file_path: string;
+  vote_count: number;
+}

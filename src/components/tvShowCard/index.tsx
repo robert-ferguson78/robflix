@@ -79,7 +79,7 @@ const TVShowCard: React.FC<TVShowCardProps> = ({ show, action }) => {
       </CardContent>
       <CardActions disableSpacing>
         {action(show)}
-        <Link to={`/tvshows/${show.id}`}>
+        <Link to={`/tv-shows/${show.id}`}>
           <Button variant="outlined" size="medium" color="primary">
             More Info ...
           </Button>

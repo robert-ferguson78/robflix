@@ -194,3 +194,57 @@ export const getTVGenres = () => {
     throw error;
   });
 };
+
+export const getTVShowReviews = (id: string | number) => {
+  return fetch(
+    `https://api.themoviedb.org/3/tv/${id}/reviews?api_key=${import.meta.env.VITE_TMDB_KEY}`
+  )
+    .then((res) => res.json())
+    .then((json) => {
+      return json.results;
+    })
+    .catch((error) => {
+      throw error;
+    });
+};
+
+export const getTVShow = (id: string) => {
+  return fetch(
+    `https://api.themoviedb.org/3/tv/${id}?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US`
+  ).then((response) => {
+    if (!response.ok) {
+      if (response.status === 404) {
+        throw new Error(`TV show with ID ${id} not found.`);
+      }
+      throw new Error(`Failed to get TV show data. Response status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .catch((error) => {
+    throw error;
+  });
+};
+
+export const getFeaturedTVShowImage = (id: string | number) => {
+  return fetch(
+    `https://api.themoviedb.org/3/tv/${id}?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US`
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Failed to fetch TV show details");
+      }
+      return response.json();
+    })
+    .then((show) => {
+      if (!show.poster_path) {
+        throw new Error("No poster found");
+      }
+      return {
+        file_path: show.poster_path,
+        vote_count: show.vote_count,
+      };
+    })
+    .catch((error) => {
+      throw error;
+    });
+};
