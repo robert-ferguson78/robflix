@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import FilterCard from "../filterTVShowsCard";
 import Fab from "@mui/material/Fab";
 import Drawer from "@mui/material/Drawer";
+import Button from "@mui/material/Button";
 import { TVShowFilterUIProps } from "../../types/interfaces";
 
 const styles = {
@@ -17,10 +18,11 @@ const styles = {
 };
 
 const TVShowFilterUI: React.FC<TVShowFilterUIProps> = ({
-    onFilterValuesChange,
+    onUserInput,
     titleFilter,
     genreFilter,
     sortOption,
+    resetFilters,
   }) => {
     const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -40,11 +42,17 @@ const TVShowFilterUI: React.FC<TVShowFilterUIProps> = ({
                 onClose={() => setDrawerOpen(false)}
             >
                 <FilterCard
-                    onUserInput={onFilterValuesChange}
+                    onUserInput={onUserInput}
                     titleFilter={titleFilter}
                     genreFilter={genreFilter}
                     sortOption={sortOption}
                 />
+                <Button
+                    variant="outlined"
+                    onClick={resetFilters}
+                    color="primary">
+                    Reset Filters
+                </Button>
             </Drawer>
         </>
     );

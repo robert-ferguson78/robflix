@@ -67,6 +67,10 @@ const TVShowsPage: React.FC = () => {
     setFilterValues(updatedFilterSet);
   };
 
+  const resetFilters = () => {
+    setFilterValues(createFilters());
+  };
+
   const shows = data?.results ?? [];
   console.log("TV Shows before filtering:", shows);
   console.log("Filter values:", filterValues);
@@ -97,10 +101,11 @@ const TVShowsPage: React.FC = () => {
         )}
       />
       <TVShowFilterUI
-        onFilterValuesChange={changeFilterValues}
+        onUserInput={changeFilterValues}
         titleFilter={filterValues[0].value}
         genreFilter={filterValues[1].value}
         sortOption={filterValues[2].value}
+        resetFilters={resetFilters}
       />
     </>
   );
