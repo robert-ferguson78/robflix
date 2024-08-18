@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import TemplateTVShowListPage from '../components/templateTVShowListPage';
-import { BaseTVShowProps, Genre } from "../types/interfaces";
+import { BaseTVShowProps, Genre, DiscoverTVShows } from "../types/interfaces";
 import { getTVShows, getTVGenres } from "../api/tmdb-api";
 import useFiltering from "../hooks/useFiltering";
 import { tvTitleFilter, tvGenreFilter, tvSortFilter } from "../filters";
 import TVShowFilterUI from "../components/tvShowFilterUI";
-import { DiscoverTVShows } from "../types/interfaces";
 import { useQuery } from "react-query";
 import Spinner from "../components/spinner";
 import AddToFavouritesIcon from '../components/cardIcons/addToFavourites';
@@ -71,7 +70,7 @@ const TVShowsPage: React.FC = () => {
     setFilterValues(createFilters());
   };
 
-  const shows = data?.results ?? [];
+  const shows: BaseTVShowProps[] = data?.results ?? [];
   console.log("TV Shows before filtering:", shows);
   console.log("Filter values:", filterValues);
 

@@ -242,3 +242,8 @@ export interface Filter {
   /* eslint-enable @typescript-eslint/no-explicit-any */
   type?: 'filter' | 'sort';
 }
+
+export interface HeaderProps {
+  title?: string;
+  name?: string;
+}
