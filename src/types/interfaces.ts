@@ -178,6 +178,10 @@ export interface TemplateTVShowListPageProps extends BaseTVShowListProps {
   name: string;
 }
 
+export interface TVShowHeader {
+  name: string;
+}
+
 export interface TVShowDetailsProps extends BaseTVShowProps {
   genres: Genre[];
   production_companies: {
@@ -217,6 +221,11 @@ export interface TVShowFilterUIProps {
   resetFilters: () => void;
 }
 
+export interface TVShowImage {
+  file_path: string;
+  vote_count: number;
+}
+
 // general interfaces
 
 export type BaseMediaProps = BaseMovieProps | BaseTVShowProps;
@@ -226,7 +235,11 @@ export interface AddToFavouritesIconProps {
   media: BaseMediaProps;
 }
 
-export interface TVShowImage {
-  file_path: string;
-  vote_count: number;
+export interface Filter {
+  name: string;
+  value: string;
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  condition: ((item: any, value: string) => boolean) | ((items: any[], value: string) => any[]);
+  /* eslint-enable @typescript-eslint/no-explicit-any */
+  type?: 'filter' | 'sort';
 }

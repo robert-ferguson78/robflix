@@ -1,13 +1,5 @@
 import { useState } from "react";
-
-interface Filter {
-  name: string;
-  value: string;
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  condition: (item: any, value: string) => boolean;
-  /* eslint-enable @typescript-eslint/no-explicit-any */
-  type?: 'filter' | 'sort';
-}
+import { Filter } from "../types/interfaces";
 
 const useFiltering = (filters: Filter[]) => {
   const [filterValues, setFilterValues] = useState(() => {
@@ -17,10 +9,10 @@ const useFiltering = (filters: Filter[]) => {
     }));
   });
 
-  const filteringConditions = filters.filter(f => f.type !== 'sort').map((f) => f.condition);
-  const sortingConditions = filters.filter(f => f.type === 'sort').map((f) => f.condition);
-
   /* eslint-disable @typescript-eslint/no-explicit-any */
+  const filteringConditions = filters.filter(f => f.type !== 'sort').map((f) => f.condition as (item: any, value: string) => boolean);
+  const sortingConditions = filters.filter(f => f.type === 'sort').map((f) => f.condition as (items: any[], value: string) => any[]);
+
   const filterFunction = (collection: any) => {
     let filteredData = filteringConditions.reduce((data, conditionFn, index) => {
       return data.filter((item: any) => conditionFn(item, filterValues[index].value));
