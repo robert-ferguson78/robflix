@@ -38,10 +38,18 @@ export interface MovieDetailsProps extends BaseMovieProps {
   }[];
   production_companies: {
     id: number;
-    logo_path: string;
+    logo_path: string | null;
     name: string;
     origin_country: string;
   }[];
+  adult?: boolean; // Optional propertys
+  backdrop_path?: string;
+  belongs_to_collection?: {
+    id: number;
+    name: string;
+    poster_path: string;
+    backdrop_path: string;
+  };
 }
 
 export interface MovieImage {
@@ -167,7 +175,7 @@ export interface TVShowDetailsProps extends BaseTVShowProps {
   genres: Genre[];
   production_companies: {
     id: number;
-    logo_path: string;
+    logo_path: string | null;
     name: string;
     origin_country: string;
   }[];
