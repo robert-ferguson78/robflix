@@ -85,6 +85,7 @@ export interface DiscoverMovies {
 }
 
 export interface Review {
+  id: number;
   author: string;
   content: string;
   agree: boolean;
@@ -164,6 +165,7 @@ export interface BaseTVShowProps {
   poster_path?: string;
   genre_ids?: number[];
   genres?: Genre[];
+  vote_count: number;
 }
 
 export interface BaseTVShowListProps {
@@ -184,6 +186,7 @@ export interface TVShowDetailsProps extends BaseTVShowProps {
     episode_count: number;
     air_date: string;
   }[];
+  episode_run_time?: number[]; // Optional as not every show has this property
 }
 
 export interface FilterTVShowsCardProps {

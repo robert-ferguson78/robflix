@@ -30,7 +30,8 @@ export const MoviesContext = React.createContext<MovieContextInterface>(initialC
 
 const MoviesContextProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     const [favourites, setFavourites] = useState<number[]>([]);
-    const [myReviews, setMyReviews] = useState<Review[]>([]);
+    // Usimg _ to ignore the value of the state
+    const [_, setMyReviews] = useState<Review[]>([]);
     const [mustPlaylist, setMustPlaylist] = useState<number[]>([]);
     const [movies, setMovies] = useState<BaseMovieProps[]>([]);
     const [genres, setGenres] = useState<Genre[]>([]);
