@@ -8,7 +8,7 @@ import TVShowFilterUI from "../components/tvShowFilterUI";
 import { useQuery } from "react-query";
 import Spinner from "../components/spinner";
 import AddToFavouritesIcon from '../components/cardIcons/addToFavourites';
-import AddToPlaylistIcon from "../components/cardIcons/addToPlaylist";
+// import AddToPlaylistIcon from "../components/cardIcons/addToPlaylist";
 
 const createFilters = () => {
   const titleFiltering = {
@@ -94,7 +94,7 @@ const TVShowsPage: React.FC = () => {
         shows={displayedShows}
         action={(show: BaseTVShowProps) => (
           <>
-            <AddToPlaylistIcon {...show} />
+            {/* <AddToPlaylistIcon {...show} /> */}
             <AddToFavouritesIcon type="show" media={show} />
           </>
         )}
