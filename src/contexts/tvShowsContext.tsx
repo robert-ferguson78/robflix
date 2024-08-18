@@ -30,7 +30,8 @@ export const TVShowsContext = React.createContext<TVShowContextInterface>(initia
 
 const TVShowsContextProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     const [favourites, setFavourites] = useState<number[]>([]);
-    const [myReviews, setMyReviews] = useState<Review[]>([]);
+    // Usimg _ to ignore the value of the state
+    const [_, setMyReviews] = useState<Review[]>([]);
     const [mustPlaylist, setMustPlaylist] = useState<number[]>([]);
     const [tvShows, setTVShows] = useState<BaseTVShowProps[]>([]);
     const [genres, setGenres] = useState<Genre[]>([]);

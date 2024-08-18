@@ -173,6 +173,11 @@ export interface BaseTVShowListProps {
   action: (show: BaseTVShowProps) => React.ReactNode;
 }
 
+
+export interface TemplateTVShowListPageProps extends BaseTVShowListProps {
+  name: string;
+}
+
 export interface TVShowDetailsProps extends BaseTVShowProps {
   genres: Genre[];
   production_companies: {
