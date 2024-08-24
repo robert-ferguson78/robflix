@@ -72,6 +72,10 @@ const HomePage: React.FC = () => {
   const displayedMovies = filterFunction(movies);
   console.log("Displayed Movies after filtering:", displayedMovies);
 
+  const resetFilters = () => {
+    setFilterValues(createFilters());
+  };
+
   return (
     <>
       <PageTemplate
@@ -89,6 +93,7 @@ const HomePage: React.FC = () => {
         titleFilter={filterValues[0].value}
         genreFilter={filterValues[1].value}
         sortOption={filterValues[2].value}
+        resetFilters={resetFilters}
       />
     </>
   );

@@ -139,6 +139,7 @@ export interface MovieFilterUIProps {
   titleFilter: string;
   genreFilter: string;
   sortOption: string;
+  resetFilters: () => void;
 }
 
 export interface FilterMoviesCardProps {

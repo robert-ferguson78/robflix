@@ -127,25 +127,29 @@ const PlaylistMoviesPage: React.FC = () => {
     setFilterValues(updatedFilterSet);
   };
 
+  const resetFilters = () => {
+    console.log("Resetting filters");
+    setFilterValues(createFilters());
+  };
+
   return (
     <>
       <PageTemplate
         title="Must Watch Movies"
         movies={displayedMovies}
-        action={(movie) => {
-          return (
-            <>
-              <RemoveFromPlaylistIcon {...movie} /> {/* Correct component */}
-              <WriteReview {...movie} />
-            </>
-          );
-        }}
+        action={(movie) => (
+          <>
+            <RemoveFromPlaylistIcon {...movie} />
+            <WriteReview {...movie} />
+          </>
+        )}
       />
       <MovieFilterUI
         onFilterValuesChange={changeFilterValues}
         titleFilter={filterValues[0].value}
         genreFilter={filterValues[1].value}
         sortOption={filterValues[2].value}
+        resetFilters={resetFilters}
       />
     </>
   );
