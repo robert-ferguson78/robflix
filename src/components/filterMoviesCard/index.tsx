@@ -28,8 +28,8 @@ const styles = {
   },
 };
 
-const FilterMoviesCard: React.FC<FilterMoviesCardProps> = ({ titleFilter, genreFilter, sortOption, onUserInput }) => {
-  const { data, error, isLoading, isError } = useQuery<GenreData, Error>("genres", getGenres);
+const FilterMoviesCard: React.FC<FilterMoviesCardProps> = ({ titleFilter, genreFilter, sortOption, onUserInput, language }) => {
+  const { data, error, isLoading, isError } = useQuery<GenreData, Error>(["genres", language], () => getGenres(language));
   const [sortOptionState, setSortOptionState] = useState<string>(sortOption);
 
   if (isLoading) {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import FilterCard from "../filterTVShowsCard";
 import Fab from "@mui/material/Fab";
 import Drawer from "@mui/material/Drawer";
@@ -23,8 +23,13 @@ const TVShowFilterUI: React.FC<TVShowFilterUIProps> = ({
     genreFilter,
     sortOption,
     resetFilters,
+    language,
   }) => {
     const [drawerOpen, setDrawerOpen] = useState(false);
+
+    useEffect(() => {
+        console.log(`Language prop filterUI: ${language}`);
+    }, [language]);
 
     return (
         <>
@@ -46,6 +51,7 @@ const TVShowFilterUI: React.FC<TVShowFilterUIProps> = ({
                     titleFilter={titleFilter}
                     genreFilter={genreFilter}
                     sortOption={sortOption}
+                    language={language}
                 />
                 <Button
                     variant="outlined"

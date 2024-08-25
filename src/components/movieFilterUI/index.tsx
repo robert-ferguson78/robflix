@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import FilterCard from "../filterMoviesCard";
 import Fab from "@mui/material/Fab";
 import Drawer from "@mui/material/Drawer";
@@ -23,8 +23,13 @@ const MovieFilterUI: React.FC<MovieFilterUIProps> = ({
   genreFilter,
   sortOption,
   resetFilters,
+  language,
 }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
+
+  useEffect(() => {
+    console.log(`Language prop: ${language}`);
+  }, [language]);
 
   return (
     <>
@@ -46,6 +51,7 @@ const MovieFilterUI: React.FC<MovieFilterUIProps> = ({
           titleFilter={titleFilter}
           genreFilter={genreFilter}
           sortOption={sortOption}
+          language={language}
         />
         <Button
           variant="outlined"

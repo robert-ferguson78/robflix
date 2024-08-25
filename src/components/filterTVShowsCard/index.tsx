@@ -10,7 +10,7 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SortIcon from '@mui/icons-material/Sort';
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { getTVGenres } from "../../api/tmdb-api"; // Ensure this function fetches TV show genres
+import { getTVGenres } from "../../api/tmdb-api";
 import { useQuery } from "react-query";
 import Spinner from '../spinner';
 
@@ -19,7 +19,6 @@ const styles = {
     maxWidth: 345,
   },
   media: { height: 300 },
- 
   formControl: {
     margin: 1,
     minWidth: 220,
@@ -27,23 +26,33 @@ const styles = {
   },
 };
 
-const FilterTVShowsCard: React.FC<FilterTVShowsCardProps> = ({ titleFilter, genreFilter, sortOption, onUserInput }) => {
-  const { data, error, isLoading, isError } = useQuery<Genre[], Error>("tvShowGenres", getTVGenres);
-  const [sortOptionState, setSortOptionState] = useState<string>(sortOption);
+const FilterTVShowsCard: React.FC<FilterTVShowsCardProps> = ({ titleFilter, genreFilter, sortOption, onUserInput, language }) => {
+  console.log(`Language prop tv show card: ${language}`); // Debugging log
 
-  console.log("Query status:", { isLoading, isError, error, data }); // Log the query status
+  const { data, error, isLoading, isError } = useQuery<Genre[], Error>(["genres", language], () => getTVGenres(language), {
+    onSuccess: (data) => {
+      console.log("Raw data from API:", data); // Log raw data
+    },
+    onError: (error) => {
+      console.error("Error fetching genres:", error); // Log any errors
+    }
+  });
+  const [sortOptionState, setSortOptionState] = useState<string>(sortOption);
 
   if (isLoading) {
     return <Spinner />;
   }
   if (isError) {
-    console.error("Error fetching data:", error); // Log the error
     return <h1>{(error as Error).message}</h1>;
   }
-  const genres = data || [];
-  if (genres[0].name !== "All") {
+  console.log("Data before assigning to genres:", data);
+  const genres: Genre[] = data || [];
+  console.log("Fetched genres:", genres); // Log the genres
+  if (genres.length > 0 && genres[0].name !== "All") {
     genres.unshift({ id: 0, name: "All" });
   }
+
+  console.log("Fetched genres:", genres); // Log the genres
 
   const handleChange = (e: SelectChangeEvent, type: FilterOption, value: string) => {
     e.preventDefault();
