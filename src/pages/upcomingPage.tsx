@@ -67,6 +67,10 @@ const UpcomingMoviesPage: React.FC = () => {
     setFilterValues(updatedFilterSet);
   };
 
+  const resetFilters = () => {
+    setFilterValues(createFilters());
+  };
+
   const movies = data ? data.results : [];
   const displayedMovies = filterFunction(movies);
 
@@ -87,6 +91,7 @@ const UpcomingMoviesPage: React.FC = () => {
         titleFilter={filterValues[0].value}
         genreFilter={filterValues[1].value}
         sortOption={filterValues[2].value}
+        resetFilters={resetFilters}
       />
       <div>
         <span>Current Page: {page}</span>
