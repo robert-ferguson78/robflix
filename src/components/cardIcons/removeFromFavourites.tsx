@@ -5,9 +5,11 @@ import { MoviesContext } from "../../contexts/moviesContext";
 import { BaseMovieProps } from "../../types/interfaces";
 import { userFirestoreStore } from "../../models/user-firestore-store";
 import { auth } from "../../firebase/firebaseConfig";
+import { useQueryClient } from "react-query";
 
 const RemoveFromFavouritesIcon: React.FC<BaseMovieProps> = (movie) => {
   const context = useContext(MoviesContext);
+  const queryClient = useQueryClient();
 
   const removeFromLocalStorage = (movieId: number) => {
     const storedFavourites = JSON.parse(localStorage.getItem("favouriteMovies") || "[]");
@@ -29,6 +31,9 @@ const RemoveFromFavouritesIcon: React.FC<BaseMovieProps> = (movie) => {
 
     // Remove from local storage
     removeFromLocalStorage(movie.id);
+
+    // Invalidate the favouriteMovies query to trigger a refetch
+    queryClient.invalidateQueries("favouriteMovies");
   };
 
   return (

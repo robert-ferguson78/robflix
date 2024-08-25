@@ -5,9 +5,11 @@ import { MoviesContext } from "../../contexts/moviesContext";
 import { BaseMovieProps } from "../../types/interfaces";
 import { userFirestoreStore } from "../../models/user-firestore-store";
 import { auth } from "../../firebase/firebaseConfig";
+import { useQueryClient } from "react-query";
 
 const RemoveFromPlaylistIcon: React.FC<BaseMovieProps> = (movie) => {
   const context = useContext(MoviesContext);
+  const queryClient = useQueryClient();
 
   const removeFromLocalStorage = (movieId: number) => {
     const storedPlaylist = JSON.parse(localStorage.getItem("playlistMovies") || "[]");
@@ -24,16 +26,25 @@ const RemoveFromPlaylistIcon: React.FC<BaseMovieProps> = (movie) => {
 
     context.removeFromPlaylist(movie);
 
-    const userId = auth.currentUser?.uid; // Get the authenticated user's ID
+    const userId = auth.currentUser?.uid;
     if (userId) {
       console.log("User ID:", userId);
-      await userFirestoreStore.removeWatchListMovie(userId, movie.id.toString()); // Remove the movie from Firestore
+      try {
+        console.log(`Removing movie with ID: ${movie.id} from user with ID: ${userId}`);
+        await userFirestoreStore.removeWatchListMovie(userId, movie.id.toString());
+        console.log(`Successfully removed movie with ID: ${movie.id} from Firestore`);
+      } catch (error) {
+        console.error(`Failed to remove movie with ID: ${movie.id} from Firestore`, error);
+      }
     } else {
       console.error("User is not authenticated");
     }
 
     // Remove from local storage
     removeFromLocalStorage(movie.id);
+
+    // Invalidate the playlistMovies query to trigger a refetch
+    queryClient.invalidateQueries("playlistMovies");
   };
 
   return (

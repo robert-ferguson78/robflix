@@ -1,7 +1,7 @@
-import React, { useContext, useMemo } from "react";
+import React, { useContext, useMemo, useEffect } from "react";
 import PageTemplate from "../components/templateMovieListPage";
 import { MoviesContext } from "../contexts/moviesContext";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { getMovie } from "../api/tmdb-api";
 import Spinner from "../components/spinner";
 import useFiltering from "../hooks/useFiltering";
@@ -20,7 +20,8 @@ const createFilters = () => [
 ];
 
 const PlaylistMoviesPage: React.FC = () => {
-  useContext(MoviesContext);
+  const { mustPlaylist, setMustPlaylist } = useContext(MoviesContext);
+  const queryClient = useQueryClient();
   const { filterValues, setFilterValues, filterFunction } = useFiltering(createFilters());
 
   const fetchPlaylistMovies = async (): Promise<number[]> => {
@@ -44,14 +45,17 @@ const PlaylistMoviesPage: React.FC = () => {
     {
       staleTime: 1000 * 60 * 5, // 5 minutes
       cacheTime: 1000 * 60 * 30, // 30 minutes
+      onSuccess: (data) => {
+        setMustPlaylist(data);
+      },
     }
   );
 
   const { data: playlistMovies, isLoading: isMoviesLoading } = useQuery(
-    ["playlistMoviesDetails", localPlaylist],
+    ["playlistMoviesDetails", mustPlaylist],
     async () => {
-      if (!localPlaylist) return [];
-      const moviePromises = localPlaylist.map((movieId: number) => getMovie(movieId.toString()));
+      if (!mustPlaylist || mustPlaylist.length === 0) return [];
+      const moviePromises = mustPlaylist.map((movieId: number) => getMovie(movieId.toString()));
       const movies = await Promise.all(moviePromises);
       console.log("Fetched movies:", movies); // Log fetched movies
       movies.forEach(movie => {
@@ -61,7 +65,7 @@ const PlaylistMoviesPage: React.FC = () => {
       return movies;
     },
     {
-      enabled: !!localPlaylist,
+      enabled: !!mustPlaylist && mustPlaylist.length > 0,
       staleTime: 1000 * 60 * 5, // 5 minutes
       cacheTime: 1000 * 60 * 30, // 30 minutes
     }
@@ -88,6 +92,13 @@ const PlaylistMoviesPage: React.FC = () => {
   const resetFilters = () => {
     setFilterValues(createFilters());
   };
+
+  useEffect(() => {
+    if (localPlaylist && localPlaylist.length > 0) {
+      setMustPlaylist(localPlaylist);
+      queryClient.invalidateQueries("playlistMoviesDetails");
+    }
+  }, [localPlaylist, setMustPlaylist, queryClient]);
 
   if (isLoading) {
     return <Spinner />;

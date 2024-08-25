@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from "react";
+import React, { useContext, useMemo, useEffect } from "react";
 import PageTemplate from "../components/templateMovieListPage";
 import { MoviesContext } from "../contexts/moviesContext";
 import { useQuery } from "react-query";
@@ -20,7 +20,7 @@ const createFilters = () => [
 ];
 
 const FavouriteMoviesPage: React.FC = () => {
-  useContext(MoviesContext);
+  const { setFavourites } = useContext(MoviesContext);
   const { filterValues, setFilterValues, filterFunction } = useFiltering(createFilters());
 
   const fetchFavouriteMovies = async (): Promise<number[]> => {
@@ -46,6 +46,25 @@ const FavouriteMoviesPage: React.FC = () => {
       cacheTime: 1000 * 60 * 30, // 30 minutes
     }
   );
+
+  useEffect(() => {
+    if (localFavourites) {
+      setFavourites(localFavourites);
+    }
+  }, [localFavourites, setFavourites]);
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const updatedFavourites = JSON.parse(localStorage.getItem("favouriteMovies") || "[]");
+      setFavourites(updatedFavourites);
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, [setFavourites]);
 
   const { data: favouriteMovies, isLoading: isMoviesLoading } = useQuery(
     ["favouriteMoviesDetails", localFavourites],

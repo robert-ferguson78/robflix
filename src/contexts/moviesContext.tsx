@@ -12,6 +12,8 @@ interface MovieContextInterface {
     removeFromPlaylist: (movie: BaseMovieProps) => void;
     addReview: (movie: BaseMovieProps, review: Review) => void;
     addToPlaylist: (movie: BaseMovieProps) => void;
+    setMustPlaylist: (movies: number[]) => void; // Add setMustPlaylist to the interface
+    setFavourites: (movies: number[]) => void; // Add setFavourites to the interface
 }
 
 const initialContextState: MovieContextInterface = {
@@ -24,13 +26,15 @@ const initialContextState: MovieContextInterface = {
     removeFromPlaylist: () => {},
     addReview: () => {},
     addToPlaylist: () => {},
+    setMustPlaylist: () => {}, // Initialize setMustPlaylist
+    setFavourites: () => {}, // Initialize setFavourites
 };
 
 export const MoviesContext = React.createContext<MovieContextInterface>(initialContextState);
 
 const MoviesContextProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     const [favourites, setFavourites] = useState<number[]>([]);
-    // Usimg _ to ignore the value of the state
+    // Using _ to ignore the value of the state
     const [_, setMyReviews] = useState<Review[]>([]);
     const [mustPlaylist, setMustPlaylist] = useState<number[]>([]);
     const [movies, setMovies] = useState<BaseMovieProps[]>([]);
@@ -90,7 +94,9 @@ const MoviesContextProvider: React.FC<React.PropsWithChildren> = ({ children }) 
             removeFromFavourites,
             removeFromPlaylist,
             addReview,
-            addToPlaylist
+            addToPlaylist,
+            setMustPlaylist, // Provide setMustPlaylist in the context value
+            setFavourites // Provide setFavourites in the context value
         }}>
             {children}
         </MoviesContext.Provider>

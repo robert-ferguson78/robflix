@@ -6,11 +6,13 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import { AddToFavouritesIconProps, BaseMovieProps, BaseTVShowProps } from "../../types/interfaces";
 import { userFirestoreStore } from "../../models/user-firestore-store";
 import { auth } from "../../firebase/firebaseConfig";
+import { useQueryClient } from "react-query";
 
 const AddToFavouritesIcon: React.FC<AddToFavouritesIconProps> = (props) => {
   const { type, media } = props;
   const moviesContext = useContext(MoviesContext);
   const tvShowsContext = useContext(TVShowsContext); // Use TVShowsContext
+  const queryClient = useQueryClient();
 
   const onUserSelect = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -33,10 +35,14 @@ const AddToFavouritesIcon: React.FC<AddToFavouritesIconProps> = (props) => {
     // Add to local storage
     if (type === "movie") {
       const storedFavourites = JSON.parse(localStorage.getItem("favouriteMovies") || "[]");
-      localStorage.setItem("favouriteMovies", JSON.stringify([...storedFavourites, media.id]));
+      const updatedFavourites = [...storedFavourites, media.id];
+      localStorage.setItem("favouriteMovies", JSON.stringify(updatedFavourites));
+      // Invalidate the playlistMovies query to trigger a refetch
+      queryClient.invalidateQueries("favouriteMovies");
     } else if (type === "show") {
       const storedFavourites = JSON.parse(localStorage.getItem("favouriteTVShows") || "[]");
       localStorage.setItem("favouriteTVShows", JSON.stringify([...storedFavourites, media.id]));
+      queryClient.invalidateQueries("favouriteTVShows");
     }
   };
 
