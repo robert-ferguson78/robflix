@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PageTemplate from '../components/templateMovieListPage';
 import { BaseMovieProps } from "../types/interfaces";
 import { getMovies } from "../api/tmdb-api";
@@ -10,6 +10,7 @@ import { useQuery } from "react-query";
 import Spinner from "../components/spinner";
 import AddToFavouritesIcon from '../components/cardIcons/addToFavourites';
 import AddToPlaylistIcon from "../components/cardIcons/addToPlaylist";
+import { useLanguage } from '../contexts/languageContext';
 
 const createFilters = () => {
   const titleFiltering = {
@@ -37,8 +38,19 @@ const createFilters = () => {
 };
 
 const HomePage: React.FC = () => {
-  const { data, error, isLoading, isError } = useQuery<DiscoverMovies, Error>("discover", getMovies);
+  const { language } = useLanguage();
+  console.log("Current language:", language); // Log the language value
+
+  const { data, error, isLoading, isError, refetch } = useQuery<DiscoverMovies, Error>(
+    ["discover", language], 
+    () => getMovies(language)
+  );
+
   const { filterValues, setFilterValues, filterFunction } = useFiltering(createFilters());
+
+  useEffect(() => {
+    refetch();
+  }, [language, refetch]);
 
   if (isLoading) {
     return <Spinner />;
@@ -94,6 +106,7 @@ const HomePage: React.FC = () => {
         genreFilter={filterValues[1].value}
         sortOption={filterValues[2].value}
         resetFilters={resetFilters}
+        language={language} // had to pass in the language prop to the filter component
       />
     </>
   );

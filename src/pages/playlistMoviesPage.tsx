@@ -8,10 +8,11 @@ import useFiltering from "../hooks/useFiltering";
 import { titleFilter, sortFilter, genreFilterFavourites } from "../filters";
 import MovieFilterUI from "../components/movieFilterUI";
 import { BaseMovieProps } from "../types/interfaces";
-import RemoveFromPlaylistIcon from "../components/cardIcons/removeFromPlaylist"; // Correct import
+import RemoveFromPlaylistIcon from "../components/cardIcons/removeFromPlaylist";
 import WriteReview from "../components/cardIcons/writeReview";
 import { userFirestoreStore } from "../models/user-firestore-store";
 import { auth } from "../firebase/firebaseConfig";
+import { useLanguage } from '../contexts/languageContext';
 
 const createFilters = () => [
   { name: "title", value: "", condition: titleFilter, type: 'filter' as const },
@@ -20,6 +21,7 @@ const createFilters = () => [
 ];
 
 const PlaylistMoviesPage: React.FC = () => {
+  const { language } = useLanguage();
   const { mustPlaylist, setMustPlaylist } = useContext(MoviesContext);
   const queryClient = useQueryClient();
   const { filterValues, setFilterValues, filterFunction } = useFiltering(createFilters());
@@ -52,10 +54,10 @@ const PlaylistMoviesPage: React.FC = () => {
   );
 
   const { data: playlistMovies, isLoading: isMoviesLoading } = useQuery(
-    ["playlistMoviesDetails", mustPlaylist],
+    ["playlistMoviesDetails", mustPlaylist, language],
     async () => {
       if (!mustPlaylist || mustPlaylist.length === 0) return [];
-      const moviePromises = mustPlaylist.map((movieId: number) => getMovie(movieId.toString()));
+      const moviePromises = mustPlaylist.map((movieId: number) => getMovie(movieId.toString(), language));
       const movies = await Promise.all(moviePromises);
       console.log("Fetched movies:", movies); // Log fetched movies
       movies.forEach(movie => {
@@ -100,6 +102,10 @@ const PlaylistMoviesPage: React.FC = () => {
     }
   }, [localPlaylist, setMustPlaylist, queryClient]);
 
+  useEffect(() => {
+    queryClient.invalidateQueries(["playlistMoviesDetails", mustPlaylist, language]);
+  }, [language, mustPlaylist, queryClient]);
+
   if (isLoading) {
     return <Spinner />;
   }
@@ -122,6 +128,7 @@ const PlaylistMoviesPage: React.FC = () => {
         genreFilter={filterValues[1].value}
         sortOption={filterValues[2].value}
         resetFilters={resetFilters}
+        language={language}
       />
     </>
   );

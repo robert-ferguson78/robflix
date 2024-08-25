@@ -12,6 +12,7 @@ import RemoveFromFavourites from "../components/cardIcons/removeFromFavourites";
 import WriteReview from "../components/cardIcons/writeReview";
 import { userFirestoreStore } from "../models/user-firestore-store";
 import { auth } from "../firebase/firebaseConfig";
+import { useLanguage } from '../contexts/languageContext';
 
 const createFilters = () => [
   { name: "title", value: "", condition: titleFilter, type: 'filter' as const },
@@ -20,6 +21,7 @@ const createFilters = () => [
 ];
 
 const FavouriteMoviesPage: React.FC = () => {
+  const { language } = useLanguage();
   const { setFavourites } = useContext(MoviesContext);
   const { filterValues, setFilterValues, filterFunction } = useFiltering(createFilters());
 
@@ -67,10 +69,10 @@ const FavouriteMoviesPage: React.FC = () => {
   }, [setFavourites]);
 
   const { data: favouriteMovies, isLoading: isMoviesLoading } = useQuery(
-    ["favouriteMoviesDetails", localFavourites],
+    ["favouriteMoviesDetails", localFavourites, language],
     async () => {
       if (!localFavourites) return [];
-      const moviePromises = localFavourites.map((movieId: number) => getMovie(movieId.toString()));
+      const moviePromises = localFavourites.map((movieId: number) => getMovie(movieId.toString(), language));
       const movies = await Promise.all(moviePromises);
       console.log("Fetched movies:", movies); // Log fetched movies
       movies.forEach(movie => {
@@ -130,6 +132,7 @@ const FavouriteMoviesPage: React.FC = () => {
         genreFilter={filterValues[1].value}
         sortOption={filterValues[2].value}
         resetFilters={resetFilters}
+        language={language}
       />
     </>
   );

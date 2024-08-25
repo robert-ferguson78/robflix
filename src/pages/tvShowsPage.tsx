@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import TemplateTVShowListPage from '../components/templateTVShowListPage';
-import { BaseTVShowProps, Genre, DiscoverTVShows } from "../types/interfaces";
-import { getTVShows, getTVGenres } from "../api/tmdb-api";
+import { BaseTVShowProps, DiscoverTVShows } from "../types/interfaces";
+import { getTVShows } from "../api/tmdb-api";
 import useFiltering from "../hooks/useFiltering";
 import { tvTitleFilter, tvGenreFilter, tvSortFilter } from "../filters";
 import TVShowFilterUI from "../components/tvShowFilterUI";
 import { useQuery } from "react-query";
 import Spinner from "../components/spinner";
 import AddToFavouritesIcon from '../components/cardIcons/addToFavourites';
-// import AddToPlaylistIcon from "../components/cardIcons/addToPlaylist";
+import { useLanguage } from '../contexts/languageContext';
 
 const createFilters = () => {
   const titleFiltering = {
@@ -21,7 +21,7 @@ const createFilters = () => {
   const genreFiltering = {
     name: "genre",
     value: "0",
-    condition: (show: BaseTVShowProps, value: string) => tvGenreFilter(show, value),
+    condition: tvGenreFilter,
     type: 'filter' as const,
   };
 
@@ -36,26 +36,25 @@ const createFilters = () => {
 };
 
 const TVShowsPage: React.FC = () => {
-  const { data, error, isLoading, isError } = useQuery<DiscoverTVShows, Error>("discoverTVShows", getTVShows);
-  const setGenres = useState<Genre[]>([])[1];
+  const { language } = useLanguage();
+  console.log("Current language:", language); // Log the language value
+
+  const { data, error, isLoading, isError, refetch } = useQuery<DiscoverTVShows, Error>(
+    ["discoverTVShows", language], 
+    () => getTVShows(language)
+  );
+
   const { filterValues, setFilterValues, filterFunction } = useFiltering(createFilters());
 
   useEffect(() => {
-    const fetchGenres = async () => {
-      const genres = await getTVGenres();
-      console.log("Fetched TV show genres data page:", genres);
-      setGenres(genres);
-    };
-    fetchGenres();
-  }, []);
+    refetch();
+  }, [language, refetch]);
 
   if (isLoading) {
-    console.log("Loading data...");
     return <Spinner />;
   }
 
   if (isError) {
-    console.error("Error fetching data:", error);
     return <h1>{error.message}</h1>;
   }
 
@@ -64,10 +63,6 @@ const TVShowsPage: React.FC = () => {
       filter.name === type ? { ...filter, value } : filter
     );
     setFilterValues(updatedFilterSet);
-  };
-
-  const resetFilters = () => {
-    setFilterValues(createFilters());
   };
 
   const shows: BaseTVShowProps[] = data?.results ?? [];
@@ -87,6 +82,10 @@ const TVShowsPage: React.FC = () => {
   const displayedShows = filterFunction(shows);
   console.log("Displayed TV Shows after filtering:", displayedShows);
 
+  const resetFilters = () => {
+    setFilterValues(createFilters());
+  };
+
   return (
     <>
       <TemplateTVShowListPage
@@ -105,6 +104,7 @@ const TVShowsPage: React.FC = () => {
         genreFilter={filterValues[1].value}
         sortOption={filterValues[2].value}
         resetFilters={resetFilters}
+        language={language}
       />
     </>
   );

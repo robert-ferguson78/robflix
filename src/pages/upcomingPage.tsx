@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query"; // updated import
 import Spinner from "../components/spinner";
 import AddToPlaylistIcon from "../components/cardIcons/addToPlaylist";
 import AddToFavouritesIcon from '../components/cardIcons/addToFavourites';
+import { useLanguage } from '../contexts/languageContext';
 
 const createFilters = () => {
   const titleFiltering = {
@@ -37,15 +38,16 @@ const createFilters = () => {
 };
 
 const UpcomingMoviesPage: React.FC = () => {
+  const { language } = useLanguage();
   const [page, setPage] = useState(1);
 
   const fetchUpcomingMovies = (page = 1) => {
     console.log(`Fetching upcoming movies for page ${page} at ${new Date().toLocaleTimeString()}`);
-    return upcomingMovies(page);
+    return upcomingMovies(language, page);
   };
 
   const { isLoading, isError, error, data, isFetching } = useQuery<DiscoverMovies, Error>({
-    queryKey: ["upcoming", page],
+    queryKey: ["upcoming", page, language],
     queryFn: () => fetchUpcomingMovies(page),
     staleTime: 300000 // 5 minutes cache before data is considered stale
   });
@@ -92,6 +94,7 @@ const UpcomingMoviesPage: React.FC = () => {
         genreFilter={filterValues[1].value}
         sortOption={filterValues[2].value}
         resetFilters={resetFilters}
+        language={language}
       />
       <div>
         <span>Current Page: {page}</span>
