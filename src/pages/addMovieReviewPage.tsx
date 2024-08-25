@@ -6,10 +6,12 @@ import { useQuery } from "react-query";
 import { getMovie } from "../api/tmdb-api";
 import Spinner from "../components/spinner";
 import { MovieDetailsProps } from "../types/interfaces";
+import { useLanguage } from '../contexts/languageContext';
 
 const WriteReviewPage: React.FC = () => {
     const location = useLocation();
     const navigate = useNavigate();
+    const { language } = useLanguage();
 
     const { movieId } = location.state || {};
 
@@ -25,7 +27,7 @@ const WriteReviewPage: React.FC = () => {
 
     const { data: movie, error, isLoading, isError } = useQuery<MovieDetailsProps, Error>(
         ["movie", movieId],
-        () => getMovie(movieId),
+        () => getMovie(movieId, language),
         {
             enabled: !!movieId, // Only run the query if movieId is truthy
         }
