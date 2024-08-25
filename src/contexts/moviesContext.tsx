@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { BaseMovieProps, Review, Genre } from "../types/interfaces";
-import { getMovies, getTVGenres } from "../api/tmdb-api";
+import { getMovies, getGenres } from "../api/tmdb-api";
 
 interface MovieContextInterface {
     favourites: number[];
@@ -40,7 +40,7 @@ const MoviesContextProvider: React.FC<React.PropsWithChildren> = ({ children }) 
         const fetchMoviesAndGenres = async () => {
             try {
                 const moviesData = await getMovies();
-                const genresData = await getTVGenres();
+                const genresData = await getGenres();
                 setMovies(moviesData.results);
                 setGenres(genresData.genres);
             } catch (error) {
