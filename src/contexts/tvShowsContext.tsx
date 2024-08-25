@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { BaseTVShowProps, Review, Genre } from "../types/interfaces";
 import { getTVShows, getTVGenres } from "../api/tmdb-api";
+import { useLanguage } from '../contexts/languageContext';
 
 interface TVShowContextInterface {
     favourites: number[];
@@ -29,6 +30,7 @@ const initialContextState: TVShowContextInterface = {
 export const TVShowsContext = React.createContext<TVShowContextInterface>(initialContextState);
 
 const TVShowsContextProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
+    const { language } = useLanguage();
     const [favourites, setFavourites] = useState<number[]>([]);
     // Usimg _ to ignore the value of the state
     const [_, setMyReviews] = useState<Review[]>([]);
@@ -39,8 +41,8 @@ const TVShowsContextProvider: React.FC<React.PropsWithChildren> = ({ children })
     useEffect(() => {
         const fetchTVShowsAndGenres = async () => {
             try {
-                const tvShowsData = await getTVShows();
-                const genresData = await getTVGenres();
+                const tvShowsData = await getTVShows(language);
+                const genresData = await getTVGenres(language);
                 setTVShows(tvShowsData.results);
                 setGenres(genresData.genres);
             } catch (error) {
@@ -48,7 +50,7 @@ const TVShowsContextProvider: React.FC<React.PropsWithChildren> = ({ children })
             }
         };
         fetchTVShowsAndGenres();
-    }, []);
+    }, [language]);
 
     const addToFavourites = useCallback((show: BaseTVShowProps) => {
         setFavourites((prevFavourites) => {
