@@ -142,6 +142,7 @@ export interface MovieFilterUIProps {
   genreFilter: string;
   sortOption: string;
   resetFilters: () => void;
+  language: string;
 }
 
 export interface FilterMoviesCardProps {
@@ -149,6 +150,7 @@ export interface FilterMoviesCardProps {
   titleFilter: string;
   genreFilter: string;
   sortOption: string;
+  language: string;
 }
 
 export interface Poster {
@@ -206,6 +208,7 @@ export interface FilterTVShowsCardProps {
   titleFilter: string;
   genreFilter: string;
   sortOption: string;
+  language: string;
 }
 
 export interface DiscoverTVShows {
@@ -221,6 +224,7 @@ export interface TVShowFilterUIProps {
   genreFilter: string;
   sortOption: string;
   resetFilters: () => void;
+  language: string;
 }
 
 export interface TVShowImage {
