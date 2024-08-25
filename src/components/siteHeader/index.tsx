@@ -7,12 +7,14 @@ import { styled } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
+import Select from '@mui/material/Select';
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import logo from "../../images/robflix.png";
 import { auth } from '../../firebase/firebaseConfig'; // Import auth
 import { signOut } from 'firebase/auth'; // Import signOut from firebase/auth
+import { useLanguage } from '../../contexts/languageContext';
 
 const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
 
@@ -28,6 +30,14 @@ const CustomButton = styled(Button)({
   },
 });
 
+const LanguageSelect = styled(Select)({
+  color: 'white',
+  marginRight: '20px',
+  '& .MuiSelect-icon': {
+    color: 'white',
+  },
+});
+
 const SiteHeader: React.FC = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -35,6 +45,7 @@ const SiteHeader: React.FC = () => {
   const open = Boolean(anchorEl);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
+  const { language, setLanguage } = useLanguage();
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
@@ -78,6 +89,15 @@ const SiteHeader: React.FC = () => {
         elevation={0}
         sx={{ bgcolor: "rgb(20, 20, 20)" }}
       >
+        <LanguageSelect
+        value={language}
+        onChange={(e) => setLanguage(e.target.value as 'en' | 'fr' | 'de')}
+        sx={{ position: 'absolute', top: '10px', right: '10px' }}
+      >
+          <MenuItem value="en">English</MenuItem>
+          <MenuItem value="fr">Français</MenuItem>
+          <MenuItem value="de">Deutsch</MenuItem>
+        </LanguageSelect>
         <Toolbar sx={{ maxWidth: "1100px", width: "100%", margin: "0 auto" }}>
           <img
             src={logo}
