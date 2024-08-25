@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { BaseMovieProps, Review, Genre } from "../types/interfaces";
 import { getMovies, getGenres } from "../api/tmdb-api";
+import { useLanguage } from '../contexts/languageContext';
 
 interface MovieContextInterface {
     favourites: number[];
@@ -12,8 +13,8 @@ interface MovieContextInterface {
     removeFromPlaylist: (movie: BaseMovieProps) => void;
     addReview: (movie: BaseMovieProps, review: Review) => void;
     addToPlaylist: (movie: BaseMovieProps) => void;
-    setMustPlaylist: (movies: number[]) => void; // Add setMustPlaylist to the interface
-    setFavourites: (movies: number[]) => void; // Add setFavourites to the interface
+    setMustPlaylist: (movies: number[]) => void;
+    setFavourites: (movies: number[]) => void;
 }
 
 const initialContextState: MovieContextInterface = {
@@ -26,15 +27,15 @@ const initialContextState: MovieContextInterface = {
     removeFromPlaylist: () => {},
     addReview: () => {},
     addToPlaylist: () => {},
-    setMustPlaylist: () => {}, // Initialize setMustPlaylist
-    setFavourites: () => {}, // Initialize setFavourites
+    setMustPlaylist: () => {},
+    setFavourites: () => {},
 };
 
 export const MoviesContext = React.createContext<MovieContextInterface>(initialContextState);
 
 const MoviesContextProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
+    const { language } = useLanguage();
     const [favourites, setFavourites] = useState<number[]>([]);
-    // Using _ to ignore the value of the state
     const [_, setMyReviews] = useState<Review[]>([]);
     const [mustPlaylist, setMustPlaylist] = useState<number[]>([]);
     const [movies, setMovies] = useState<BaseMovieProps[]>([]);
@@ -43,8 +44,8 @@ const MoviesContextProvider: React.FC<React.PropsWithChildren> = ({ children }) 
     useEffect(() => {
         const fetchMoviesAndGenres = async () => {
             try {
-                const moviesData = await getMovies();
-                const genresData = await getGenres();
+                const moviesData = await getMovies(language);
+                const genresData = await getGenres(language);
                 setMovies(moviesData.results);
                 setGenres(genresData.genres);
             } catch (error) {
@@ -52,7 +53,7 @@ const MoviesContextProvider: React.FC<React.PropsWithChildren> = ({ children }) 
             }
         };
         fetchMoviesAndGenres();
-    }, []);
+    }, [language]);
 
     const addToFavourites = useCallback((movie: BaseMovieProps) => {
         setFavourites((prevFavourites) => {
@@ -95,8 +96,8 @@ const MoviesContextProvider: React.FC<React.PropsWithChildren> = ({ children }) 
             removeFromPlaylist,
             addReview,
             addToPlaylist,
-            setMustPlaylist, // Provide setMustPlaylist in the context value
-            setFavourites // Provide setFavourites in the context value
+            setMustPlaylist,
+            setFavourites
         }}>
             {children}
         </MoviesContext.Provider>

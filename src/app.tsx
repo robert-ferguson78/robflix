@@ -15,6 +15,7 @@ import TVPage from "./pages/tvShowDetailsPage";
 import SiteHeader from './components/siteHeader';
 import MoviesContextProvider from "./contexts/moviesContext";
 import TVShowsContextProvider from "./contexts/tvShowsContext";
+import { LanguageProvider } from "./contexts/languageContext";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { AuthProvider } from './contexts/authContext';
@@ -43,6 +44,7 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
+      <LanguageProvider>
         <BrowserRouter>
           <SiteHeader />
           <MoviesContextProvider>
@@ -67,6 +69,7 @@ const App = () => {
             </TVShowsContextProvider>
           </MoviesContextProvider>
         </BrowserRouter>
+        </LanguageProvider>
       </AuthProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

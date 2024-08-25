@@ -2,9 +2,14 @@ import { Poster } from "../types/interfaces";
 
 // Movie API calls
 
-export const getMovies = () => {
-  return fetch(
-    `https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US&include_adult=false&include_video=false&page=1`
+const fetchWithLanguage = (url: string, language: string) => {
+  return fetch(`${url}&language=${language}`);
+};
+
+export const getMovies = (language: string) => {
+  return fetchWithLanguage(
+    `https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_TMDB_KEY}&include_adult=false&include_video=false&page=1`,
+    language
   ).then((response) => {
     if (!response.ok)
       throw new Error(`Unable to fetch movies. Response status: ${response.status}`);
@@ -15,31 +20,45 @@ export const getMovies = () => {
     });
 };
 
-export const getMovie = (id: string) => {
-  return fetch(
-    `https://api.themoviedb.org/3/movie/${id}?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US&&append_to_response=videos`
-  ).then((response) => {
+export const getMovie = async (id: string, language: string) => {
+  console.log("getMovie called with id:", id, "and language:", language); // Log id and language parameters
+
+  try {
+    const response = await fetch(
+      `https://api.themoviedb.org/3/movie/${id}?api_key=${import.meta.env.VITE_TMDB_KEY}&language=${language}&append_to_response=videos`
+    );
+
     if (!response.ok) {
       throw new Error(`Failed to get movie data. Response status: ${response.status}`);
     }
-    return response.json();
-  })
-  .catch((error) => {
-    throw error
- });
+
+    const data = await response.json();
+    console.log("Fetched movie data:", data); // Log the fetched movie data
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch movie data:", error);
+    throw error;
+  }
 };
 
-export const getGenres = () => {
+export const getGenres = (language: string) => {
+  console.log(`Fetching genres with language: ${language}`);
+  
   return fetch(
-    "https://api.themoviedb.org/3/genre/movie/list?api_key=" + import.meta.env.VITE_TMDB_KEY + "&language=en-US"
-  ).then( (response) => {
+    `https://api.themoviedb.org/3/genre/movie/list?api_key=${import.meta.env.VITE_TMDB_KEY}&language=${language}`
+  ).then((response) => {
     if (!response.ok)
       throw new Error(`Unable to fetch genres. Response status: ${response.status}`);
     return response.json();
   })
+  .then((data) => {
+    console.log('Fetched genres:', data);
+    return data;
+  })
   .catch((error) => {
-    throw error
- });
+    console.error('Error fetching genres:', error);
+    throw error;
+  });
 };
 
 export const getMovieImages = (id: string | number) => {
@@ -107,10 +126,10 @@ export const getReviewById = (reviewId: string) => {
   });
 };
 
-export const upcomingMovies = async (page: number = 1) => {
+export const upcomingMovies = async (language: string, page: number = 1) => {
   try {
     const response = await fetch(
-      `https://api.themoviedb.org/3/movie/upcoming?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US&page=${page}`
+      `https://api.themoviedb.org/3/movie/upcoming?api_key=${import.meta.env.VITE_TMDB_KEY}&language=${language}&page=${page}`
     );
 
     if (!response.ok) {
@@ -127,9 +146,9 @@ export const upcomingMovies = async (page: number = 1) => {
 
 // TV API calls
 
-export const fetchPopularTVShows = () => {
+export const fetchPopularTVShows = (language: string) => {
   return fetch(
-    `https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US&include_adult=false&include_video=false&page=1`
+    `https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_TMDB_KEY}&language=${language}&include_adult=false&include_video=false&page=1`
   ).then((response) => {
     if (!response.ok)
       throw new Error(`Unable to fetch TV shows. Response status: ${response.status}`);
@@ -145,9 +164,9 @@ export const fetchPopularTVShows = () => {
     });
 };
 
-export const fetchTVShow = (id: string) => {
+export const fetchTVShow = (id: string, language: string) => {
   return fetch(
-    `https://api.themoviedb.org/3/tv/${id}?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US`
+    `https://api.themoviedb.org/3/tv/${id}?api_key=${import.meta.env.VITE_TMDB_KEY}&language=${language}`
   ).then((response) => {
     if (!response.ok) {
       throw new Error(`Failed to get TV show data. Response status: ${response.status}`);
@@ -159,9 +178,9 @@ export const fetchTVShow = (id: string) => {
   });
 };
 
-export const getTVShows = () => {
+export const getTVShows = (language: string) => {
   return fetch(
-      `https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US&include_adult=false&include_video=false`
+      `https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_TMDB_KEY}&language=${language}&include_adult=false&include_video=false`
     ).then((response) => {
       if (!response.ok) {
         throw new Error(`Failed to get TV show data. Response status: ${response.status}`);
@@ -173,9 +192,9 @@ export const getTVShows = () => {
     });
 };
 
-export const getTVGenres = () => {
+export const getTVGenres = (language: string) => {
   return fetch(
-    `https://api.themoviedb.org/3/genre/tv/list?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US`
+    `https://api.themoviedb.org/3/genre/tv/list?api_key=${import.meta.env.VITE_TMDB_KEY}&language=${language}`
   ).then((response) => {
     if (!response.ok) {
       throw new Error(`Failed to get TV show genres. Response status: ${response.status}`);
@@ -208,9 +227,9 @@ export const getTVShowReviews = (id: string | number) => {
     });
 };
 
-export const getTVShow = (id: string) => {
+export const getTVShow = (id: string, language: string) => {
   return fetch(
-    `https://api.themoviedb.org/3/tv/${id}?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US`
+    `https://api.themoviedb.org/3/tv/${id}?api_key=${import.meta.env.VITE_TMDB_KEY}&language=${language}`
   ).then((response) => {
     if (!response.ok) {
       if (response.status === 404) {
