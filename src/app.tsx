@@ -14,7 +14,7 @@ import TVShowsPage from "./pages/tvShowsPage";
 import TVPage from "./pages/tvShowDetailsPage";
 import SiteHeader from './components/siteHeader';
 import MoviesContextProvider from "./contexts/moviesContext";
-import TVShowsContextProvider from "./contexts/tvShowsContext"; 
+import TVShowsContextProvider from "./contexts/tvShowsContext";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { AuthProvider } from './contexts/authContext';
@@ -50,6 +50,7 @@ const App = () => {
               <Routes>
                 <Route path="/reviews/form/:movieId" element={<AddMovieReviewPageWithAuth />} />
                 <Route path="/reviews/:id" element={<MovieReviewPageWithAuth />} />
+                <Route path="/user-reviews/:id" element={<MovieReviewPageWithAuth />} />
                 <Route path="/movies/favourites" element={<FavouriteMoviesPageWithAuth />} />
                 <Route path="/movies/playlist" element={<PlaylistMoviesPageWithAuth />} />
                 <Route path="/movies/:id" element={<MoviePage />} />
