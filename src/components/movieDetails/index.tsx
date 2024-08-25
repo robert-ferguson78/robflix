@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Chip from "@mui/material/Chip";
 import Paper from "@mui/material/Paper";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -10,8 +10,12 @@ import NavigationIcon from "@mui/icons-material/Navigation";
 import Fab from "@mui/material/Fab";
 import Drawer from "@mui/material/Drawer";
 import Grid from "@mui/material/Grid";
-import MovieReviews from '../movieReviews'
+import MovieReviews from '../movieReviews';
+import EmbedVideo from '../embedVideo'; // Import the new component
 import { styled } from '@mui/material/styles';
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const styles = {
     chipSet: {
@@ -51,8 +55,23 @@ const StyledImg = styled('img')({
 });
 
 const MovieDetails: React.FC<MovieDetailsProps> = (movie) => {
+    const [drawerOpen, setDrawerOpen] = useState(false);
 
-    const [drawerOpen, setDrawerOpen] = useState(false); // New
+    // Filter YouTube videos
+    const youtubeVideos = movie.videos.results.filter(video => video.site === "YouTube");
+
+    // Log the youtubeVideos to the console
+    useEffect(() => {
+        console.log('youtube video log:', JSON.stringify(youtubeVideos, null, 2));
+    }, [youtubeVideos]);
+
+    const sliderSettings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+    };
 
     return (
         <>
@@ -110,7 +129,15 @@ const MovieDetails: React.FC<MovieDetailsProps> = (movie) => {
             <Drawer anchor="top" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
                 <MovieReviews {...movie} />
             </Drawer>
+            <Slider {...sliderSettings}>
+                {youtubeVideos.map(video => (
+                    <div key={video.id}>
+                        <EmbedVideo name={video.name} videoKey={video.key} />
+                    </div>
+                ))}
+            </Slider>
         </>
     );
 };
+
 export default MovieDetails;

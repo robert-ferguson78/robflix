@@ -42,13 +42,22 @@ export interface MovieDetailsProps extends BaseMovieProps {
     name: string;
     origin_country: string;
   }[];
-  adult?: boolean; // Optional propertys
+  adult?: boolean; // Optional properties
   backdrop_path?: string;
   belongs_to_collection?: {
     id: number;
     name: string;
     poster_path: string;
     backdrop_path: string;
+  };
+  videos: {
+    results: {
+      id: string;
+      key: string;
+      name: string;
+      site: string;
+      type: string;
+    }[];
   };
 }
 
