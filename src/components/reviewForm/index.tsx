@@ -1,4 +1,4 @@
-import React, { useContext, useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
@@ -7,12 +7,12 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import { MoviesContext } from "../../contexts/moviesContext";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles";
 import ratings from "./ratingCategories";
 import { BaseMovieProps, Review } from "../../types/interfaces";
-
+import { userFirestoreStore } from "../../models/user-firestore-store";
+import { auth } from "../../firebase/firebaseConfig"; // Import auth from Firebase config
 
 const ReviewForm: React.FC<BaseMovieProps> = (movie) => {
     const defaultValues = {
@@ -33,7 +33,6 @@ const ReviewForm: React.FC<BaseMovieProps> = (movie) => {
       } = useForm<Review>(defaultValues);
     
       const navigate = useNavigate();
-      const context = useContext(MoviesContext);
       const [rating, setRating] = useState(3);
       const [open, setOpen] = useState(false);
     
@@ -46,11 +45,24 @@ const ReviewForm: React.FC<BaseMovieProps> = (movie) => {
         navigate("/");
       };
     
-      const onSubmit: SubmitHandler<Review> = (review) => {
+      const onSubmit: SubmitHandler<Review> = async (review) => {
         review.movieId = movie.id;
         review.rating = rating;
-        context.addReview(movie, review);
-        setOpen(true); 
+        const userId = auth.currentUser?.uid; // Get the authenticated user's ID
+        if (userId) {
+          const now = new Date().toISOString();
+          const reviewId = Date.now(); // Generate a unique numeric ID based on the current timestamp
+          const reviewWithMeta = {
+            ...review,
+            created_at: now,
+            updated_at: now,
+            id: reviewId, // Convert the numeric ID to a string if necessary
+          };
+          await userFirestoreStore.addReview(userId, reviewWithMeta); // Save review to Firestore with user ID
+          setOpen(true);
+        } else {
+          console.error("User is not authenticated");
+        }
       };
     
       return (

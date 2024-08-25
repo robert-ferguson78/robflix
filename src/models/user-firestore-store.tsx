@@ -1,6 +1,6 @@
 import { doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import { firestore } from "../firebase/firebaseConfig";
-import { User } from "../types/interfaces";
+import { User, Review } from "../types/interfaces";
 
 const collectionName = "users";
 
@@ -178,5 +178,50 @@ export const userFirestoreStore = {
 
         const updatedDoc = await getDoc(userRef);
         return updatedDoc.data();
+    },
+
+    // Function to add a review to the user's reviews array
+    addReview: async function (_id: string, review: Review) {
+        const userRef = doc(firestore, collectionName, _id);
+        const userDoc = await getDoc(userRef);
+
+        if (!userDoc.exists()) {
+            // Create the document if it does not exist
+            await setDoc(userRef, { reviews: [] });
+        }
+
+        // console.log("Adding review:", review);
+
+        // Add the review to the reviews array
+        await updateDoc(userRef, {
+            reviews: arrayUnion(review)
+        });
+
+        const updatedDoc = await getDoc(userRef);
+        return updatedDoc.data();
+    },
+
+    // Function to get reviews by movie ID
+    getReviewsByMovieId: async function (_id: string, movieId: string) {
+        const userRef = doc(firestore, collectionName, _id);
+        const userDoc = await getDoc(userRef);
+
+        if (!userDoc.exists()) {
+            throw new Error("User document does not exist");
+        }
+
+        const userData = userDoc.data();
+        // console.log("Fetched user data:", userData);
+
+        const reviews = userData?.reviews || [];
+        // console.log("All reviews:", reviews);
+
+        // Convert movieId to a number for comparison
+        const movieIdNumber = Number(movieId);
+
+        const filteredReviews = reviews.filter((review: Review) => review.movieId === movieIdNumber);
+        // console.log("Filtered reviews for movie ID", movieId, ":", filteredReviews);
+
+        return filteredReviews;
     },
 };

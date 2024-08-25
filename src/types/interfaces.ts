@@ -91,6 +91,8 @@ export interface Review {
   agree: boolean;
   rating: number;
   movieId: number;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface AuthContextType {
