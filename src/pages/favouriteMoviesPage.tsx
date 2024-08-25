@@ -1,129 +1,87 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useMemo } from "react";
 import PageTemplate from "../components/templateMovieListPage";
 import { MoviesContext } from "../contexts/moviesContext";
-import { useQueries } from "react-query";
+import { useQuery } from "react-query";
 import { getMovie } from "../api/tmdb-api";
 import Spinner from "../components/spinner";
 import useFiltering from "../hooks/useFiltering";
 import { titleFilter, sortFilter, genreFilterFavourites } from "../filters";
 import MovieFilterUI from "../components/movieFilterUI";
+import { BaseMovieProps } from "../types/interfaces";
 import RemoveFromFavourites from "../components/cardIcons/removeFromFavourites";
 import WriteReview from "../components/cardIcons/writeReview";
 import { userFirestoreStore } from "../models/user-firestore-store";
 import { auth } from "../firebase/firebaseConfig";
 
-const createFilters = () => {
-  const titleFiltering = {
-    name: "title",
-    value: "",
-    condition: titleFilter,
-    type: 'filter' as const,
-  };
-
-  const genreFiltering = {
-    name: "genre",
-    value: "0",
-    condition: genreFilterFavourites,
-    type: 'filter' as const,
-  };
-
-  const sortFiltering = {
-    name: "sort",
-    value: "name", // Set a default sort value
-    condition: sortFilter,
-    type: 'sort' as const,
-  };
-
-  return [titleFiltering, genreFiltering, sortFiltering];
-};
+const createFilters = () => [
+  { name: "title", value: "", condition: titleFilter, type: 'filter' as const },
+  { name: "genre", value: "0", condition: genreFilterFavourites, type: 'filter' as const },
+  { name: "sort", value: "name", condition: sortFilter, type: 'sort' as const },
+];
 
 const FavouriteMoviesPage: React.FC = () => {
   useContext(MoviesContext);
   const { filterValues, setFilterValues, filterFunction } = useFiltering(createFilters());
 
-  const [localFavourites, setLocalFavourites] = useState<number[]>([]);
+  const fetchFavouriteMovies = async (): Promise<number[]> => {
+    let storedFavourites = JSON.parse(localStorage.getItem("favouriteMovies") || "[]");
 
-  useEffect(() => {
-    const fetchFavouriteMovies = async () => {
-      let storedFavourites = JSON.parse(localStorage.getItem("favouriteMovies") || "[]");
-
-      if (storedFavourites.length === 0) {
-        const userId = auth.currentUser?.uid;
-        if (userId) {
-          // Fetch the favourite movies from Firestore
-          const favouriteMovies = await userFirestoreStore.getFavouriteMovies(userId);
-          storedFavourites = favouriteMovies.map((favMovieId: string) => Number(favMovieId));
-          localStorage.setItem("favouriteMovies", JSON.stringify(storedFavourites));
-        }
+    if (storedFavourites.length === 0) {
+      const userId = auth.currentUser?.uid;
+      if (userId) {
+        const favouriteMovies = await userFirestoreStore.getFavouriteMovies(userId);
+        storedFavourites = favouriteMovies.map((favMovieId: string) => Number(favMovieId));
+        localStorage.setItem("favouriteMovies", JSON.stringify(storedFavourites));
       }
+    }
 
-      setLocalFavourites(storedFavourites);
-    };
+    return storedFavourites;
+  };
 
-    fetchFavouriteMovies();
-  }, []);
-
-  useEffect(() => {
-    const handleStorageChange = () => {
-      const storedFavourites = JSON.parse(localStorage.getItem("favouriteMovies") || "[]");
-      setLocalFavourites(storedFavourites);
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, []);
-
-  const favouriteMovieQueries = useQueries(
-    localFavourites.map((movieId) => {
-      return {
-        queryKey: ["movie", movieId],
-        queryFn: async () => {
-          const movie = await getMovie(movieId.toString());
-          // console.log(`Fetched movie data for ID ${movieId}:`, movie);
-          return movie;
-        },
-      };
-    })
+  const { data: localFavourites, isLoading: isFavouritesLoading } = useQuery(
+    "favouriteMovies",
+    fetchFavouriteMovies,
+    {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      cacheTime: 1000 * 60 * 30, // 30 minutes
+    }
   );
 
-  const isLoading = favouriteMovieQueries.find((m) => m.isLoading === true);
+  const { data: favouriteMovies, isLoading: isMoviesLoading } = useQuery(
+    ["favouriteMoviesDetails", localFavourites],
+    async () => {
+      if (!localFavourites) return [];
+      const moviePromises = localFavourites.map((movieId: number) => getMovie(movieId.toString()));
+      const movies = await Promise.all(moviePromises);
+      console.log("Fetched movies:", movies); // Log fetched movies
+      movies.forEach(movie => {
+        movie.genre_ids = movie.genres.map((genre: { id: number }) => genre.id); // Ensure genre_ids is populated
+        console.log(`Movie ID: ${movie.id}, Genres:`, movie.genres); // Log genres of each movie
+      });
+      return movies;
+    },
+    {
+      enabled: !!localFavourites,
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      cacheTime: 1000 * 60 * 30, // 30 minutes
+    }
+  );
 
-  if (isLoading) {
-    return <Spinner />;
-  }
+  const isLoading = isFavouritesLoading || isMoviesLoading;
 
-  const allFavourites = favouriteMovieQueries.map((q) => q.data);
-  // console.log("All favourite movies before filtering:", allFavourites);
-
-  // Log the genre filter value
-  // const genreFilterValue = filterValues.find(filter => filter.name === "genre")?.value;
-  // console.log("Genre filter value:", genreFilterValue);
-
-  // Log the entire movie object to check why genre_ids is undefined
-  // allFavourites.forEach((movie, index) => {
-  //   console.log(`Movie ${index}:`, movie);
-  // });
-
-  const displayedMovies = allFavourites ? filterFunction(allFavourites) : [];
-
-  // Log the result of the genre filter condition for each movie
-  // if (genreFilterValue) {
-  //   allFavourites.forEach((movie, index) => {
-  //     const result = genreFilterFavourites(movie, genreFilterValue);
-  //     console.log(`Genre filter result for movie ${index}:`, result);
-  //   });
-  // }
-
-  // console.log("Displayed movies after filtering:", displayedMovies);
+  const displayedMovies = useMemo(() => {
+    console.log("Filtering movies with filter values:", filterValues);
+    const filteredMovies = favouriteMovies ? filterFunction(favouriteMovies) : [];
+    console.log("Filtered movies:", filteredMovies); // Log filtered movies
+    filteredMovies.forEach((movie: BaseMovieProps) => console.log(`Filtered Movie ID: ${movie.id}, Genres:`, movie.genres)); // Log genres of each filtered movie
+    return filteredMovies;
+  }, [favouriteMovies, filterFunction, filterValues]);
 
   const changeFilterValues = (type: string, value: string) => {
-    const updatedFilterSet = filterValues.map(filter => 
+    const updatedFilterSet = filterValues.map(filter =>
       filter.name === type ? { ...filter, value } : filter
     );
-    // console.log(`Updated filter values for ${type}:`, updatedFilterSet);
+    console.log("Updated filter values:", updatedFilterSet);
     setFilterValues(updatedFilterSet);
   };
 
@@ -131,19 +89,21 @@ const FavouriteMoviesPage: React.FC = () => {
     setFilterValues(createFilters());
   };
 
+  if (isLoading) {
+    return <Spinner />;
+  }
+
   return (
     <>
       <PageTemplate
         title="Favourite Movies"
         movies={displayedMovies}
-        action={(movie) => {
-          return (
-            <>
-              <RemoveFromFavourites {...movie} />
-              <WriteReview {...movie} />
-            </>
-          );
-        }}
+        action={(movie) => (
+          <>
+            <RemoveFromFavourites {...movie} />
+            <WriteReview {...movie} />
+          </>
+        )}
       />
       <MovieFilterUI
         onFilterValuesChange={changeFilterValues}
