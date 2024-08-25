@@ -52,7 +52,9 @@ export const titleFilter = (movie: BaseMovieProps, value: string): boolean => {
 export const genreFilter = (movie: BaseMovieProps, value: string): boolean => {
   const genreId = Number(value);
   const genreIds = movie.genre_ids;
-  return genreId > 0 && genreIds ? genreIds.includes(genreId) : true;
+  const result = genreId > 0 && genreIds ? genreIds.includes(genreId) : true;
+  console.log(`genreFilter - Movie: ${movie.title}, GenreId: ${genreId}, GenreIds: ${genreIds}, Result: ${result}`);
+  return result;
 };
 
 export const sortFilter = (movies: BaseMovieProps[], value: string): BaseMovieProps[] => {
@@ -114,11 +116,10 @@ export const tvSortFilter = (shows: BaseTVShowProps[], value: string): BaseTVSho
   return sortedShows;
 };
 
-// New function for filtering favourite movies by genre
 export const genreFilterFavourites = (movie: BaseMovieProps, value: string): boolean => {
   const genreId = Number(value);
-  const genreIds = movie.genre_ids;
-  const result = genreId > 0 && genreIds ? genreIds.includes(genreId) : true;
+  const genreIds = movie.genre_ids || []; // Ensure genre_ids is an array
+  const result = genreId === 0 || (genreIds.length > 0 && genreIds.includes(genreId));
   console.log(`genreFilterFavourites - Movie: ${movie.title}, GenreId: ${genreId}, GenreIds: ${genreIds}, Result: ${result}`);
   return result;
 };
