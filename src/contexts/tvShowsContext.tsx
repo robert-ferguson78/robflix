@@ -13,6 +13,7 @@ interface TVShowContextInterface {
     removeFromPlaylist: (show: BaseTVShowProps) => void;
     addReview: (show: BaseTVShowProps, review: Review) => void;
     addToPlaylist: (show: BaseTVShowProps) => void;
+    setFavourites: (movies: number[]) => void;
 }
 
 const initialContextState: TVShowContextInterface = {
@@ -25,6 +26,7 @@ const initialContextState: TVShowContextInterface = {
     removeFromPlaylist: () => {},
     addReview: () => {},
     addToPlaylist: () => {},
+    setFavourites: () => {},
 };
 
 export const TVShowsContext = React.createContext<TVShowContextInterface>(initialContextState);
@@ -82,12 +84,6 @@ const TVShowsContextProvider: React.FC<React.PropsWithChildren> = ({ children })
         });
     }, []);
 
-    // Add logging to setFavourites
-    const setFavouritesWithLogging = (newFavourites: number[]) => {
-        console.log("Setting favourites:", newFavourites);
-        setFavourites(newFavourites);
-    };
-
     return (
         <TVShowsContext.Provider value={{
             favourites,
@@ -99,7 +95,7 @@ const TVShowsContextProvider: React.FC<React.PropsWithChildren> = ({ children })
             removeFromPlaylist,
             addReview,
             addToPlaylist,
-            setFavourites: setFavouritesWithLogging // Use the logging version
+            setFavourites
         }}>
             {children}
         </TVShowsContext.Provider>
