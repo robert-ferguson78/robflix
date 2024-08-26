@@ -180,6 +180,19 @@ export const userFirestoreStore = {
         return updatedDoc.data();
     },
 
+    // Function to get the favourite TV shows of a user
+    getFavouriteTVShows: async function(_id: string) {
+        const userRef = doc(firestore, collectionName, _id);
+        const userDoc = await getDoc(userRef);
+
+        if (!userDoc.exists()) {
+            throw new Error("User document does not exist");
+        }
+
+        const userData = userDoc.data();
+        return userData?.tvfavourites || [];
+    },
+
     // Function to add a review to the user's reviews array
     addReview: async function (_id: string, review: Review) {
         const userRef = doc(firestore, collectionName, _id);

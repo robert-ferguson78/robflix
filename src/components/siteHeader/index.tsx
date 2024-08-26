@@ -62,6 +62,10 @@ const SiteHeader: React.FC = () => {
     { id: 5, label: "Add Fantasy Movie", path: "/movies/fantasy-movie-upload" },
     { id: 6, label: "Fantasy Movies", path: "/movies/fantasy-movies" },
     { id: 7, label: "TV", path: "/tv-shows" },
+    { id: 8, label: "Upcoming", path: "/tv-shows/upcoming" },
+    { id: 9, label: "Popular TV", path: "/tv-shows/popular" },
+    { id: 10, label: "Favorites", path: "/tv-shows/favourites" },
+    { id: 11, label: "Must Watch", path: "/tv-shows/playlist" },
   ];
 
   const handleMenuSelect = (pageURL: string) => {

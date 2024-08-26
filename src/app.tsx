@@ -3,10 +3,13 @@ import HomePage from "./pages/homePage";
 import LoginPage from "./pages/loginPage";
 import MoviePage from "./pages/movieDetailsPage";
 import FavouriteMoviesPage from "./pages/favouriteMoviesPage";
+import FavouriteTVPage from "./pages/favouriteTVPage";
 import PlaylistMoviesPage from "./pages/playlistMoviesPage";
 import MovieReviewPage from "./pages/movieReviewPage";
 import AddMovieReviewPage from './pages/addMovieReviewPage';
 import UpcomingPage from "./pages/upcomingPage";
+import UpcomingTVPage from "./pages/tvShowsUpcomingPage";
+import PopularTVPage from "./pages/tvShowsPopularPage";
 import AddFantasyMoviePage from "./pages/addFantasyMoviePage";
 import FantasyMoviesPage from "./pages/fantasyMoviePage";
 import FantasyMovieDetailsPage from "./pages/fantasyMovieDetailsPage";
@@ -25,6 +28,7 @@ import withAuth from './hoc/withAuth';
 const AddMovieReviewPageWithAuth = withAuth(AddMovieReviewPage);
 const MovieReviewPageWithAuth = withAuth(MovieReviewPage);
 const FavouriteMoviesPageWithAuth = withAuth(FavouriteMoviesPage);
+const FavouriteTVPageWithAuth = withAuth(FavouriteTVPage);
 const PlaylistMoviesPageWithAuth = withAuth(PlaylistMoviesPage);
 const AddFantasyMoviePageWithAuth = withAuth(AddFantasyMoviePage);
 const FantasyMoviesPageWithAuth = withAuth(FantasyMoviesPage);
@@ -60,6 +64,9 @@ const App = () => {
                 <Route path="/movies/fantasy-movies" element={<FantasyMoviesPageWithAuth />} />
                 <Route path="/movies/fantasy-movies/:id" element={<FantasyMovieDetailsPageWithAuth />} />
                 <Route path="/movies/upcoming" element={<UpcomingPage />} />
+                <Route path="/tv-shows/upcoming" element={<UpcomingTVPage />} />
+                <Route path="/tv-shows/favourites" element={<FavouriteTVPageWithAuth />} />
+                <Route path="/tv-shows/popular" element={<PopularTVPage />} />
                 <Route path="/" element={<HomePage />} />
                 <Route path="/tv-shows" element={<TVShowsPage />} />
                 <Route path="/tv-shows/:id" element={<TVPage />} />

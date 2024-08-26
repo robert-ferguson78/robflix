@@ -137,6 +137,7 @@ export const upcomingMovies = async (language: string, page: number = 1) => {
     }
 
     const data = await response.json();
+    console.log("Fetched upcoming movies data:", data);
     return data;
   } catch (error) {
     console.error("Failed to fetch upcoming movies:", error);
@@ -146,9 +147,9 @@ export const upcomingMovies = async (language: string, page: number = 1) => {
 
 // TV API calls
 
-export const fetchPopularTVShows = (language: string) => {
+export const fetchPopularTVShows = (language: string, page: number = 1) => {
   return fetch(
-    `https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_TMDB_KEY}&language=${language}&include_adult=false&include_video=false&page=1`
+    `https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_TMDB_KEY}&language=${language}&include_adult=false&include_video=false&page=${page}`
   ).then((response) => {
     if (!response.ok)
       throw new Error(`Unable to fetch TV shows. Response status: ${response.status}`);
@@ -156,7 +157,7 @@ export const fetchPopularTVShows = (language: string) => {
   })
     .then((data) => {
       console.log("Fetched TV shows data:", data);
-      return data.results;
+      return data;
     })
     .catch((error) => {
       console.error("Error fetching TV shows:", error);
@@ -262,6 +263,25 @@ export const getFeaturedTVShowImage = (id: string | number) => {
         file_path: show.poster_path,
         vote_count: show.vote_count,
       };
+    })
+    .catch((error) => {
+      throw error;
+    });
+};
+
+export const fetchUpcomingTVShows = (language: string, page: number = 1) => {
+  return fetch(
+    `https://api.themoviedb.org/3/tv/on_the_air?api_key=${import.meta.env.VITE_TMDB_KEY}&language=${language}&page=${page}`
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Failed to fetch upcoming TV shows. Response status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log("Fetched upcoming TV shows data:", data);
+      return data;
     })
     .catch((error) => {
       throw error;
