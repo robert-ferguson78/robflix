@@ -167,6 +167,20 @@ export interface Poster {
   vote_count: number;
 }
 
+export interface HeaderPropsWithPagination extends HeaderProps {
+  page?: number;
+  setPage?: React.Dispatch<React.SetStateAction<number>>;
+  isFetching?: boolean;
+  totalPages?: number;
+}
+
+export interface MovieListPageTemplateWithPaginationProps extends MovieListPageTemplateProps {
+  page?: number;
+  setPage?: React.Dispatch<React.SetStateAction<number>>;
+  isFetching?: boolean;
+  totalPages?: number;
+}
+
 // TV show interfaces
 
 export interface BaseTVShowProps {
@@ -190,6 +204,10 @@ export interface BaseTVShowListProps {
 
 export interface TemplateTVShowListPageProps extends BaseTVShowListProps {
   name: string;
+  page?: number;
+  setPage?: React.Dispatch<React.SetStateAction<number>>;
+  isFetching?: boolean;
+  totalPages?: number;
 }
 
 export interface TVShowHeader {

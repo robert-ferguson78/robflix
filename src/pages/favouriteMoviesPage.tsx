@@ -7,7 +7,6 @@ import Spinner from "../components/spinner";
 import useFiltering from "../hooks/useFiltering";
 import { titleFilter, sortFilter, genreFilterFavourites } from "../filters";
 import MovieFilterUI from "../components/movieFilterUI";
-import { BaseMovieProps } from "../types/interfaces";
 import RemoveFromFavourites from "../components/cardIcons/removeFromFavourites";
 import WriteReview from "../components/cardIcons/writeReview";
 import { userFirestoreStore } from "../models/user-firestore-store";
@@ -74,10 +73,8 @@ const FavouriteMoviesPage: React.FC = () => {
       if (!localFavourites) return [];
       const moviePromises = localFavourites.map((movieId: number) => getMovie(movieId.toString(), language));
       const movies = await Promise.all(moviePromises);
-      console.log("Fetched movies:", movies); // Log fetched movies
       movies.forEach(movie => {
-        movie.genre_ids = movie.genres.map((genre: { id: number }) => genre.id); // Ensure genre_ids is populated
-        console.log(`Movie ID: ${movie.id}, Genres:`, movie.genres); // Log genres of each movie
+        movie.genre_ids = movie.genres.map((genre: { id: number }) => genre.id);
       });
       return movies;
     },
@@ -91,18 +88,14 @@ const FavouriteMoviesPage: React.FC = () => {
   const isLoading = isFavouritesLoading || isMoviesLoading;
 
   const displayedMovies = useMemo(() => {
-    console.log("Filtering movies with filter values:", filterValues);
     const filteredMovies = favouriteMovies ? filterFunction(favouriteMovies) : [];
-    console.log("Filtered movies:", filteredMovies); // Log filtered movies
-    filteredMovies.forEach((movie: BaseMovieProps) => console.log(`Filtered Movie ID: ${movie.id}, Genres:`, movie.genres)); // Log genres of each filtered movie
     return filteredMovies;
-  }, [favouriteMovies, filterFunction, filterValues]);
+  }, [favouriteMovies, filterFunction]);
 
   const changeFilterValues = (type: string, value: string) => {
     const updatedFilterSet = filterValues.map(filter =>
       filter.name === type ? { ...filter, value } : filter
     );
-    console.log("Updated filter values:", updatedFilterSet);
     setFilterValues(updatedFilterSet);
   };
 

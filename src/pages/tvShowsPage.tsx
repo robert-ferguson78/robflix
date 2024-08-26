@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import TemplateTVShowListPage from '../components/templateTVShowListPage';
 import { BaseTVShowProps, DiscoverTVShows } from "../types/interfaces";
 import { getTVShows } from "../api/tmdb-api";
@@ -37,11 +37,17 @@ const createFilters = () => {
 
 const TVShowsPage: React.FC = () => {
   const { language } = useLanguage();
-  console.log("Current language:", language); // Log the language value
+  const [page, setPage] = useState(1);
 
-  const { data, error, isLoading, isError, refetch } = useQuery<DiscoverTVShows, Error>(
-    ["discoverTVShows", language], 
-    () => getTVShows(language)
+  const fetchTVShows = (page = 1) => {
+    console.log(`Fetching TV shows for page ${page} at ${new Date().toLocaleTimeString()}`);
+    return getTVShows(language, page);
+  };
+
+  const { data, error, isLoading, isError, isFetching, refetch } = useQuery<DiscoverTVShows, Error>(
+    ["discoverTVShows", page, language], 
+    () => fetchTVShows(page),
+    { staleTime: 300000 } // 5 minutes cache before data is considered stale
   );
 
   const { filterValues, setFilterValues, filterFunction } = useFiltering(createFilters());
@@ -65,26 +71,14 @@ const TVShowsPage: React.FC = () => {
     setFilterValues(updatedFilterSet);
   };
 
-  const shows: BaseTVShowProps[] = data?.results ?? [];
-  console.log("TV Shows before filtering:", shows);
-  console.log("Filter values:", filterValues);
-
-  // Log each filter value
-  filterValues.forEach(filter => {
-    console.log(`Filter type: ${filter.name}, Filter value: ${filter.value}`);
-  });
-
-  // Log the sort filter value specifically
-  const sortFilter = filterValues.find(filter => filter.name === "sort");
-  console.log("Sort filter value:", sortFilter?.value);
-
-  // Log inside filterFunction
-  const displayedShows = filterFunction(shows);
-  console.log("Displayed TV Shows after filtering:", displayedShows);
-
   const resetFilters = () => {
     setFilterValues(createFilters());
   };
+
+  const shows: BaseTVShowProps[] = data?.results ?? [];
+  const displayedShows = filterFunction(shows);
+
+  const totalPages = data ? Math.ceil(data.total_results / 20) : 1; // Assuming 20 shows per page
 
   return (
     <>
@@ -93,10 +87,13 @@ const TVShowsPage: React.FC = () => {
         shows={displayedShows}
         action={(show: BaseTVShowProps) => (
           <>
-            {/* <AddToPlaylistIcon {...show} /> */}
             <AddToFavouritesIcon type="show" media={show} />
           </>
         )}
+        page={page}
+        setPage={setPage}
+        isFetching={isFetching}
+        totalPages={totalPages}
       />
       <TVShowFilterUI
         onUserInput={changeFilterValues}

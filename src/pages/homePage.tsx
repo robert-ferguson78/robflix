@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import PageTemplate from '../components/templateMovieListPage';
 import { BaseMovieProps } from "../types/interfaces";
 import { getMovies } from "../api/tmdb-api";
@@ -39,11 +39,17 @@ const createFilters = () => {
 
 const HomePage: React.FC = () => {
   const { language } = useLanguage();
-  console.log("Current language:", language); // Log the language value
+  const [page, setPage] = useState(1);
 
-  const { data, error, isLoading, isError, refetch } = useQuery<DiscoverMovies, Error>(
-    ["discover", language], 
-    () => getMovies(language)
+  const fetchMovies = (page = 1) => {
+    console.log(`Fetching movies for page ${page} at ${new Date().toLocaleTimeString()}`);
+    return getMovies(language, page);
+  };
+
+  const { data, error, isLoading, isError, refetch, isFetching } = useQuery<DiscoverMovies, Error>(
+    ["discover", page, language], 
+    () => fetchMovies(page),
+    { staleTime: 300000 } // 5 minutes cache before data is considered stale
   );
 
   const { filterValues, setFilterValues, filterFunction } = useFiltering(createFilters());
@@ -67,26 +73,13 @@ const HomePage: React.FC = () => {
     setFilterValues(updatedFilterSet);
   };
 
-  const movies = data?.results ?? [];
-  console.log("Movies before filtering:", movies);
-  console.log("Filter values:", filterValues);
-
-  // Log each filter value
-  filterValues.forEach(filter => {
-    console.log(`Filter type: ${filter.name}, Filter value: ${filter.value}`);
-  });
-
-  // Log the sort filter value specifically
-  const sortFilter = filterValues.find(filter => filter.name === "sort");
-  console.log("Sort filter value:", sortFilter?.value);
-
-  // Log inside filterFunction
-  const displayedMovies = filterFunction(movies);
-  console.log("Displayed Movies after filtering:", displayedMovies);
-
   const resetFilters = () => {
     setFilterValues(createFilters());
   };
+
+  const movies = data?.results ?? [];
+  const displayedMovies = filterFunction(movies);
+  const totalPages = data ? Math.ceil(data.total_results / 20) : 1; // Assuming 20 movies per page
 
   return (
     <>
@@ -99,6 +92,10 @@ const HomePage: React.FC = () => {
             <AddToFavouritesIcon type="movie" media={movie} />
           </>
         )}
+        page={page}
+        setPage={setPage}
+        isFetching={isFetching}
+        totalPages={totalPages}
       />
       <MovieFilterUI
         onFilterValuesChange={changeFilterValues}
@@ -106,7 +103,7 @@ const HomePage: React.FC = () => {
         genreFilter={filterValues[1].value}
         sortOption={filterValues[2].value}
         resetFilters={resetFilters}
-        language={language} // had to pass in the language prop to the filter component
+        language={language}
       />
     </>
   );

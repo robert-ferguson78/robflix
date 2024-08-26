@@ -91,6 +91,8 @@ const PopularTVPage: React.FC = () => {
     console.warn("No shows displayed after filtering. Check the filter function.");
   }
 
+  const totalPages = data ? Math.ceil(data.total_results / 20) : 1; // Assuming 20 shows per page
+
   return (
     <>
       <TemplateTVShowListPage
@@ -101,6 +103,10 @@ const PopularTVPage: React.FC = () => {
             <AddToFavouritesIcon type="show" media={show} />
           </>
         )}
+        page={page}
+        setPage={setPage}
+        isFetching={isFetching}
+        totalPages={totalPages}
       />
       <TVShowFilterUI
         onUserInput={changeFilterValues}
@@ -110,26 +116,6 @@ const PopularTVPage: React.FC = () => {
         resetFilters={resetFilters}
         language={language}
       />
-      <div>
-        <span>Current Page: {page}</span>
-        <button
-          onClick={() => setPage((old) => Math.max(old - 1, 1))}
-          disabled={page === 1}
-        >
-          Previous Page
-        </button>
-        <button
-          onClick={() => {
-            if (!isFetching && data?.total_pages && page < data.total_pages) {
-              setPage((old) => old + 1);
-            }
-          }}
-          disabled={isFetching || (data && page >= data.total_pages)}
-        >
-          Next Page
-        </button>
-        {isFetching ? <span> Loading...</span> : null}
-      </div>
     </>
   );
 };

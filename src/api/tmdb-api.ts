@@ -6,9 +6,9 @@ const fetchWithLanguage = (url: string, language: string) => {
   return fetch(`${url}&language=${language}`);
 };
 
-export const getMovies = (language: string) => {
+export const getMovies = (language: string, page: number = 1) => {
   return fetchWithLanguage(
-    `https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_TMDB_KEY}&include_adult=false&include_video=false&page=1`,
+    `https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_TMDB_KEY}&include_adult=false&include_video=false&page=${page}`,
     language
   ).then((response) => {
     if (!response.ok)
@@ -16,7 +16,7 @@ export const getMovies = (language: string) => {
     return response.json();
   })
     .catch((error) => {
-      throw error
+      throw error;
     });
 };
 
@@ -179,9 +179,9 @@ export const fetchTVShow = (id: string, language: string) => {
   });
 };
 
-export const getTVShows = (language: string) => {
+export const getTVShows = (language: string, page: number = 1) => {
   return fetch(
-      `https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_TMDB_KEY}&language=${language}&include_adult=false&include_video=false`
+      `https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_TMDB_KEY}&language=${language}&include_adult=false&include_video=false&page=${page}`
     ).then((response) => {
       if (!response.ok) {
         throw new Error(`Failed to get TV show data. Response status: ${response.status}`);

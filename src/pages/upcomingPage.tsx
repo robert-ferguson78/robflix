@@ -76,6 +76,8 @@ const UpcomingMoviesPage: React.FC = () => {
   const movies = data ? data.results : [];
   const displayedMovies = filterFunction(movies);
 
+  const totalPages = data ? Math.ceil(data.total_results / 20) : 1; // Assuming 20 movies per page
+
   return (
     <>
       <PageTemplate
@@ -87,6 +89,10 @@ const UpcomingMoviesPage: React.FC = () => {
             <AddToFavouritesIcon type="movie" media={movie} />
           </>
         )}
+        page={page}
+        setPage={setPage}
+        isFetching={isFetching}
+        totalPages={totalPages}
       />
       <MovieFilterUI
         onFilterValuesChange={changeFilterValues}
@@ -96,26 +102,6 @@ const UpcomingMoviesPage: React.FC = () => {
         resetFilters={resetFilters}
         language={language}
       />
-      <div>
-        <span>Current Page: {page}</span>
-        <button
-          onClick={() => setPage((old) => Math.max(old - 1, 1))}
-          disabled={page === 1}
-        >
-          Previous Page
-        </button>
-        <button
-          onClick={() => {
-            if (!isFetching && data?.total_pages && page < data.total_pages) {
-              setPage((old) => old + 1);
-            }
-          }}
-          disabled={isFetching || (data && page >= data.total_pages)}
-        >
-          Next Page
-        </button>
-        {isFetching ? <span> Loading...</span> : null}
-      </div>
     </>
   );
 };
