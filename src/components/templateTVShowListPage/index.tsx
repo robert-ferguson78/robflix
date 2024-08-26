@@ -2,7 +2,13 @@ import React from "react";
 import Grid from "@mui/material/Grid";
 import Header from "../headerTVList";
 import TVShowList from "../tvShowsList";
-import { TemplateTVShowListPageProps } from "../../types/interfaces";
+import { BaseTVShowProps } from "../../types/interfaces";
+
+interface TemplateTVShowListPageProps {
+  name: string;
+  shows: BaseTVShowProps[];
+  action: (show: BaseTVShowProps) => JSX.Element;
+}
 
 const styles = {
   root: { 
