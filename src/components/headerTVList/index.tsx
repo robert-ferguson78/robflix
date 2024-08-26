@@ -13,7 +13,11 @@ const styles = {
         alignItems: "center",
         flexWrap: "wrap",
         marginBottom: 1.5,
+        backgroundColor: "#b90000",
     },
+    whiteColour: {
+        color: "#ffffff", // Custom color for ArrowForwardIcon
+      },
 };
 
 const Header: React.FC<HeaderPropsWithPagination> = ({ title, page, setPage, isFetching, totalPages }) => {
@@ -26,12 +30,12 @@ const Header: React.FC<HeaderPropsWithPagination> = ({ title, page, setPage, isF
                         onClick={() => setPage((old) => Math.max(old - 1, 1))}
                         disabled={page === 1}
                     >
-                        <ArrowBackIcon color="primary" fontSize="large" />
+                        <ArrowBackIcon  sx={styles.whiteColour} fontSize="large" />
                     </IconButton>
                 </>
             )}
 
-            <Typography variant="h4" component="h3">
+            <Typography  sx={styles.whiteColour} variant="h4" component="h3">
                 {title}
             </Typography>
 
@@ -46,7 +50,7 @@ const Header: React.FC<HeaderPropsWithPagination> = ({ title, page, setPage, isF
                         }}
                         disabled={isFetching || page >= totalPages}
                     >
-                        <ArrowForwardIcon color="primary" fontSize="large" />
+                        <ArrowForwardIcon  sx={styles.whiteColour} fontSize="large" />
                     </IconButton>
                 </>
             )}

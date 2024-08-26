@@ -15,9 +15,13 @@ const styles = {
     alignItems: "center",
     flexWrap: "wrap",
     marginBottom: 1.5,
+    backgroundColor: "#b90000",
 },
   avatar: {
     backgroundColor: "rgb(255, 0, 0)",
+  },
+  whiteColour: {
+    color: "#ffffff", // Custom color for ArrowForwardIcon
   },
 };
 
@@ -28,7 +32,7 @@ const TVShowHeader: React.FC<BaseTVShowProps> = (show) => {
   return (
     <Paper component="div" sx={styles.root}>
       <IconButton aria-label="go back">
-        <ArrowBackIcon color="primary" fontSize="large" />
+        <ArrowBackIcon sx={styles.whiteColour} fontSize="large" />
       </IconButton>
         {
           isFavourite ? (
@@ -37,11 +41,11 @@ const TVShowHeader: React.FC<BaseTVShowProps> = (show) => {
                 </Avatar>
               ) : null
         }
-      <Typography variant="h4" component="h3">
+      <Typography sx={styles.whiteColour} variant="h4" component="h3">
         {show.name}{" "}
       </Typography>
       <IconButton aria-label="go forward">
-        <ArrowForwardIcon color="primary" fontSize="large" />
+        <ArrowForwardIcon sx={styles.whiteColour} fontSize="large" />
       </IconButton>
     </Paper>
   );

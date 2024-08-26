@@ -6,7 +6,7 @@ import { TemplateTVShowListPageProps } from "../../types/interfaces";
 
 const styles = {
   root: { 
-    backgroundColor: "#bfbfbf",
+    backgroundColor: "#000000",
   }
 };
 

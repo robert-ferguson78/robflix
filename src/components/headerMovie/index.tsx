@@ -16,9 +16,13 @@ const styles = {
     alignItems: "center",
     flexWrap: "wrap",
     padding: 1.5,
+    backgroundColor: "#b90000",
   },
   avatar: {
     backgroundColor: "rgb(255, 0, 0)",
+  },
+  whiteColour: {
+    color: "#ffffff", // Custom color for ArrowForwardIcon
   },
 };
 
@@ -29,7 +33,7 @@ const MovieHeader: React.FC<MovieDetailsProps> = (movie) => {
   return (
     <Paper component="div" sx={styles.root}>
       <IconButton aria-label="go back">
-        <ArrowBackIcon color="primary" fontSize="large" />
+        <ArrowBackIcon sx={styles.whiteColour} fontSize="large" />
       </IconButton>
         {
           isFavourite ? (
@@ -38,7 +42,7 @@ const MovieHeader: React.FC<MovieDetailsProps> = (movie) => {
                 </Avatar>
               ) : null
         }
-      <Typography variant="h4" component="h3">
+      <Typography sx={styles.whiteColour} variant="h4" component="h3">
         {movie.title}{"   "}
         <a href={movie.homepage}>
           <HomeIcon color="primary"  fontSize="large"/>
@@ -47,7 +51,7 @@ const MovieHeader: React.FC<MovieDetailsProps> = (movie) => {
         <span>{`${movie.tagline}`} </span>
       </Typography>
       <IconButton aria-label="go forward">
-        <ArrowForwardIcon color="primary" fontSize="large" />
+        <ArrowForwardIcon sx={styles.whiteColour} fontSize="large" />
       </IconButton>
     </Paper>
   );

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './app';
 import { AuthProvider } from './contexts/authContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import './css/style.css';
 
 // Create a client
 const queryClient = new QueryClient();
