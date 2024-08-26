@@ -18,7 +18,7 @@ const styles = {
 };
 
 const TVShowFilterUI: React.FC<TVShowFilterUIProps> = ({
-    onUserInput,
+    onFilterValuesChange,
     titleFilter,
     genreFilter,
     sortOption,
@@ -47,7 +47,7 @@ const TVShowFilterUI: React.FC<TVShowFilterUIProps> = ({
                 onClose={() => setDrawerOpen(false)}
             >
                 <FilterCard
-                    onUserInput={onUserInput}
+                    onUserInput={onFilterValuesChange}
                     titleFilter={titleFilter}
                     genreFilter={genreFilter}
                     sortOption={sortOption}
