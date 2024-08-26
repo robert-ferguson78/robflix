@@ -41,6 +41,8 @@ const LanguageSelect = styled(Select)({
 const SiteHeader: React.FC = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [selectedMenu, setSelectedMenu] = useState<'movies' | 'tv'>('movies');
+  const [selectedSubMenu, setSelectedSubMenu] = useState<string>('');
   const [isAuthenticated, setIsAuthenticated] = useState(false); // State to track authentication status
   const open = Boolean(anchorEl);
   const theme = useTheme();
@@ -54,22 +56,16 @@ const SiteHeader: React.FC = () => {
     return () => unsubscribe();
   }, []);
 
-  const menuOptions = [
-    { id: 1, label: "Movies", path: "/" },
-    { id: 2, label: "Upcoming", path: "/movies/upcoming" },
-    { id: 3, label: "Favorites", path: "/movies/favourites" },
-    { id: 4, label: "Must Watch", path: "/movies/playlist" },
-    { id: 5, label: "Add Fantasy Movie", path: "/movies/fantasy-movie-upload" },
-    { id: 6, label: "Fantasy Movies", path: "/movies/fantasy-movies" },
-    { id: 7, label: "TV", path: "/tv-shows" },
-    { id: 8, label: "Upcoming", path: "/tv-shows/upcoming" },
-    { id: 9, label: "Popular TV", path: "/tv-shows/popular" },
-    { id: 10, label: "Favorites", path: "/tv-shows/favourites" },
-    { id: 11, label: "Must Watch", path: "/tv-shows/playlist" },
-  ];
-
-  const handleMenuSelect = (pageURL: string) => {
+  const handleMenuSelect = (pageURL: string, subMenu: string) => {
     navigate(pageURL);
+    setSelectedSubMenu(subMenu);
+    setAnchorEl(null);
+  };
+
+  const handleMainMenuSelect = (menu: 'movies' | 'tv') => {
+    setSelectedMenu(menu);
+    setSelectedSubMenu('');
+    navigate(menu === 'movies' ? '/' : '/tv-shows');
   };
 
   const handleMenu = (event: MouseEvent<HTMLButtonElement>) => {
@@ -86,6 +82,119 @@ const SiteHeader: React.FC = () => {
     }
   };
 
+  const renderSubMenu = () => {
+    if (selectedMenu === 'movies') {
+      return (
+        <>
+          <MenuItem
+            onClick={() => handleMenuSelect("/movies/upcoming", "upcoming")}
+            sx={{
+              borderBottom: selectedSubMenu === 'upcoming' ? '2px solid red' : 'none',
+              '&:hover': {
+                borderBottom: '2px solid red',
+              },
+            }}
+          >
+            Upcoming
+          </MenuItem>
+          <MenuItem
+            onClick={() => handleMenuSelect("/movies/favourites", "favourites")}
+            sx={{
+              borderBottom: selectedSubMenu === 'favourites' ? '2px solid red' : 'none',
+              '&:hover': {
+                borderBottom: '2px solid red',
+              },
+            }}
+          >
+            Favorites
+          </MenuItem>
+          <MenuItem
+            onClick={() => handleMenuSelect("/movies/playlist", "playlist")}
+            sx={{
+              borderBottom: selectedSubMenu === 'playlist' ? '2px solid red' : 'none',
+              '&:hover': {
+                borderBottom: '2px solid red',
+              },
+            }}
+          >
+            Must Watch
+          </MenuItem>
+          <MenuItem
+            onClick={() => handleMenuSelect("/movies/fantasy-movie-upload", "fantasy-movie-upload")}
+            sx={{
+              borderBottom: selectedSubMenu === 'fantasy-movie-upload' ? '2px solid red' : 'none',
+              '&:hover': {
+                borderBottom: '2px solid red',
+              },
+            }}
+          >
+            Add Fantasy Movie
+          </MenuItem>
+          <MenuItem
+            onClick={() => handleMenuSelect("/movies/fantasy-movies", "fantasy-movies")}
+            sx={{
+              borderBottom: selectedSubMenu === 'fantasy-movies' ? '2px solid red' : 'none',
+              '&:hover': {
+                borderBottom: '2px solid red',
+              },
+            }}
+          >
+            Fantasy Movies
+          </MenuItem>
+        </>
+      );
+    } else if (selectedMenu === 'tv') {
+      return (
+        <>
+          <MenuItem
+            onClick={() => handleMenuSelect("/tv-shows/upcoming", "upcoming")}
+            sx={{
+              borderBottom: selectedSubMenu === 'upcoming' ? '2px solid red' : 'none',
+              '&:hover': {
+                borderBottom: '2px solid red',
+              },
+            }}
+          >
+            Upcoming
+          </MenuItem>
+          <MenuItem
+            onClick={() => handleMenuSelect("/tv-shows/popular", "popular")}
+            sx={{
+              borderBottom: selectedSubMenu === 'popular' ? '2px solid red' : 'none',
+              '&:hover': {
+                borderBottom: '2px solid red',
+              },
+            }}
+          >
+            Popular TV
+          </MenuItem>
+          <MenuItem
+            onClick={() => handleMenuSelect("/tv-shows/favourites", "favourites")}
+            sx={{
+              borderBottom: selectedSubMenu === 'favourites' ? '2px solid red' : 'none',
+              '&:hover': {
+                borderBottom: '2px solid red',
+              },
+            }}
+          >
+            Favorites
+          </MenuItem>
+          <MenuItem
+            onClick={() => handleMenuSelect("/tv-shows/playlist", "playlist")}
+            sx={{
+              borderBottom: selectedSubMenu === 'playlist' ? '2px solid red' : 'none',
+              '&:hover': {
+                borderBottom: '2px solid red',
+              },
+            }}
+          >
+            Must Watch
+          </MenuItem>
+        </>
+      );
+    }
+  };
+
   return (
     <>
       <AppBar
@@ -94,10 +203,10 @@ const SiteHeader: React.FC = () => {
         sx={{ bgcolor: "rgb(20, 20, 20)" }}
       >
         <LanguageSelect
-        value={language}
-        onChange={(e) => setLanguage(e.target.value as 'en' | 'fr' | 'de')}
-        sx={{ position: 'absolute', top: '10px', right: '10px' }}
-      >
+          value={language}
+          onChange={(e) => setLanguage(e.target.value as 'en' | 'fr' | 'de')}
+          sx={{ position: 'absolute', top: '10px', right: '10px' }}
+        >
           <MenuItem value="en">English</MenuItem>
           <MenuItem value="fr">Français</MenuItem>
           <MenuItem value="de">Deutsch</MenuItem>
@@ -136,32 +245,49 @@ const SiteHeader: React.FC = () => {
                 open={open}
                 onClose={() => setAnchorEl(null)}
               >
-                {menuOptions.map((opt) => (
-                  <MenuItem
-                    key={opt.id}
-                    onClick={() => handleMenuSelect(opt.path)}
-                  >
-                    {opt.label}
-                  </MenuItem>
-                ))}
-                <MenuItem onClick={isAuthenticated ? handleLogout : () => handleMenuSelect('/login')}>
+                <MenuItem onClick={() => handleMainMenuSelect('movies')}>Movies</MenuItem>
+                <MenuItem onClick={() => handleMainMenuSelect('tv')}>TV</MenuItem>
+                {renderSubMenu()}
+                <MenuItem onClick={isAuthenticated ? handleLogout : () => handleMenuSelect('/login', '')}>
                   {isAuthenticated ? "Logout" : "Login / Register"}
                 </MenuItem>
               </Menu>
             </>
           ) : (
             <>
-              {menuOptions.map((opt) => (
-                <Button
-                  key={opt.id}
-                  color="inherit"
-                  onClick={() => handleMenuSelect(opt.path)}
-                >
-                  {opt.label}
-                </Button>
-              ))}
+              <Button
+                color="inherit"
+                onClick={() => handleMainMenuSelect('movies')}
+                sx={{
+                  backgroundColor: selectedMenu === 'movies' ? 'red' : 'transparent',
+                  color: selectedMenu === 'movies' ? 'white' : 'inherit',
+                  borderBottom: selectedMenu === 'movies' ? '2px solid red' : 'none',
+                  '&:hover': {
+                    backgroundColor: selectedMenu === 'movies' ? 'darkred' : 'rgba(255, 255, 255, 0.08)',
+                  },
+                }}
+              >
+                Movies
+              </Button>
+              <Button
+                color="inherit"
+                onClick={() => handleMainMenuSelect('tv')}
+                sx={{
+                  backgroundColor: selectedMenu === 'tv' ? 'red' : 'transparent',
+                  color: selectedMenu === 'tv' ? 'white' : 'inherit',
+                  borderBottom: selectedMenu === 'tv' ? '2px solid red' : 'none',
+                  '&:hover': {
+                    backgroundColor: selectedMenu === 'tv' ? 'darkred' : 'rgba(255, 255, 255, 0.08)',
+                  },
+                }}
+              >
+                TV
+              </Button>
+              <div style={{ display: 'flex', marginLeft: '20px' }}>
+                {renderSubMenu()}
+              </div>
               <CustomButton
-                onClick={isAuthenticated ? handleLogout : () => handleMenuSelect('/login')}
+                onClick={isAuthenticated ? handleLogout : () => handleMenuSelect('/login', '')}
                 sx={{ marginLeft: "auto" }}
               >
                 {isAuthenticated ? "Logout" : "Login / Register"}
