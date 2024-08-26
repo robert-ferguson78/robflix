@@ -20,11 +20,6 @@ const FantasyMovieDetailsPage: React.FC = () => {
     }
   );
 
-  console.log("FantasyMovieDetailsPage: isLoading:", isLoading);
-  console.log("FantasyMovieDetailsPage: isError:", isError);
-  console.log("FantasyMovieDetailsPage: error:", error);
-  console.log("FantasyMovieDetailsPage: movie:", movie);
-
   if (isLoading) {
     return <Spinner />;
   }

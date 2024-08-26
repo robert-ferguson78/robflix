@@ -45,31 +45,33 @@ const FantasyMovieDetails: React.FC<FantasyMovieProps> = (movie) => {
     return (
         <>
             <Grid container spacing={2}>
-                <Grid item xs={12}>
-                    <Typography variant="h2" component="h1" sx={styles.title}>
-                        {movie.title}
-                    </Typography>
-                </Grid>
                 <Grid item xs={12} sm={4}>
                     <img src={movie.posterUrl} alt={`${movie.title} poster`} style={styles.poster} />
                 </Grid>
                 <Grid item xs={12} sm={8}>
-                    <Typography variant="h6" component="p">
-                        {movie.overview}
-                    </Typography>
-
-                    <Paper component="ul" sx={styles.chipSet}>
-                        <li>
-                            <Chip label="Genres" sx={styles.chipLabel} color="primary" />
-                        </li>
-                        {movie.genres.map((g) => (
-                            <li key={g}>
-                                <Chip label={g} />
-                            </li>
-                        ))}
-                        <Chip icon={<AccessTimeIcon />} label={`${movie.runtime} min.`} color="primary" />
-                        <Chip label={`Released: ${movie.releaseDate}`} color="primary" />
-                    </Paper>
+                    <Grid container sx={{ backgroundColor: "#ffffff", padding: 2 }}>
+                    <Grid item xs={12}>
+                        <Typography variant="h6" component="p">
+                            {movie.overview}
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                            <Paper component="ul" sx={styles.chipSet}>
+                                <li>
+                                    <Chip label="Genres" sx={styles.chipLabel} color="primary" />
+                                </li>
+                                {movie.genres.map((g) => (
+                                    <li key={g}>
+                                        <Chip label={g} />
+                                    </li>
+                                ))}
+                            </Paper>
+                        </Grid>
+                        <Grid item xs={12} sx={styles.chipSet}>
+                            <Chip icon={<AccessTimeIcon />} label={`${movie.runtime} min.`} color="primary" />
+                            <Chip label={`Released: ${movie.releaseDate}`} color="primary" />
+                        </Grid>
+                    </Grid>
                 </Grid>
             </Grid>
             <Button variant="contained" color="primary" style={styles.button} onClick={handleBackClick}>
