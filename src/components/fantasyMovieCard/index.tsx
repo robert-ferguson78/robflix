@@ -12,8 +12,6 @@ import CalendarIcon from "@mui/icons-material/CalendarTodayTwoTone";
 import Grid from "@mui/material/Grid";
 import img from '../../images/film-poster-placeholder.png';
 import { FantasyMovieCardProp } from "../../types/interfaces";
-import Avatar from "@mui/material/Avatar";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import { styled } from "@mui/system";
 
 const styles = {
