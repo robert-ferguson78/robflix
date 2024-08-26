@@ -14,7 +14,9 @@ const styles = {
     position: "fixed",
     top: 20,
     right: 2,
-  },
+    backgroundColor: "#ffffff",
+    border: "2px solid #ffffff",
+},
 };
 
 const MovieFilterUI: React.FC<MovieFilterUIProps> = ({
@@ -34,7 +36,6 @@ const MovieFilterUI: React.FC<MovieFilterUIProps> = ({
   return (
     <>
       <Fab
-        color="secondary"
         variant="extended"
         onClick={() => setDrawerOpen(true)}
         sx={styles.fab}

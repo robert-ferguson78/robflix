@@ -26,9 +26,12 @@ const styles = {
         margin: 0.5,
     },
     fab: {
+        marginTop: 8,
         position: "fixed",
-        top: 50,
+        top: 20,
         right: 2,
+        backgroundColor: "#ffffff",
+        border: "2px solid #ffffff",
     },
     gridContainer: {
         padding: "15px",
@@ -55,50 +58,56 @@ const TVShowDetails: React.FC<TVShowDetailsProps> = (show) => {
 
     return (
         <>
-            <Typography variant="h5" component="h3">
-                Overview
-            </Typography>
+            <Grid container sx={{ backgroundColor: "#ffffff", padding: 2 }}>
+                <Typography variant="h5" component="h3">
+                    Overview
+                </Typography>
 
-            <Typography variant="h6" component="p">
-                {show.overview}
-            </Typography>
-
-            <Paper component="ul" sx={styles.chipSet}>
-                <li>
-                    <Chip label="Genres" sx={styles.chipLabel} color="primary" />
-                </li>
-                {show.genres.map((g) => (
-                    <li key={g.name}>
-                        <Chip label={g.name} />
-                    </li>
-                ))}
-            </Paper>
-            <Paper component="ul" sx={styles.chipSet}>
-                <Chip 
-                    icon={<AccessTimeIcon />}
-                    // runtime is not always available, so we need to check if it exists before displaying it
-                    label={show.episode_run_time && show.episode_run_time.length > 0 ? `${show.episode_run_time[0]} min.` : "No Runtime"} 
-                />
-                <Chip
-                    icon={<StarRate />}
-                    label={`${show.vote_average} based on ${show.vote_count} votes`}
-                />
-                <Chip label={`First Air Date: ${show.first_air_date}`} />
-            </Paper>
-            <Grid container spacing={5} sx={styles.gridContainer} wrap="wrap">
-                {show.production_companies.map((company) => (
-                    <Grid item key={company.id} sx={styles.gridItem}>
-                        {company.logo_path && (
-                            <StyledImg
-                                src={`https://image.tmdb.org/t/p/w500/${company.logo_path}`}
-                                alt={`${company.name} (${company.origin_country})`}
-                            />
-                        )}
+                <Typography variant="h6" component="p">
+                    {show.overview}
+                </Typography>
+                <Grid container direction="column" alignItems="center" spacing={2}>
+                    <Grid item>
+                        <Paper component="ul" sx={styles.chipSet}>
+                            <li>
+                                <Chip label="Genres" sx={styles.chipLabel} color="primary" />
+                            </li>
+                            {show.genres.map((g) => (
+                                <li key={g.name}>
+                                    <Chip label={g.name} />
+                                </li>
+                            ))}
+                        </Paper>
                     </Grid>
-                ))}
+                    <Grid item>
+                        <Paper component="ul" sx={styles.chipSet}>
+                            <Chip 
+                                icon={<AccessTimeIcon />}
+                                // runtime is not always available, so we need to check if it exists before displaying it
+                                label={show.episode_run_time && show.episode_run_time.length > 0 ? `${show.episode_run_time[0]} min.` : "No Runtime"} 
+                            />
+                            <Chip
+                                icon={<StarRate />}
+                                label={`${show.vote_average} based on ${show.vote_count} votes`}
+                            />
+                            <Chip label={`First Air Date: ${show.first_air_date}`} />
+                        </Paper>
+                    </Grid>
+                </Grid>
+                <Grid container spacing={5} sx={styles.gridContainer} wrap="wrap">
+                    {show.production_companies.map((company) => (
+                        <Grid item key={company.id} sx={styles.gridItem}>
+                            {company.logo_path && (
+                                <StyledImg
+                                    src={`https://image.tmdb.org/t/p/w500/${company.logo_path}`}
+                                    alt={`${company.name} (${company.origin_country})`}
+                                />
+                            )}
+                        </Grid>
+                    ))}
+                </Grid>
             </Grid>
             <Fab
-                color="secondary"
                 variant="extended"
                 onClick={() => setDrawerOpen(true)}
                 sx={styles.fab}

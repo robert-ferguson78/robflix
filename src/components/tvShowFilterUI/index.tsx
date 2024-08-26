@@ -14,6 +14,8 @@ const styles = {
         position: "fixed",
         top: 20,
         right: 2,
+        backgroundColor: "#ffffff",
+        border: "2px solid #ffffff",
     },
 };
 
@@ -34,7 +36,6 @@ const TVShowFilterUI: React.FC<TVShowFilterUIProps> = ({
     return (
         <>
             <Fab
-                color="secondary"
                 variant="extended"
                 onClick={() => setDrawerOpen(true)}
                 sx={styles.fab}

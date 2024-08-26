@@ -31,9 +31,12 @@ const styles = {
         margin: 0.5,
     },
     fab: {
+        marginTop: 8,
         position: "fixed",
-        top: 50,
+        top: 20,
         right: 2,
+        backgroundColor: "#ffffff",
+        border: "2px solid #ffffff",
     },
     gridContainer: {
         padding: "15px",
@@ -80,50 +83,52 @@ const MovieDetails: React.FC<MovieDetailsProps> = (movie) => {
 
     return (
         <>
-            <Typography variant="h5" component="h3">
-                Overview
-            </Typography>
+            <Grid container sx={{ backgroundColor: "#ffffff", padding: 2 }}>
+                <Typography variant="h5" component="h3">
+                    Overview
+                </Typography>
 
-            <Typography variant="h6" component="p">
-                {movie.overview}
-            </Typography>
+                <Typography variant="h6" component="p">
+                    {movie.overview}
+                </Typography>
 
-            <Paper component="ul" sx={styles.chipSet}>
-                <li>
-                    <Chip label="Genres" sx={styles.chipLabel} color="primary" />
-                </li>
-                {movie.genres.map((g) => (
-                    <li key={g.name}>
-                        <Chip label={g.name} />
-                    </li>
-                ))}
-            </Paper>
-            <Paper component="ul" sx={styles.chipSet}>
-                <Chip icon={<AccessTimeIcon />} label={`${movie.runtime} min.`} />
-                <Chip
-                    icon={<MonetizationIcon />}
-                    label={`${movie.revenue.toLocaleString()}`}
-                />
-                <Chip
-                    icon={<StarRate />}
-                    label={`${movie.vote_average} based on ${movie.vote_count} votes`}
-                />
-                <Chip label={`Released: ${movie.release_date}`} />
-            </Paper>
-            <Grid container spacing={5} sx={styles.gridContainer} wrap="wrap">
-                {movie.production_companies.map((company) => (
-                    <Grid item key={company.id} sx={styles.gridItem}>
-                        {company.logo_path && (
-                            <StyledImg
-                                src={`https://image.tmdb.org/t/p/w500/${company.logo_path}`}
-                                alt={`${company.name} (${company.origin_country})`}
-                            />
-                        )}
+                <Grid container direction="column" alignItems="center" spacing={2}>
+                    <Grid item>
+                        <Paper component="ul" sx={styles.chipSet}>
+                            <li>
+                                <Chip label="Genres" sx={styles.chipLabel} color="primary" />
+                            </li>
+                            {movie.genres.map((g) => (
+                                <li key={g.name}>
+                                    <Chip label={g.name} />
+                                </li>
+                            ))}
+                        </Paper>
                     </Grid>
-                ))}
+                    <Grid item>
+                        <Paper component="ul" sx={styles.chipSet}>
+                            <Chip icon={<AccessTimeIcon />} label={`${movie.runtime} min.`} />
+                            <Chip icon={<MonetizationIcon />} label={`${movie.revenue.toLocaleString()}`} />
+                            <Chip icon={<StarRate />} label={`${movie.vote_average} based on ${movie.vote_count} votes`} />
+                            <Chip label={`Released: ${movie.release_date}`} />
+                        </Paper>
+                    </Grid>
+                </Grid>
+
+                <Grid container spacing={5} sx={styles.gridContainer} wrap="wrap">
+                    {movie.production_companies.map((company) => (
+                        <Grid item key={company.id} sx={styles.gridItem}>
+                            {company.logo_path && (
+                                <StyledImg
+                                    src={`https://image.tmdb.org/t/p/w500/${company.logo_path}`}
+                                    alt={`${company.name} (${company.origin_country})`}
+                                />
+                            )}
+                        </Grid>
+                    ))}
+                </Grid>
             </Grid>
             <Fab
-                color="secondary"
                 variant="extended"
                 onClick={() => setDrawerOpen(true)}
                 sx={styles.fab}
