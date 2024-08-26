@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, Container, Typography, Box, IconButton, CircularProgress, Snackbar, Select, MenuItem, InputLabel, FormControl, Checkbox, ListItemText, SelectChangeEvent } from '@mui/material';
+import { TextField, Button, Typography, Box, IconButton, CircularProgress, Snackbar, Select, MenuItem, InputLabel, FormControl, Checkbox, ListItemText, SelectChangeEvent, Container } from '@mui/material';
 import { uploadImage } from '../models/storage-firease';
 import { fantasyMovieFirestoreStore } from '../models/fantasy-movie-firestore-store';
 import { Add as AddIcon, Delete as DeleteIcon, Theaters as TheatersIcon } from '@mui/icons-material';
 import { auth } from '../firebase/firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
+import { styled } from '@mui/system';
 
 const allowedGenres = [
     { id: "0", name: "All" },
@@ -30,6 +31,14 @@ const allowedGenres = [
 ];
 
 type ActorField = 'name' | 'biography' | 'profileFile';
+
+const StyledContainer = styled(Container)({
+    backgroundColor: 'white',
+    marginTop: '50px',
+    padding: '20px',
+    borderRadius: '8px',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+});
 
 const AddFantasyMoviePage = () => {
     const [title, setTitle] = useState('');
@@ -192,7 +201,7 @@ const AddFantasyMoviePage = () => {
     };
 
     return (
-        <Container maxWidth="sm">
+        <StyledContainer maxWidth="sm">
             <Typography variant="h4" component="h1" gutterBottom>
                 Add Fantasy Movie
             </Typography>
@@ -345,7 +354,7 @@ const AddFantasyMoviePage = () => {
                 autoHideDuration={2000}
                 onClose={() => setSuccessMessage('')}
             />
-        </Container>
+        </StyledContainer>
     );
 };
 
