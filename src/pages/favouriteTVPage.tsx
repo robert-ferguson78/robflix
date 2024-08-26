@@ -9,7 +9,7 @@ import { tvTitleFilter, tvSortFilter, tvGenreFilterFavourites } from "../filters
 import TVShowFilterUI from "../components/tvShowFilterUI";
 import { BaseTVShowProps } from "../types/interfaces";
 import RemoveFromFavourites from "../components/cardIcons/removeFromTVFavourites";
-import WriteReview from "../components/cardIcons/writeReview";
+// import WriteReview from "../components/cardIcons/writeReview";
 import { userFirestoreStore } from "../models/user-firestore-store";
 import { auth } from "../firebase/firebaseConfig";
 import { useLanguage } from '../contexts/languageContext';
@@ -123,7 +123,7 @@ const FavouriteTVPage: React.FC = () => {
         action={(tvShow) => (
           <>
             <RemoveFromFavourites {...tvShow} />
-            <WriteReview {...tvShow} />
+            {/* <WriteReview {...tvShow} /> */}
           </>
         )}
       />
