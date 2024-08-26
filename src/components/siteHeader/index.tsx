@@ -19,7 +19,7 @@ import { useLanguage } from '../../contexts/languageContext';
 const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
 
 const CustomButton = styled(Button)({
-  color: 'black',
+  color: 'white',
   backgroundColor: 'red',
   border: '1px solid red',
   borderRadius: '5px',

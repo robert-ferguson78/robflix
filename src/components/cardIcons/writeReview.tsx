@@ -3,6 +3,16 @@ import RateReviewIcon from "@mui/icons-material/RateReview";
 import { BaseMovieProps } from "../../types/interfaces";
 import { Link } from "react-router-dom";
 
+const styles = {
+  buttonStyle: {
+    color: "#ffffff",
+    '&:hover': {
+      color: "rgb(255, 0, 0)",
+    },
+  },
+};
+
+
 const WriteReviewIcon: React.FC<BaseMovieProps> = (movie) => {
   if (!movie) {
     console.error("Movie is undefined");
@@ -16,7 +26,7 @@ const WriteReviewIcon: React.FC<BaseMovieProps> = (movie) => {
         movieId: movie.id,
       }}
     >
-      <RateReviewIcon color="primary" fontSize="large" />
+      <RateReviewIcon sx={styles.buttonStyle} fontSize="large" />
     </Link>
   );
 };

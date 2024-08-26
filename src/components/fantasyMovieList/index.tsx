@@ -9,7 +9,7 @@ const FantasyMovieList: React.FC<FantasyMovieCardProps> = ({ movies }) => {
   }
 
   const movieCards = movies.map((m) => (
-    <Grid key={m.id} item xs={12} sm={6} md={4} lg={3} xl={2}>
+    <Grid key={m.id} item xs={12} sm={6} md={3} lg={3} xl={3}>
       <FantasyMovieCard key={m.id} movies={m}  />
     </Grid>
   ));

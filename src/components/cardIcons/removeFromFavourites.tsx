@@ -7,6 +7,15 @@ import { userFirestoreStore } from "../../models/user-firestore-store";
 import { auth } from "../../firebase/firebaseConfig";
 import { useQueryClient } from "react-query";
 
+const styles = {
+  buttonStyle: {
+    color: "#ffffff",
+    '&:hover': {
+      color: "rgb(255, 0, 0)",
+    },
+  },
+};
+
 const RemoveFromFavouritesIcon: React.FC<BaseMovieProps> = (movie) => {
   const context = useContext(MoviesContext);
   const queryClient = useQueryClient();
@@ -38,7 +47,7 @@ const RemoveFromFavouritesIcon: React.FC<BaseMovieProps> = (movie) => {
 
   return (
     <IconButton aria-label="remove from favorites" onClick={onUserRequest}>
-      <DeleteIcon color="primary" fontSize="large" />
+      <DeleteIcon sx={styles.buttonStyle} fontSize="large" />
     </IconButton>
   );
 };

@@ -8,6 +8,15 @@ import { userFirestoreStore } from "../../models/user-firestore-store";
 import { auth } from "../../firebase/firebaseConfig";
 import { useQueryClient } from "react-query";
 
+const styles = {
+  buttonStyle: {
+    color: "#ffffff",
+    '&:hover': {
+      color: "rgb(255, 0, 0)",
+    },
+  },
+};
+
 const AddToFavouritesIcon: React.FC<AddToFavouritesIconProps> = (props) => {
   const { type, media } = props;
   const moviesContext = useContext(MoviesContext);
@@ -48,7 +57,7 @@ const AddToFavouritesIcon: React.FC<AddToFavouritesIconProps> = (props) => {
 
   return (
     <IconButton aria-label="add to favorites" onClick={onUserSelect}>
-      <FavoriteIcon color="primary" fontSize="large" />
+      <FavoriteIcon sx={styles.buttonStyle} fontSize="large" />
     </IconButton>
   );
 };

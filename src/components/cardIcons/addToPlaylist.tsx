@@ -7,6 +7,15 @@ import { userFirestoreStore } from "../../models/user-firestore-store";
 import { auth } from "../../firebase/firebaseConfig";
 import { useQueryClient } from "react-query";
 
+const styles = {
+  buttonStyle: {
+    color: "#ffffff",
+    '&:hover': {
+      color: "rgb(255, 0, 0)",
+    },
+  },
+};
+
 const AddToPlaylistIcon: React.FC<BaseMovieProps> = (movie) => {
   const context = useContext(MoviesContext);
   const queryClient = useQueryClient();
@@ -41,7 +50,7 @@ const AddToPlaylistIcon: React.FC<BaseMovieProps> = (movie) => {
 
   return (
     <IconButton aria-label="add to must watch list" onClick={onUserSelect}>
-      <PlaylistIcon color="primary" fontSize="large" />
+      <PlaylistIcon sx={styles.buttonStyle} fontSize="large" />
     </IconButton>
   );
 };
