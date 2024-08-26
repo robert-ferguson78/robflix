@@ -1,40 +1,62 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import MovieCard from "../components/movieCard";
-import SampleMovie from "./sampleData";
-import { MemoryRouter } from "react-router";
-import MoviesContextProvider from "../contexts/moviesContext";
-import { action } from "@storybook/addon-actions";
-import AddToFavouritesIcon from "../components/cardIcons/addToFavourites";
 import React from 'react';
+import { Story, Meta } from '@storybook/react';
+import MovieCard from '../components/movieCard';
+import { MoviesContext } from '../contexts/moviesContext';
+import sampleData from './sampleData';
+import { MemoryRouter } from 'react-router-dom';
 
-const meta = {
-  title: 'Home Page/MovieCard',
+export default {
+  title: 'Components/MovieCard',
   component: MovieCard,
   decorators: [
-    (Story) => <MemoryRouter initialEntries={["/"]}>{Story()}</MemoryRouter>,
-    (Story) => <MoviesContextProvider>{Story()}</MoviesContextProvider>,
+    (Story) => (
+      <MemoryRouter>
+        <Story />
+      </MemoryRouter>
+    ),
   ],
-} satisfies Meta<typeof MovieCard>;
+} as Meta;
 
-export default meta;
+const Template: Story = (args) => <MovieCard {...args} />;
 
-type Story = StoryObj<typeof meta>;
-
-export const Basic: Story = {
-  args: {
-    action: (movie ) => <AddToFavouritesIcon {...movie} />,
-    movie: SampleMovie,
-
-  }
-
+export const Default = Template.bind({});
+Default.args = {
+  movie: sampleData,
+  action: () => <></>,
 };
-Basic.storyName = "Default";
 
-const sampleNoPoster = { ...SampleMovie, poster_path: undefined };
-export const Exceptional: Story = {
-  args: {
-    movie: sampleNoPoster,
-    action: (movie ) => <AddToFavouritesIcon {...movie} />,
-  }
+export const Favorite = Template.bind({});
+Favorite.args = {
+  ...Default.args,
 };
-Exceptional.storyName = "Exception";
+Favorite.decorators = [
+  (Story) => (
+    <MoviesContext.Provider
+      value={{
+        favourites: [sampleData.id],
+        addToFavourites: () => {},
+        mustPlaylist: [],
+        movies: [],
+        genres: [],
+        removeFromFavourites: () => {},
+        addToPlaylist: () => {},
+        removeFromPlaylist: () => {},
+        addReview: () => {},
+        setMustPlaylist: () => {},
+        setFavourites: () => {},
+      }}
+    >
+      <Story />
+    </MoviesContext.Provider>
+  ),
+];
+
+export const WithAction = Template.bind({});
+WithAction.args = {
+  ...Default.args,
+  action: (movie) => (
+    <button onClick={() => console.log(`Added ${movie.title} to favorites`)}>
+      Add to Favorites
+    </button>
+  ),
+};
