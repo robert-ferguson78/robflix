@@ -32,7 +32,7 @@ export const TVShowsContext = React.createContext<TVShowContextInterface>(initia
 const TVShowsContextProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     const { language } = useLanguage();
     const [favourites, setFavourites] = useState<number[]>([]);
-    // Usimg _ to ignore the value of the state
+    // Using _ to ignore the value of the state
     const [_, setMyReviews] = useState<Review[]>([]);
     const [mustPlaylist, setMustPlaylist] = useState<number[]>([]);
     const [tvShows, setTVShows] = useState<BaseTVShowProps[]>([]);
@@ -82,6 +82,12 @@ const TVShowsContextProvider: React.FC<React.PropsWithChildren> = ({ children })
         });
     }, []);
 
+    // Add logging to setFavourites
+    const setFavouritesWithLogging = (newFavourites: number[]) => {
+        console.log("Setting favourites:", newFavourites);
+        setFavourites(newFavourites);
+    };
+
     return (
         <TVShowsContext.Provider value={{
             favourites,
@@ -92,7 +98,8 @@ const TVShowsContextProvider: React.FC<React.PropsWithChildren> = ({ children })
             removeFromFavourites,
             removeFromPlaylist,
             addReview,
-            addToPlaylist
+            addToPlaylist,
+            setFavourites: setFavouritesWithLogging // Use the logging version
         }}>
             {children}
         </TVShowsContext.Provider>

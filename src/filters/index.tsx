@@ -18,9 +18,14 @@ const useFiltering = <T,>(filters: Filter<T>[]) => {
   const sortingConditions = filters.filter(f => f.type === 'sort').map((f) => f.condition);
 
   const filterFunction = (collection: T[]) => {
+    console.log("Collection before filtering:", collection);
     let filteredData = filteringConditions.reduce((data, conditionFn, index) => {
       console.log(`Applying filter: ${filterValues[index].name}, value: ${filterValues[index].value}`);
-      return data.filter((item) => conditionFn(item, filterValues[index].value) as boolean);
+      return data.filter((item) => {
+        const result = conditionFn(item, filterValues[index].value) as boolean;
+        console.log(`Filter result for item: ${JSON.stringify(item)}, result: ${result}`);
+        return result;
+      });
     }, collection);
 
     if (sortingConditions.length > 0) {
@@ -32,6 +37,7 @@ const useFiltering = <T,>(filters: Filter<T>[]) => {
       }, filteredData);
     }
 
+    console.log("Filtered data after applying all filters and sorts:", filteredData);
     return filteredData;
   };
 
@@ -46,7 +52,9 @@ export default useFiltering;
 
 // Movie Filters
 export const titleFilter = (movie: BaseMovieProps, value: string): boolean => {
-  return movie.title?.toLowerCase().includes(value.toLowerCase()) ?? false;
+  const result = movie.title?.toLowerCase().includes(value.toLowerCase()) ?? false;
+  console.log(`titleFilter - Movie: ${movie.title}, Value: ${value}, Result: ${result}`);
+  return result;
 };
 
 export const genreFilter = (movie: BaseMovieProps, value: string): boolean => {
@@ -60,18 +68,25 @@ export const genreFilter = (movie: BaseMovieProps, value: string): boolean => {
 export const sortFilter = (movies: BaseMovieProps[], value: string): BaseMovieProps[] => {
   if (!Array.isArray(movies)) return [];
   
+  let sortedMovies;
   switch (value) {
     case "name":
-      return movies.sort((a, b) => a.title.localeCompare(b.title));
+      sortedMovies = movies.sort((a, b) => a.title.localeCompare(b.title));
+      break;
     case "highRating":
-      return movies.sort((a, b) => b.vote_average - a.vote_average);
+      sortedMovies = movies.sort((a, b) => b.vote_average - a.vote_average);
+      break;
     case "lowRating":
-      return movies.sort((a, b) => a.vote_average - b.vote_average);
+      sortedMovies = movies.sort((a, b) => a.vote_average - b.vote_average);
+      break;
     case "releaseDate":
-      return movies.sort((a, b) => new Date(b.release_date).getTime() - new Date(a.release_date).getTime());
+      sortedMovies = movies.sort((a, b) => new Date(b.release_date).getTime() - new Date(a.release_date).getTime());
+      break;
     default:
-      return movies;
+      sortedMovies = movies;
   }
+  console.log(`sortFilter - Sort by: ${value}, Result:`, sortedMovies);
+  return sortedMovies;
 };
 
 // TV Show Filters
@@ -121,5 +136,13 @@ export const genreFilterFavourites = (movie: BaseMovieProps, value: string): boo
   const genreIds = movie.genre_ids || []; // Ensure genre_ids is an array
   const result = genreId === 0 || (genreIds.length > 0 && genreIds.includes(genreId));
   console.log(`genreFilterFavourites - Movie: ${movie.title}, GenreId: ${genreId}, GenreIds: ${genreIds}, Result: ${result}`);
+  return result;
+};
+
+export const tvGenreFilterFavourites = (show: BaseTVShowProps, value: string): boolean => {
+  const genreId = Number(value);
+  const genreIds = show.genre_ids || []; // Ensure genre_ids is an array
+  const result = genreId === 0 || (genreIds.length > 0 && genreIds.includes(genreId));
+  console.log(`tvGenreFilterFavourites - Show: ${show.name}, GenreId: ${genreId}, GenreIds: ${genreIds}, Result: ${result}`);
   return result;
 };

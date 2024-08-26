@@ -57,12 +57,17 @@ const StyledImg = styled('img')({
 const MovieDetails: React.FC<MovieDetailsProps> = (movie) => {
     const [drawerOpen, setDrawerOpen] = useState(false);
 
+    // Log the entire movie data to the console
+    useEffect(() => {
+        console.log('Movie data:', JSON.stringify(movie, null, 2));
+    }, [movie]);
+
     // Filter YouTube videos
     const youtubeVideos = movie.videos.results.filter(video => video.site === "YouTube");
 
     // Log the youtubeVideos to the console
     useEffect(() => {
-        console.log('youtube video log:', JSON.stringify(youtubeVideos, null, 2));
+        console.log('YouTube video log:', JSON.stringify(youtubeVideos, null, 2));
     }, [youtubeVideos]);
 
     const sliderSettings = {
