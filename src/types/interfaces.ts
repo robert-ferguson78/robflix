@@ -228,7 +228,7 @@ export interface DiscoverTVShows {
 }
 
 export interface TVShowFilterUIProps {
-  onFilterValuesChange: (type: string, value: string) => void;
+  onUserInput: (type: string, value: string) => void;
   titleFilter: string;
   genreFilter: string;
   sortOption: string;

@@ -127,7 +127,7 @@ const FavouriteTVPage: React.FC = () => {
         )}
       />
       <TVShowFilterUI
-        onFilterValuesChange={changeFilterValues}
+        onUserInput={changeFilterValues}
         titleFilter={filterValues[0].value}
         genreFilter={filterValues[1].value}
         sortOption={filterValues[2].value}
