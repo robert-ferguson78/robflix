@@ -209,7 +209,43 @@ export interface TVShowDetailsProps extends BaseTVShowProps {
     episode_count: number;
     air_date: string;
   }[];
-  episode_run_time?: number[]; // Optional as not every show has this property
+  episode_run_time?: number[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  created_by?: any[];
+  in_production?: boolean;
+  languages?: string[];
+  last_air_date?: string;
+  last_episode_to_air?: {
+    id: number;
+    name: string;
+    vote_average: number;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any;
+  };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  networks?: any[];
+  next_episode_to_air?: {
+    id: number;
+    name: string;
+    vote_average: number;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any;
+  };
+  number_of_episodes?: number;
+  number_of_seasons?: number;
+  origin_country?: string[];
+  original_name?: string;
+  production_countries?: {
+    iso_3166_1: string;
+    name: string;
+  }[];
+  spoken_languages?: {
+    iso_639_1: string;
+    name: string;
+  }[];
+  status?: string;
+  tagline?: string;
+  type?: string;
 }
 
 export interface FilterTVShowsCardProps {

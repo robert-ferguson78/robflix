@@ -79,6 +79,7 @@ const FavouriteTVPage: React.FC = () => {
         tvShow.genre_ids = tvShow.genres.map((genre: { id: number }) => genre.id); // Ensure genre_ids is populated
         console.log(`TV Show ID: ${tvShow.id}, Genres:`, tvShow.genres); // Log genres of each TV show
       });
+      console.log("Final TV shows structure:", tvShows);
       return tvShows;
     },
     {
