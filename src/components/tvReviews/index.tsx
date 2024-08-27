@@ -9,18 +9,20 @@ import Paper from "@mui/material/Paper";
 import { Link } from "react-router-dom";
 import { getTVShowReviews } from "../../api/tmdb-api";
 import { excerpt } from "../../util";
-
 import { TVShowDetailsProps, Review } from "../../types/interfaces";
 
+// Define styles for the table
 const styles = {
     table: {
         minWidth: 550,
     },
 };
 
+// Component to display TV show reviews
 const TVShowReviews: React.FC<TVShowDetailsProps> = (show) => { 
     const [reviews, setReviews] = useState<Review[]>([]);
 
+    // Fetch reviews when the component mounts
     useEffect(() => {
         getTVShowReviews(show.id).then((reviews) => {
             setReviews(reviews);
@@ -29,6 +31,7 @@ const TVShowReviews: React.FC<TVShowDetailsProps> = (show) => {
     }, []);
 
     return (
+        // Table container for reviews
         <TableContainer component={Paper}>
             <Table sx={styles.table} aria-label="reviews table">
                 <TableHead>

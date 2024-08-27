@@ -11,17 +11,20 @@ import Slider from "react-slick";
 import Button from "@mui/material/Button";
 import img from '../../images/film-poster-placeholder.png';
 
+// Props for the TemplateMoviePage component
 interface TemplateMoviePageProps {
     movie: MovieDetailsProps;
     children: React.ReactElement;
 }
 
+// Props for the custom arrow components
 interface ArrowProps {
     className?: string;
     style?: React.CSSProperties;
     onClick?: React.MouseEventHandler<HTMLDivElement>;
 }
 
+// Custom next arrow component for the slider
 const NextArrow: React.FC<ArrowProps> = (props) => {
     const { className, style, onClick } = props;
     return (
@@ -33,6 +36,7 @@ const NextArrow: React.FC<ArrowProps> = (props) => {
     );
 };
 
+// Custom previous arrow component for the slider
 const PrevArrow: React.FC<ArrowProps> = (props) => {
     const { className, style, onClick } = props;
     return (
@@ -44,28 +48,34 @@ const PrevArrow: React.FC<ArrowProps> = (props) => {
     );
 };
 
+// Main component for the movie page template
 const TemplateMoviePage: React.FC<TemplateMoviePageProps> = ({ movie, children }) => {
     const [showSlider, setShowSlider] = useState(false);
 
+    // Query to fetch movie images
     const { data: imagesData, error: imagesError, isLoading: isImagesLoading, isError: isImagesError, refetch: refetchImages } = useQuery<MovieImage[], Error>(
         ["images", movie.id],
         () => getMovieImages(movie.id),
         { enabled: false } // Disable automatic query execution
     );
 
+    // Query to fetch the featured movie image
     const { data: featuredImage, error: featuredImageError, isLoading: isFeaturedImageLoading, isError: isFeaturedImageError } = useQuery<MovieImage | null, Error>(
         ["featuredImage", movie.id],
         () => getFeaturedMovieImage(movie.id)
     );
 
+    // Show spinner while loading the featured image
     if (isFeaturedImageLoading) {
         return <Spinner />;
     }
 
+    // Show error message if there is an error loading the featured image
     if (isFeaturedImageError) {
         return <h1>{featuredImageError.message}</h1>;
     }
 
+    // Handle toggle for the slider
     const handleToggleSlider = () => {
         if (!showSlider) {
             refetchImages();
@@ -73,6 +83,7 @@ const TemplateMoviePage: React.FC<TemplateMoviePageProps> = ({ movie, children }
         setShowSlider(!showSlider);
     };
 
+    // Settings for the slider component
     const sliderSettings = {
         dots: true,
         infinite: true,
@@ -85,8 +96,10 @@ const TemplateMoviePage: React.FC<TemplateMoviePageProps> = ({ movie, children }
 
     return (
         <>
+            {/* Movie header component */}
             <MovieHeader {...movie} />
 
+            {/* Main content grid */}
             <Grid container spacing={5} style={{ padding: "15px" }}>
                 <Grid item xs={4}>
                     <img
@@ -99,6 +112,8 @@ const TemplateMoviePage: React.FC<TemplateMoviePageProps> = ({ movie, children }
                     {children}
                 </Grid>
             </Grid>
+
+            {/* Slider toggle button and slider grid */}
             <Grid container spacing={5} style={{ padding: "15px", textAlign: "center" }}>
                 <Grid item xs={12}>
                     <Button variant="contained" color="primary" onClick={handleToggleSlider}>

@@ -7,6 +7,7 @@ import { userFirestoreStore } from "../../models/user-firestore-store";
 import { auth } from "../../firebase/firebaseConfig";
 import { useQueryClient } from "react-query";
 
+// Define styles for the playlist button
 const styles = {
   buttonStyle: {
     color: "#ffffff",
@@ -16,22 +17,27 @@ const styles = {
   },
 };
 
+// Component for adding a movie to the playlist
 const AddToPlaylistIcon: React.FC<BaseMovieProps> = (movie) => {
   const context = useContext(MoviesContext);
   const queryClient = useQueryClient();
 
+  // Function to handle the user selecting the playlist button
   const onUserSelect = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     console.log("Button clicked, adding to playlist:", movie);
 
+    // Add the movie to the playlist in the context
     context.addToPlaylist(movie);
 
-    const userId = auth.currentUser?.uid; // Get the authenticated user's ID
+    // Get the authenticated user's ID
+    const userId = auth.currentUser?.uid;
     if (userId) {
       console.log("User ID:", userId);
       try {
+        // Add the movie to Firestore
         console.log(`Adding movie with ID: ${movie.id} to user with ID: ${userId}`);
-        await userFirestoreStore.addWatchListMovie(userId, movie.id.toString()); // Add the movie to Firestore
+        await userFirestoreStore.addWatchListMovie(userId, movie.id.toString());
         console.log(`Successfully added movie with ID: ${movie.id} to Firestore`);
       } catch (error) {
         console.error(`Failed to add movie with ID: ${movie.id} to Firestore`, error);
@@ -40,7 +46,7 @@ const AddToPlaylistIcon: React.FC<BaseMovieProps> = (movie) => {
       console.error("User is not authenticated");
     }
 
-    // Add to local storage
+    // Add the movie to local storage
     const storedPlaylist = JSON.parse(localStorage.getItem("playlistMovies") || "[]");
     localStorage.setItem("playlistMovies", JSON.stringify([...storedPlaylist, movie.id]));
 
@@ -48,6 +54,7 @@ const AddToPlaylistIcon: React.FC<BaseMovieProps> = (movie) => {
     queryClient.invalidateQueries("playlistMovies");
   };
 
+  // Render the playlist button
   return (
     <IconButton aria-label="add to must watch list" onClick={onUserSelect}>
       <PlaylistIcon sx={styles.buttonStyle} fontSize="large" />

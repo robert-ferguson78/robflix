@@ -9,30 +9,37 @@ import { useQuery } from "react-query";
 import Spinner from '../spinner';
 import img from '../../images/film-poster-placeholder.png';
 
+// Props for the TemplateTVShowPage component
 interface TemplateTVShowPageProps {
     show: TVShowDetailsProps;
     children: React.ReactElement;
 }
 
+// Main component for the TV show page template
 const TemplateTVShowPage: React.FC<TemplateTVShowPageProps> = ({ show, children }) => {
 
+    // Query to fetch the featured TV show image
     const { data: featuredImage, error: featuredImageError, isLoading: isFeaturedImageLoading, isError: isFeaturedImageError } = useQuery<TVShowImage, Error>(
         ["featuredImage", show.id],
         () => getFeaturedTVShowImage(show.id)
     );
 
+    // Show spinner while loading the featured image
     if (isFeaturedImageLoading) {
         return <Spinner />;
     }
 
+    // Show error message if there is an error loading the featured image
     if (isFeaturedImageError) {
         return <h1>{featuredImageError.message}</h1>;
     }
 
     return (
         <>
+            {/* TV show header component */}
             <TVShowHeader {...show} />
 
+            {/* Main content grid */}
             <Grid container spacing={5} style={{ padding: "15px" }}>
                 <Grid item xs={4}>
                     <img

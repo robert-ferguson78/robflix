@@ -18,6 +18,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import GoBackButton from '../goBackButton';
 
+// Define styles for various components
 const styles = {
     chipSet: {
         display: "flex",
@@ -52,12 +53,14 @@ const styles = {
     },
 };
 
+// Define styled component for images
 const StyledImg = styled('img')({
     width: 'auto',
     height: 'auto',
     maxHeight: '50px',
 });
 
+// Define the MovieDetails component
 const MovieDetails: React.FC<MovieDetailsProps> = (movie) => {
     const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -74,6 +77,7 @@ const MovieDetails: React.FC<MovieDetailsProps> = (movie) => {
         console.log('YouTube video log:', JSON.stringify(youtubeVideos, null, 2));
     }, [youtubeVideos]);
 
+    // Slider settings for the video carousel
     const sliderSettings = {
         dots: true,
         infinite: true,
@@ -84,17 +88,19 @@ const MovieDetails: React.FC<MovieDetailsProps> = (movie) => {
 
     return (
         <>
+            {/* Main container for movie details */}
             <Grid container sx={{ backgroundColor: "#ffffff", padding: 2 }}>
                 <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <GoBackButton />
                 </Grid>
                 <Typography variant="h5" component="h3">
-                        Overview
-                    </Typography>
+                    Overview
+                </Typography>
                 <Typography variant="h6" component="p">
                     {movie.overview}
                 </Typography>
 
+                {/* Display movie genres and other details */}
                 <Grid container direction="column" alignItems="center" spacing={2}>
                     <Grid item>
                         <Paper component="ul" sx={styles.chipSet}>
@@ -118,6 +124,7 @@ const MovieDetails: React.FC<MovieDetailsProps> = (movie) => {
                     </Grid>
                 </Grid>
 
+                {/* Display production companies */}
                 <Grid container spacing={5} sx={styles.gridContainer} wrap="wrap">
                     {movie.production_companies.map((company) => (
                         <Grid item key={company.id} sx={styles.gridItem}>
@@ -131,6 +138,8 @@ const MovieDetails: React.FC<MovieDetailsProps> = (movie) => {
                     ))}
                 </Grid>
             </Grid>
+
+            {/* Floating action button to open reviews drawer */}
             <Fab
                 variant="extended"
                 onClick={() => setDrawerOpen(true)}
@@ -139,9 +148,13 @@ const MovieDetails: React.FC<MovieDetailsProps> = (movie) => {
                 <NavigationIcon />
                 Reviews
             </Fab>
+
+            {/* Drawer to display movie reviews */}
             <Drawer anchor="top" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
                 <MovieReviews {...movie} />
             </Drawer>
+
+            {/* Slider to display YouTube videos */}
             <Slider {...sliderSettings}>
                 {youtubeVideos.map(video => (
                     <div key={video.id}>

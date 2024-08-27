@@ -13,17 +13,20 @@ import { userFirestoreStore } from "../models/user-firestore-store";
 import { auth } from "../firebase/firebaseConfig";
 import { useLanguage } from '../contexts/languageContext';
 
+// Function to create initial filter settings
 const createFilters = () => [
   { name: "title", value: "", condition: titleFilter, type: 'filter' as const },
   { name: "genre", value: "0", condition: genreFilterFavourites, type: 'filter' as const },
   { name: "sort", value: "name", condition: sortFilter, type: 'sort' as const },
 ];
 
+// Component to display the favourite movies page
 const FavouriteMoviesPage: React.FC = () => {
-  const { language } = useLanguage();
-  const { setFavourites } = useContext(MoviesContext);
-  const { filterValues, setFilterValues, filterFunction } = useFiltering(createFilters());
+  const { language } = useLanguage(); // Get the current language from context
+  const { setFavourites } = useContext(MoviesContext); // Get the setFavourites function from context
+  const { filterValues, setFilterValues, filterFunction } = useFiltering(createFilters()); // Initialize filters
 
+  // Function to fetch favourite movies from local storage or Firestore
   const fetchFavouriteMovies = async (): Promise<number[]> => {
     let storedFavourites = JSON.parse(localStorage.getItem("favouriteMovies") || "[]");
 
@@ -39,6 +42,7 @@ const FavouriteMoviesPage: React.FC = () => {
     return storedFavourites;
   };
 
+  // Query to fetch favourite movies
   const { data: localFavourites, isLoading: isFavouritesLoading } = useQuery(
     "favouriteMovies",
     fetchFavouriteMovies,
@@ -48,12 +52,14 @@ const FavouriteMoviesPage: React.FC = () => {
     }
   );
 
+  // Effect to update favourites in context when localFavourites changes
   useEffect(() => {
     if (localFavourites) {
       setFavourites(localFavourites);
     }
   }, [localFavourites, setFavourites]);
 
+  // Effect to handle storage changes
   useEffect(() => {
     const handleStorageChange = () => {
       const updatedFavourites = JSON.parse(localStorage.getItem("favouriteMovies") || "[]");
@@ -67,6 +73,7 @@ const FavouriteMoviesPage: React.FC = () => {
     };
   }, [setFavourites]);
 
+  // Query to fetch details of favourite movies
   const { data: favouriteMovies, isLoading: isMoviesLoading } = useQuery(
     ["favouriteMoviesDetails", localFavourites, language],
     async () => {
@@ -87,11 +94,13 @@ const FavouriteMoviesPage: React.FC = () => {
 
   const isLoading = isFavouritesLoading || isMoviesLoading;
 
+  // Memoize the filtered movies
   const displayedMovies = useMemo(() => {
     const filteredMovies = favouriteMovies ? filterFunction(favouriteMovies) : [];
     return filteredMovies;
   }, [favouriteMovies, filterFunction]);
 
+  // Function to change filter values
   const changeFilterValues = (type: string, value: string) => {
     const updatedFilterSet = filterValues.map(filter =>
       filter.name === type ? { ...filter, value } : filter
@@ -99,14 +108,17 @@ const FavouriteMoviesPage: React.FC = () => {
     setFilterValues(updatedFilterSet);
   };
 
+  // Function to reset filters to initial values
   const resetFilters = () => {
     setFilterValues(createFilters());
   };
 
+  // Show spinner while loading
   if (isLoading) {
     return <Spinner />;
   }
 
+  // Render the page template with the filtered movies and filter UI
   return (
     <>
       <PageTemplate

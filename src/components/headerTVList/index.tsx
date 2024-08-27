@@ -6,6 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { HeaderPropsWithPagination } from "../../types/interfaces";
 
+// Define styles for various components
 const styles = {
     root: {
         display: "flex",
@@ -17,30 +18,37 @@ const styles = {
     },
     whiteColour: {
         color: "#ffffff", // Custom color for ArrowForwardIcon
-      },
+    },
 };
 
+// Define the Header component
 const Header: React.FC<HeaderPropsWithPagination> = ({ title, page, setPage, isFetching, totalPages }) => {
     return (
+        // Container for the header
         <Paper component="div" sx={styles.root}>
+            {/* Conditional rendering for pagination controls */}
             {page !== undefined && setPage && isFetching !== undefined && totalPages !== undefined && (
                 <>
+                    {/* Back button */}
                     <IconButton
                         aria-label="go back"
                         onClick={() => setPage((old) => Math.max(old - 1, 1))}
                         disabled={page === 1}
                     >
-                        <ArrowBackIcon  sx={styles.whiteColour} fontSize="large" />
+                        <ArrowBackIcon sx={styles.whiteColour} fontSize="large" />
                     </IconButton>
                 </>
             )}
 
-            <Typography  sx={styles.whiteColour} variant="h4" component="h3">
+            {/* Title */}
+            <Typography sx={styles.whiteColour} variant="h4" component="h3">
                 {title}
             </Typography>
 
+            {/* Conditional rendering for pagination controls */}
             {page !== undefined && setPage && isFetching !== undefined && totalPages !== undefined && (
                 <>
+                    {/* Forward button */}
                     <IconButton
                         aria-label="go forward"
                         onClick={() => {
@@ -50,7 +58,7 @@ const Header: React.FC<HeaderPropsWithPagination> = ({ title, page, setPage, isF
                         }}
                         disabled={isFetching || page >= totalPages}
                     >
-                        <ArrowForwardIcon  sx={styles.whiteColour} fontSize="large" />
+                        <ArrowForwardIcon sx={styles.whiteColour} fontSize="large" />
                     </IconButton>
                 </>
             )}

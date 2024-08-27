@@ -10,6 +10,7 @@ import Spinner from "../components/spinner";
 import AddToFavouritesIcon from '../components/cardIcons/addToFavourites';
 import { useLanguage } from '../contexts/languageContext';
 
+// Function to create initial filter settings for TV shows
 const createFilters = () => {
   const titleFiltering = {
     name: "title",
@@ -35,35 +36,42 @@ const createFilters = () => {
   return [titleFiltering, genreFiltering, sortFiltering];
 };
 
+// Component to display the TV shows page
 const TVShowsPage: React.FC = () => {
-  const { language } = useLanguage();
-  const [page, setPage] = useState(1);
+  const { language } = useLanguage(); // Get the current language from context
+  const [page, setPage] = useState(1); // State to manage the current page
 
+  // Function to fetch TV shows based on the current page and language
   const fetchTVShows = (page = 1) => {
     console.log(`Fetching TV shows for page ${page} at ${new Date().toLocaleTimeString()}`);
     return getTVShows(language, page);
   };
 
+  // Query to fetch TV shows using react-query
   const { data, error, isLoading, isError, isFetching, refetch } = useQuery<DiscoverTVShows, Error>(
     ["discoverTVShows", page, language], 
     () => fetchTVShows(page),
     { staleTime: 300000 } // 5 minutes cache before data is considered stale
   );
 
-  const { filterValues, setFilterValues, filterFunction } = useFiltering(createFilters());
+  const { filterValues, setFilterValues, filterFunction } = useFiltering(createFilters()); // Initialize filters
 
+  // Effect to refetch TV shows when the language changes
   useEffect(() => {
     refetch();
   }, [language, refetch]);
 
+  // Show spinner while loading
   if (isLoading) {
     return <Spinner />;
   }
 
+  // Show error message if there's an error
   if (isError) {
     return <h1>{error.message}</h1>;
   }
 
+  // Function to change filter values
   const changeFilterValues = (type: string, value: string) => {
     const updatedFilterSet = filterValues.map(filter => 
       filter.name === type ? { ...filter, value } : filter
@@ -71,15 +79,17 @@ const TVShowsPage: React.FC = () => {
     setFilterValues(updatedFilterSet);
   };
 
+  // Function to reset filters to initial values
   const resetFilters = () => {
     setFilterValues(createFilters());
   };
 
-  const shows: BaseTVShowProps[] = data?.results ?? [];
-  const displayedShows = filterFunction(shows);
+  const shows: BaseTVShowProps[] = data?.results ?? []; // Get the TV shows from the query data
+  const displayedShows = filterFunction(shows); // Apply filters to the TV shows
 
-  const totalPages = data ? Math.ceil(data.total_results / 20) : 1; // Assuming 20 shows per page
+  const totalPages = data ? Math.ceil(data.total_results / 20) : 1; // Calculate total pages assuming 20 shows per page
 
+  // Render the page template with the filtered TV shows and filter UI
   return (
     <>
       <TemplateTVShowListPage

@@ -1,11 +1,11 @@
 import { Poster } from "../types/interfaces";
 
-// Movie API calls
-
+// Helper function to fetch data with language parameter
 const fetchWithLanguage = (url: string, language: string) => {
   return fetch(`${url}&language=${language}`);
 };
 
+// Fetches a list of currently playing movies
 export const getMovies = (language: string, page: number = 1) => {
   return fetchWithLanguage(
     `https://api.themoviedb.org/3/movie/now_playing?api_key=${import.meta.env.VITE_TMDB_KEY}&include_adult=false&include_video=false&page=${page}`,
@@ -20,6 +20,7 @@ export const getMovies = (language: string, page: number = 1) => {
     });
 };
 
+// Fetches detailed information about a specific movie by ID
 export const getMovie = async (id: string, language: string) => {
   console.log("getMovie called with id:", id, "and language:", language); // Log id and language parameters
 
@@ -41,6 +42,7 @@ export const getMovie = async (id: string, language: string) => {
   }
 };
 
+// Fetches a list of movie genres
 export const getGenres = (language: string) => {
   console.log(`Fetching genres with language: ${language}`);
   
@@ -61,6 +63,7 @@ export const getGenres = (language: string) => {
   });
 };
 
+// Fetches images related to a specific movie by ID
 export const getMovieImages = (id: string | number) => {
   return fetch(
     `https://api.themoviedb.org/3/movie/${id}/images?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US&include_image_language=en`
@@ -75,6 +78,7 @@ export const getMovieImages = (id: string | number) => {
     });
 };
 
+// Fetches the featured image for a specific movie by ID
 export const getFeaturedMovieImage = (id: string | number) => {
   return fetch(
     `https://api.themoviedb.org/3/movie/${id}/images?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US&include_image_language=en`
@@ -101,6 +105,7 @@ export const getFeaturedMovieImage = (id: string | number) => {
     });
 };
 
+// Fetches reviews for a specific movie by ID
 export const getMovieReviews = (id: string | number) => { //movie id can be string or number
   return fetch(
     `https://api.themoviedb.org/3/movie/${id}/reviews?api_key=${import.meta.env.VITE_TMDB_KEY}`
@@ -112,6 +117,7 @@ export const getMovieReviews = (id: string | number) => { //movie id can be stri
     });
 };
 
+// Fetches a specific review by review ID
 export const getReviewById = (reviewId: string) => {
   return fetch(
     `https://api.themoviedb.org/3/review/${reviewId}?api_key=${import.meta.env.VITE_TMDB_KEY}`
@@ -126,6 +132,7 @@ export const getReviewById = (reviewId: string) => {
   });
 };
 
+// Fetches a list of upcoming movies
 export const upcomingMovies = async (language: string, page: number = 1) => {
   try {
     const response = await fetch(
@@ -145,8 +152,7 @@ export const upcomingMovies = async (language: string, page: number = 1) => {
   }
 };
 
-// TV API calls
-
+// Fetches a list of popular TV shows
 export const fetchPopularTVShows = (language: string, page: number = 1) => {
   return fetch(
     `https://api.themoviedb.org/3/trending/tv/week?api_key=${import.meta.env.VITE_TMDB_KEY}&language=${language}&include_adult=false&include_video=false&page=${page}`
@@ -165,6 +171,7 @@ export const fetchPopularTVShows = (language: string, page: number = 1) => {
     });
 };
 
+// Fetches detailed information about a specific TV show by ID
 export const fetchTVShow = (id: string, language: string) => {
   return fetch(
     `https://api.themoviedb.org/3/discover/tv${id}?api_key=${import.meta.env.VITE_TMDB_KEY}&language=${language}`
@@ -179,6 +186,7 @@ export const fetchTVShow = (id: string, language: string) => {
   });
 };
 
+// Fetches a list of TV shows sorted by vote average
 export const getTVShows = (language: string, page: number = 1) => {
   return fetch(
       `https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_TMDB_KEY}&language=${language}&include_adult=false&include_video=false&page=${page}&sort_by=vote_average.desc`
@@ -193,6 +201,7 @@ export const getTVShows = (language: string, page: number = 1) => {
     });
 };
 
+// Fetches a list of TV show genres
 export const getTVGenres = (language: string) => {
   return fetch(
     `https://api.themoviedb.org/3/genre/tv/list?api_key=${import.meta.env.VITE_TMDB_KEY}&language=${language}`
@@ -215,6 +224,7 @@ export const getTVGenres = (language: string) => {
   });
 };
 
+// Fetches reviews for a specific TV show by ID
 export const getTVShowReviews = (id: string | number) => {
   return fetch(
     `https://api.themoviedb.org/3/tv/${id}/reviews?api_key=${import.meta.env.VITE_TMDB_KEY}`
@@ -228,6 +238,7 @@ export const getTVShowReviews = (id: string | number) => {
     });
 };
 
+// Fetches detailed information about a specific TV show by ID
 export const getTVShow = (id: string, language: string) => {
   return fetch(
     `https://api.themoviedb.org/3/tv/${id}?api_key=${import.meta.env.VITE_TMDB_KEY}&language=${language}`
@@ -245,6 +256,7 @@ export const getTVShow = (id: string, language: string) => {
   });
 };
 
+// Fetches the featured image for a specific TV show by ID
 export const getFeaturedTVShowImage = (id: string | number) => {
   return fetch(
     `https://api.themoviedb.org/3/tv/${id}?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US`
@@ -267,6 +279,7 @@ export const getFeaturedTVShowImage = (id: string | number) => {
     });
 };
 
+// Fetches a list of upcoming TV shows
 export const fetchUpcomingTVShows = (language: string, page: number = 1) => {
   return fetch(
     `https://api.themoviedb.org/3/tv/on_the_air?api_key=${import.meta.env.VITE_TMDB_KEY}&language=${language}&page=${page}`
@@ -286,6 +299,7 @@ export const fetchUpcomingTVShows = (language: string, page: number = 1) => {
     });
 };
 
+// Searches for movies based on a query string
 export const searchMovies = (query: string, language: string, page: number) => {
   return fetch(
     `https://api.themoviedb.org/3/search/movie?api_key=${import.meta.env.VITE_TMDB_KEY}&language=${language}&query=${query}&include_adult=false&page=${page}`
@@ -300,6 +314,7 @@ export const searchMovies = (query: string, language: string, page: number) => {
   });
 };
 
+// Searches for TV shows based on a query string
 export const searchTVShows = (query: string, language: string, page: number) => {
   return fetch(
     `https://api.themoviedb.org/3/search/tv?api_key=${import.meta.env.VITE_TMDB_KEY}&language=${language}&query=${query}&include_adult=false&page=${page}`

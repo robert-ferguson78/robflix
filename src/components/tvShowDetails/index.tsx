@@ -13,6 +13,7 @@ import TVShowReviews from '../tvReviews';
 import { styled } from '@mui/material/styles';
 import GoBackButton from '../goBackButton';
 
+// Define styles for various components
 const styles = {
     chipSet: {
         display: "flex",
@@ -47,29 +48,33 @@ const styles = {
     },
 };
 
+// Styled component for images
 const StyledImg = styled('img')({
     width: 'auto',
     height: 'auto',
     maxHeight: '50px',
 });
 
+// Main component for TV show details
 const TVShowDetails: React.FC<TVShowDetailsProps> = (show) => {
-
     const [drawerOpen, setDrawerOpen] = useState(false);
 
     return (
         <>
+            {/* Main grid container */}
             <Grid container sx={{ backgroundColor: "#ffffff", padding: 2 }}>
-            <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                {/* Go back button */}
+                <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <GoBackButton />
                 </Grid>
+                {/* Overview section */}
                 <Typography variant="h5" component="h3">
                     Overview
                 </Typography>
-
                 <Typography variant="h6" component="p">
                     {show.overview}
                 </Typography>
+                {/* Genres and other details */}
                 <Grid container direction="column" alignItems="center" spacing={2}>
                     <Grid item>
                         <Paper component="ul" sx={styles.chipSet}>
@@ -87,7 +92,6 @@ const TVShowDetails: React.FC<TVShowDetailsProps> = (show) => {
                         <Paper component="ul" sx={styles.chipSet}>
                             <Chip 
                                 icon={<AccessTimeIcon />}
-                                // runtime is not always available, so we need to check if it exists before displaying it
                                 label={show.episode_run_time && show.episode_run_time.length > 0 ? `${show.episode_run_time[0]} min.` : "No Runtime"} 
                             />
                             <Chip
@@ -98,6 +102,7 @@ const TVShowDetails: React.FC<TVShowDetailsProps> = (show) => {
                         </Paper>
                     </Grid>
                 </Grid>
+                {/* Production companies */}
                 <Grid container spacing={5} sx={styles.gridContainer} wrap="wrap">
                     {show.production_companies.map((company) => (
                         <Grid item key={company.id} sx={styles.gridItem}>
@@ -111,6 +116,7 @@ const TVShowDetails: React.FC<TVShowDetailsProps> = (show) => {
                     ))}
                 </Grid>
             </Grid>
+            {/* Floating action button for reviews */}
             <Fab
                 variant="extended"
                 onClick={() => setDrawerOpen(true)}
@@ -119,6 +125,7 @@ const TVShowDetails: React.FC<TVShowDetailsProps> = (show) => {
                 <NavigationIcon />
                 Reviews
             </Fab>
+            {/* Drawer for reviews */}
             <Drawer anchor="top" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
                 <TVShowReviews {...show} />
             </Drawer>

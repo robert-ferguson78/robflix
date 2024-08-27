@@ -14,17 +14,20 @@ import { userFirestoreStore } from "../models/user-firestore-store";
 import { auth } from "../firebase/firebaseConfig";
 import { useLanguage } from '../contexts/languageContext';
 
+// Function to create initial filter settings
 const createFilters = () => [
   { name: "title", value: "", condition: tvTitleFilter, type: 'filter' as const },
   { name: "genre", value: "0", condition: tvGenreFilterFavourites, type: 'filter' as const },
   { name: "sort", value: "name", condition: tvSortFilter, type: 'sort' as const },
 ];
 
+// Component to display the favourite TV shows page
 const FavouriteTVPage: React.FC = () => {
-  const { language } = useLanguage();
-  const { setFavourites } = useContext(TVShowsContext);
-  const { filterValues, setFilterValues, filterFunction } = useFiltering(createFilters());
+  const { language } = useLanguage(); // Get the current language from context
+  const { setFavourites } = useContext(TVShowsContext); // Get the setFavourites function from context
+  const { filterValues, setFilterValues, filterFunction } = useFiltering(createFilters()); // Initialize filters
 
+  // Function to fetch favourite TV shows from local storage or Firestore
   const fetchFavouriteTVShows = async (): Promise<number[]> => {
     let storedFavourites = JSON.parse(localStorage.getItem("favouriteTVShows") || "[]");
 
@@ -40,6 +43,7 @@ const FavouriteTVPage: React.FC = () => {
     return storedFavourites;
   };
 
+  // Query to fetch favourite TV shows
   const { data: localFavourites, isLoading: isFavouritesLoading } = useQuery(
     "favouriteTVShows",
     fetchFavouriteTVShows,
@@ -49,12 +53,14 @@ const FavouriteTVPage: React.FC = () => {
     }
   );
 
+  // Effect to update favourites in context when localFavourites changes
   useEffect(() => {
     if (localFavourites) {
       setFavourites(localFavourites);
     }
   }, [localFavourites, setFavourites]);
 
+  // Effect to handle storage changes
   useEffect(() => {
     const handleStorageChange = () => {
       const updatedFavourites = JSON.parse(localStorage.getItem("favouriteTVShows") || "[]");
@@ -68,6 +74,7 @@ const FavouriteTVPage: React.FC = () => {
     };
   }, [setFavourites]);
 
+  // Query to fetch details of favourite TV shows
   const { data: favouriteTVShows, isLoading: isTVShowsLoading } = useQuery(
     ["favouriteTVShowsDetails", localFavourites, language],
     async () => {
@@ -91,6 +98,7 @@ const FavouriteTVPage: React.FC = () => {
 
   const isLoading = isFavouritesLoading || isTVShowsLoading;
 
+  // Memoize the filtered TV shows
   const displayedTVShows = useMemo(() => {
     console.log("Filtering TV shows with filter values:", filterValues);
     const filteredTVShows = favouriteTVShows ? filterFunction(favouriteTVShows) : [];
@@ -99,6 +107,7 @@ const FavouriteTVPage: React.FC = () => {
     return filteredTVShows;
   }, [favouriteTVShows, filterFunction, filterValues]);
 
+  // Function to change filter values
   const changeFilterValues = (type: string, value: string) => {
     const updatedFilterSet = filterValues.map(filter =>
       filter.name === type ? { ...filter, value } : filter
@@ -107,14 +116,17 @@ const FavouriteTVPage: React.FC = () => {
     setFilterValues(updatedFilterSet);
   };
 
+  // Function to reset filters to initial values
   const resetFilters = () => {
     setFilterValues(createFilters());
   };
 
+  // Show spinner while loading
   if (isLoading) {
     return <Spinner />;
   }
 
+  // Render the page template with the filtered TV shows and filter UI
   return (
     <>
       <TemplateTVShowListPage

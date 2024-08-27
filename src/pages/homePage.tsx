@@ -12,6 +12,7 @@ import AddToFavouritesIcon from '../components/cardIcons/addToFavourites';
 import AddToPlaylistIcon from "../components/cardIcons/addToPlaylist";
 import { useLanguage } from '../contexts/languageContext';
 
+// Function to create initial filter settings
 const createFilters = () => {
   const titleFiltering = {
     name: "title",
@@ -37,35 +38,42 @@ const createFilters = () => {
   return [titleFiltering, genreFiltering, sortFiltering];
 };
 
+// Component to display the home page with a list of movies
 const HomePage: React.FC = () => {
-  const { language } = useLanguage();
-  const [page, setPage] = useState(1);
+  const { language } = useLanguage(); // Get the current language from context
+  const [page, setPage] = useState(1); // State to manage the current page
 
+  // Function to fetch movies based on the current page and language
   const fetchMovies = (page = 1) => {
     console.log(`Fetching movies for page ${page} at ${new Date().toLocaleTimeString()}`);
     return getMovies(language, page);
   };
 
+  // Query to fetch movies using react-query
   const { data, error, isLoading, isError, refetch, isFetching } = useQuery<DiscoverMovies, Error>(
     ["discover", page, language], 
     () => fetchMovies(page),
     { staleTime: 300000 } // 5 minutes cache before data is considered stale
   );
 
-  const { filterValues, setFilterValues, filterFunction } = useFiltering(createFilters());
+  const { filterValues, setFilterValues, filterFunction } = useFiltering(createFilters()); // Initialize filters
 
+  // Effect to refetch movies when the language changes
   useEffect(() => {
     refetch();
   }, [language, refetch]);
 
+  // Show spinner while loading
   if (isLoading) {
     return <Spinner />;
   }
 
+  // Show error message if there's an error
   if (isError) {
     return <h1>{error.message}</h1>;
   }
 
+  // Function to change filter values
   const changeFilterValues = (type: string, value: string) => {
     const updatedFilterSet = filterValues.map(filter => 
       filter.name === type ? { ...filter, value } : filter
@@ -73,14 +81,16 @@ const HomePage: React.FC = () => {
     setFilterValues(updatedFilterSet);
   };
 
+  // Function to reset filters to initial values
   const resetFilters = () => {
     setFilterValues(createFilters());
   };
 
-  const movies = data?.results ?? [];
-  const displayedMovies = filterFunction(movies);
-  const totalPages = data ? Math.ceil(data.total_results / 20) : 1; // Assuming 20 movies per page
+  const movies = data?.results ?? []; // Get the list of movies from the query data
+  const displayedMovies = filterFunction(movies); // Apply filters to the list of movies
+  const totalPages = data ? Math.ceil(data.total_results / 20) : 1; // Calculate total pages assuming 20 movies per page
 
+  // Render the page template with the filtered movies and filter UI
   return (
     <>
       <PageTemplate

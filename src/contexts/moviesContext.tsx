@@ -3,6 +3,7 @@ import { BaseMovieProps, Review, Genre } from "../types/interfaces";
 import { getMovies, getGenres } from "../api/tmdb-api";
 import { useLanguage } from '../contexts/languageContext';
 
+// Define the interface for the context
 interface MovieContextInterface {
     favourites: number[];
     mustPlaylist: number[];
@@ -17,6 +18,7 @@ interface MovieContextInterface {
     setFavourites: (movies: number[]) => void;
 }
 
+// Initial state for the context
 const initialContextState: MovieContextInterface = {
     favourites: [],
     mustPlaylist: [],
@@ -31,8 +33,10 @@ const initialContextState: MovieContextInterface = {
     setFavourites: () => {},
 };
 
+// Create the context
 export const MoviesContext = React.createContext<MovieContextInterface>(initialContextState);
 
+// Provider component to wrap the application and provide the movies context
 const MoviesContextProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     const { language } = useLanguage();
     const [favourites, setFavourites] = useState<number[]>([]);
@@ -41,6 +45,7 @@ const MoviesContextProvider: React.FC<React.PropsWithChildren> = ({ children }) 
     const [movies, setMovies] = useState<BaseMovieProps[]>([]);
     const [genres, setGenres] = useState<Genre[]>([]);
 
+    // Fetch movies and genres whenever the language changes
     useEffect(() => {
         const fetchMoviesAndGenres = async () => {
             try {
@@ -55,6 +60,7 @@ const MoviesContextProvider: React.FC<React.PropsWithChildren> = ({ children }) 
         fetchMoviesAndGenres();
     }, [language]);
 
+    // Add a movie to favourites
     const addToFavourites = useCallback((movie: BaseMovieProps) => {
         setFavourites((prevFavourites) => {
             if (!prevFavourites.includes(movie.id)) {
@@ -64,18 +70,22 @@ const MoviesContextProvider: React.FC<React.PropsWithChildren> = ({ children }) 
         });
     }, []);
 
+    // Remove a movie from favourites
     const removeFromFavourites = useCallback((movie: BaseMovieProps) => {
         setFavourites((prevFavourites) => prevFavourites.filter((mId) => mId !== movie.id));
     }, []);
 
+    // Remove a movie from the must-watch playlist
     const removeFromPlaylist = useCallback((movie: BaseMovieProps) => {
         setMustPlaylist((prevMustPlaylist) => prevMustPlaylist.filter((mId) => mId !== movie.id));
     }, []);
 
+    // Add a review for a movie
     const addReview = (movie: BaseMovieProps, review: Review) => {
         setMyReviews((prevReviews) => [...prevReviews, { ...review, movieId: movie.id }]);
     };
 
+    // Add a movie to the must-watch playlist
     const addToPlaylist = useCallback((movie: BaseMovieProps) => {
         setMustPlaylist((prevMustPlaylist) => {
             if (!prevMustPlaylist.includes(movie.id)) {
@@ -86,6 +96,7 @@ const MoviesContextProvider: React.FC<React.PropsWithChildren> = ({ children }) 
     }, []);
 
     return (
+        // Provide the context values to the children components
         <MoviesContext.Provider value={{
             favourites,
             mustPlaylist,

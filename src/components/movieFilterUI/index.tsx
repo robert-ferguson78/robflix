@@ -5,6 +5,7 @@ import Drawer from "@mui/material/Drawer";
 import Button from "@mui/material/Button";
 import { MovieFilterUIProps } from "../../types/interfaces";
 
+// Define styles for various components
 const styles = {
   root: {
     backgroundColor: "#bfbfbf",
@@ -16,9 +17,10 @@ const styles = {
     right: 2,
     backgroundColor: "#ffffff",
     border: "2px solid #ffffff",
-},
+  },
 };
 
+// Define the MovieFilterUI component
 const MovieFilterUI: React.FC<MovieFilterUIProps> = ({
   onFilterValuesChange,
   titleFilter,
@@ -27,14 +29,17 @@ const MovieFilterUI: React.FC<MovieFilterUIProps> = ({
   resetFilters,
   language,
 }) => {
+  // State to manage the drawer's open/close status
   const [drawerOpen, setDrawerOpen] = useState(false);
 
+  // Log the language prop whenever it changes
   useEffect(() => {
     console.log(`Language prop: ${language}`);
   }, [language]);
 
   return (
     <>
+      {/* Floating action button to open the filter drawer */}
       <Fab
         variant="extended"
         onClick={() => setDrawerOpen(true)}
@@ -42,11 +47,14 @@ const MovieFilterUI: React.FC<MovieFilterUIProps> = ({
       >
         Filter
       </Fab>
+
+      {/* Drawer containing the filter options */}
       <Drawer
         anchor="left"
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
       >
+        {/* Filter card component */}
         <FilterCard
           onUserInput={onFilterValuesChange}
           titleFilter={titleFilter}
@@ -54,6 +62,7 @@ const MovieFilterUI: React.FC<MovieFilterUIProps> = ({
           sortOption={sortOption}
           language={language}
         />
+        {/* Button to reset filters */}
         <Button
           variant="outlined"
           onClick={resetFilters}

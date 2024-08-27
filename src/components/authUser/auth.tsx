@@ -4,13 +4,16 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithP
 import { auth, googleProvider } from '../../firebase/firebaseConfig';
 import { TextField, Button, Box, Typography, Card, CardContent, Alert } from '@mui/material';
 
+// Auth component for handling user authentication
 export const Auth = () => {
+    // State variables for email, password, action type (login or signup), and error message
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [action, setAction] = useState<string | null>('logIn');
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const navigate = useNavigate();
 
+    // Function to handle user sign-up
     const handleSignUp = async () => {
         try {
             await createUserWithEmailAndPassword(auth, email, password);
@@ -21,6 +24,7 @@ export const Auth = () => {
         }
     };
 
+    // Function to handle user login
     const handleLogin = async () => {
         try {
             await signInWithEmailAndPassword(auth, email, password);
@@ -31,6 +35,7 @@ export const Auth = () => {
         }
     };
 
+    // Function to handle Google sign-in
     const handleGoogleSignIn = async () => {
         try {
             await signInWithPopup(auth, googleProvider);
@@ -41,11 +46,13 @@ export const Auth = () => {
         }
     };
 
+    // Function to switch between login and sign-up actions
     const handleActionChange = () => {
         setAction(action === 'logIn' ? 'signUp' : 'logIn');
         setErrorMessage(null); // Clear error message when switching actions
     };
 
+    // Function to handle form submission based on the current action
     const handleSubmit = async () => {
         if (action === 'logIn') {
             await handleLogin();
@@ -54,6 +61,7 @@ export const Auth = () => {
         }
     };
 
+    // JSX for rendering the authentication form
     return (
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
             <Card sx={{ border: '1px solid #eaeaea', boxShadow: 3, mt: 2, maxWidth: 350 }}>

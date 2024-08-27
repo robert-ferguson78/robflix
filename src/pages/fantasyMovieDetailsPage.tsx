@@ -6,10 +6,12 @@ import { useQuery } from "react-query";
 import Spinner from '../components/spinner';
 import { FantasyMovieProps } from "../types/interfaces";
 
+// Component to display details of a fantasy movie
 const FantasyMovieDetailsPage: React.FC = () => {
-  const { id } = useParams();
+  const { id } = useParams(); // Get the movie ID from the URL parameters
   console.log("FantasyMovieDetailsPage: id:", id);
 
+  // Fetch movie details using react-query
   const { data: movie, error, isLoading, isError } = useQuery<FantasyMovieProps, Error>(
     ["fantasyMovie", id],
     async () => {
@@ -20,18 +22,22 @@ const FantasyMovieDetailsPage: React.FC = () => {
     }
   );
 
+  // Show spinner while loading
   if (isLoading) {
     return <Spinner />;
   }
 
+  // Show error message if there's an error
   if (isError) {
     return <h1>{(error as Error).message}</h1>;
   }
 
+  // Show a waiting message if no movie data is available
   if (!movie) {
     return <p>Waiting for movie details</p>;
   }
 
+  // Render the movie details component with the fetched movie data
   return <FantasyMovieDetails {...movie} />;
 };
 

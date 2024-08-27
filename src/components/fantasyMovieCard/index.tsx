@@ -14,6 +14,7 @@ import img from '../../images/film-poster-placeholder.png';
 import { FantasyMovieCardProp } from "../../types/interfaces";
 import { styled } from "@mui/system";
 
+// Define custom styles for the card and its elements
 const styles = {
   card: { maxWidth: "100%" },
   media: { objectFit: "contain", height: "auto" },
@@ -30,6 +31,7 @@ const styles = {
   },
 };
 
+// Define a styled component for the overlay that appears on hover
 const Overlay = styled('div')({
   position: 'absolute',
   top: 0,
@@ -49,6 +51,7 @@ const Overlay = styled('div')({
   },
 });
 
+// Define a styled container for the overlay
 const OverlayContainer = styled('div')({
   position: 'relative',
   '&:hover .overlay': {
@@ -56,6 +59,7 @@ const OverlayContainer = styled('div')({
   },
 });
 
+// Define the FantasyMovieCard component
 const FantasyMovieCard: React.FC<FantasyMovieCardProp> = ({ movies }) => {
   return (
     <Card sx={styles.card}>

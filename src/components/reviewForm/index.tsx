@@ -14,7 +14,9 @@ import { BaseMovieProps, Review } from "../../types/interfaces";
 import { userFirestoreStore } from "../../models/user-firestore-store";
 import { auth } from "../../firebase/firebaseConfig"; // Import auth from Firebase config
 
+// Define the ReviewForm component
 const ReviewForm: React.FC<BaseMovieProps> = (movie) => {
+    // Default form values
     const defaultValues = {
         defaultValues: {
           author: "",
@@ -25,27 +27,31 @@ const ReviewForm: React.FC<BaseMovieProps> = (movie) => {
         }
       };
     
-      const {
+    // Initialize form handling with react-hook-form
+    const {
         control,
         formState: { errors },
         handleSubmit,
         reset,
       } = useForm<Review>(defaultValues);
     
-      const navigate = useNavigate();
-      const [rating, setRating] = useState(3);
-      const [open, setOpen] = useState(false);
+    const navigate = useNavigate();
+    const [rating, setRating] = useState(3);
+    const [open, setOpen] = useState(false);
     
-      const handleRatingChange = (event: ChangeEvent<HTMLInputElement>) => {
+    // Handle rating change
+    const handleRatingChange = (event: ChangeEvent<HTMLInputElement>) => {
         setRating(Number(event.target.value));
-      };
+    };
 
-      const handleSnackClose = () => {
+    // Handle Snackbar close
+    const handleSnackClose = () => {
         setOpen(false);
         navigate("/");
-      };
+    };
     
-      const onSubmit: SubmitHandler<Review> = async (review) => {
+    // Handle form submission
+    const onSubmit: SubmitHandler<Review> = async (review) => {
         review.movieId = movie.id;
         review.rating = rating;
         const userId = auth.currentUser?.uid; // Get the authenticated user's ID
@@ -63,30 +69,31 @@ const ReviewForm: React.FC<BaseMovieProps> = (movie) => {
         } else {
           console.error("User is not authenticated");
         }
-      };
+    };
     
-      return (
+    return (
         <Box component="div" sx={styles.root}>
           <Typography component="h2" variant="h3">
             Write a review
           </Typography>
-            <Snackbar
-                sx={styles.snack}
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                open={open}
-                onClose={handleSnackClose}
-            >
-                <Alert
-                severity="success"
-                variant="filled"
-                onClose={handleSnackClose}
-                >
-                <Typography variant="h4">
-                    Thank you for submitting a review
-                </Typography>
-                </Alert>
-            </Snackbar>
+          <Snackbar
+              sx={styles.snack}
+              anchorOrigin={{ vertical: "top", horizontal: "right" }}
+              open={open}
+              onClose={handleSnackClose}
+          >
+              <Alert
+              severity="success"
+              variant="filled"
+              onClose={handleSnackClose}
+              >
+              <Typography variant="h4">
+                  Thank you for submitting a review
+              </Typography>
+              </Alert>
+          </Snackbar>
           <form style={styles.form} onSubmit={handleSubmit(onSubmit)} noValidate>
+            {/* Author input field */}
             <Controller
               name="author"
               control={control}
@@ -111,6 +118,7 @@ const ReviewForm: React.FC<BaseMovieProps> = (movie) => {
                 {errors.author.message}
               </Typography>
             )}
+            {/* Review content input field */}
             <Controller
               name="content"
               control={control}
@@ -139,7 +147,7 @@ const ReviewForm: React.FC<BaseMovieProps> = (movie) => {
                 {errors.content.message}
               </Typography>
             )}
-    
+            {/* Rating selection field */}
             <Controller
               control={control}
               name="rating"
@@ -162,7 +170,7 @@ const ReviewForm: React.FC<BaseMovieProps> = (movie) => {
                 </TextField>
               )}
             />
-    
+            {/* Submit and Reset buttons */}
             <Box >
               <Button
                 type="submit"
@@ -191,6 +199,5 @@ const ReviewForm: React.FC<BaseMovieProps> = (movie) => {
         </Box>
       );
     };
-    
 
 export default ReviewForm;

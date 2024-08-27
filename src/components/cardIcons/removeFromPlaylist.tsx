@@ -7,6 +7,7 @@ import { userFirestoreStore } from "../../models/user-firestore-store";
 import { auth } from "../../firebase/firebaseConfig";
 import { useQueryClient } from "react-query";
 
+// Define styles for the button
 const styles = {
   buttonStyle: {
     color: "#ffffff",
@@ -16,10 +17,14 @@ const styles = {
   },
 };
 
+// Define the RemoveFromPlaylistIcon component
 const RemoveFromPlaylistIcon: React.FC<BaseMovieProps> = (movie) => {
+  // Access the MoviesContext
   const context = useContext(MoviesContext);
+  // Initialize the query client
   const queryClient = useQueryClient();
 
+  // Function to remove a movie from local storage
   const removeFromLocalStorage = (movieId: number) => {
     const storedPlaylist = JSON.parse(localStorage.getItem("playlistMovies") || "[]");
     const updatedPlaylist = storedPlaylist.filter((id: number) => id !== movieId);
@@ -29,17 +34,21 @@ const RemoveFromPlaylistIcon: React.FC<BaseMovieProps> = (movie) => {
     window.dispatchEvent(new Event('storage'));
   };
 
+  // Event handler for removing a movie from the playlist
   const onUserRequest = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     console.log("Button clicked, removing from playlist:", movie);
 
+    // Remove the movie from the context
     context.removeFromPlaylist(movie);
 
+    // Get the current user ID
     const userId = auth.currentUser?.uid;
     if (userId) {
       console.log("User ID:", userId);
       try {
         console.log(`Removing movie with ID: ${movie.id} from user with ID: ${userId}`);
+        // Remove the movie from Firestore
         await userFirestoreStore.removeWatchListMovie(userId, movie.id.toString());
         console.log(`Successfully removed movie with ID: ${movie.id} from Firestore`);
       } catch (error) {
@@ -49,13 +58,14 @@ const RemoveFromPlaylistIcon: React.FC<BaseMovieProps> = (movie) => {
       console.error("User is not authenticated");
     }
 
-    // Remove from local storage
+    // Remove the movie from local storage
     removeFromLocalStorage(movie.id);
 
     // Invalidate the playlistMovies query to trigger a refetch
     queryClient.invalidateQueries("playlistMovies");
   };
 
+  // Render the IconButton with the DeleteIcon
   return (
     <IconButton aria-label="remove from playlist" onClick={onUserRequest}>
       <DeleteIcon sx={styles.buttonStyle} fontSize="large" />

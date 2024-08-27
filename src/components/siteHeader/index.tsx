@@ -17,8 +17,10 @@ import { signOut } from 'firebase/auth';
 import { useLanguage } from '../../contexts/languageContext';
 import SearchPopup from '../searchPopUp';
 
+// Offset component to handle AppBar offset
 const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
 
+// Custom styled button
 const CustomButton = styled(Button)({
   color: 'white',
   backgroundColor: 'red',
@@ -31,6 +33,7 @@ const CustomButton = styled(Button)({
   },
 });
 
+// Custom styled language select dropdown
 const LanguageSelect = styled(Select)({
   color: 'white',
   marginRight: '20px',
@@ -39,6 +42,7 @@ const LanguageSelect = styled(Select)({
   },
 });
 
+// Main SiteHeader component
 const SiteHeader: React.FC = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -50,6 +54,7 @@ const SiteHeader: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
   const { language, setLanguage } = useLanguage();
 
+  // Effect to handle authentication state changes
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       setIsAuthenticated(!!user);
@@ -57,6 +62,7 @@ const SiteHeader: React.FC = () => {
     return () => unsubscribe();
   }, []);
 
+  // Effect to update document title based on selected menu and submenu
   useEffect(() => {
     const title = selectedSubMenu
       ? selectedSubMenu.charAt(0).toUpperCase() + selectedSubMenu.slice(1)
@@ -64,22 +70,26 @@ const SiteHeader: React.FC = () => {
     document.title = title;
   }, [selectedMenu, selectedSubMenu]);
 
+  // Handle menu item selection
   const handleMenuSelect = (pageURL: string, subMenu: string, customTitle?: string) => {
     navigate(pageURL);
     setSelectedSubMenu(customTitle || subMenu);
     setAnchorEl(null);
   };
 
+  // Handle main menu selection
   const handleMainMenuSelect = (menu: 'movies' | 'tv') => {
     setSelectedMenu(menu);
     setSelectedSubMenu('');
     navigate(menu === 'movies' ? '/' : '/tv-shows');
   };
 
+  // Handle menu button click
   const handleMenu = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
+  // Handle user logout
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -90,6 +100,7 @@ const SiteHeader: React.FC = () => {
     }
   };
 
+  // Render submenu items based on selected main menu
   const renderSubMenu = () => {
     if (selectedMenu === 'movies') {
       return (
@@ -210,6 +221,7 @@ const SiteHeader: React.FC = () => {
         elevation={0}
         sx={{ bgcolor: "rgb(20, 20, 20)" }}
       >
+        {/* Language selection dropdown */}
         <LanguageSelect
           value={language}
           onChange={(e) => setLanguage(e.target.value as 'en' | 'fr' | 'de')}
@@ -220,6 +232,7 @@ const SiteHeader: React.FC = () => {
           <MenuItem value="de">Deutsch</MenuItem>
         </LanguageSelect>
         <Toolbar sx={{ maxWidth: "1100px", width: "100%", margin: "0 auto" }}>
+          {/* Logo */}
           <img
             src={logo}
             alt="ROBFLIX"
@@ -227,6 +240,7 @@ const SiteHeader: React.FC = () => {
           />
           {isMobile ? (
             <>
+              {/* Mobile menu button */}
               <IconButton
                 aria-label="menu"
                 aria-controls="menu-appbar"
@@ -238,6 +252,7 @@ const SiteHeader: React.FC = () => {
               >
                 <MenuIcon />
               </IconButton>
+              {/* Mobile menu items */}
               <Menu
                 id="menu-appbar"
                 anchorEl={anchorEl}
@@ -263,6 +278,7 @@ const SiteHeader: React.FC = () => {
             </>
           ) : (
             <>
+              {/* Desktop menu buttons */}
               <Button
                 color="inherit"
                 onClick={() => handleMainMenuSelect('movies')}

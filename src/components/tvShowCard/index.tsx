@@ -18,6 +18,7 @@ import Avatar from "@mui/material/Avatar";
 import { TVShowsContext } from "../../contexts/tvShowsContext";
 import { styled } from "@mui/system";
 
+// Define styles for the card and its elements
 const styles = {
   card: { maxWidth: "100%" },
   media: { objectFit: "contain", height: "auto" },
@@ -34,6 +35,7 @@ const styles = {
   },
 };
 
+// Styled component for the overlay
 const Overlay = styled('div')({
   position: 'absolute',
   top: 0,
@@ -53,6 +55,7 @@ const Overlay = styled('div')({
   },
 });
 
+// Styled component for the overlay container
 const OverlayContainer = styled('div')({
   position: 'relative',
   '&:hover .overlay': {
@@ -60,16 +63,20 @@ const OverlayContainer = styled('div')({
   },
 });
 
+// Props for the TVShowCard component
 interface TVShowCardProps {
   show: BaseTVShowProps;
   action: (s: BaseTVShowProps) => React.ReactNode;
 }
 
+// Main component for the TV show card
 const TVShowCard: React.FC<TVShowCardProps> = ({ show, action }) => {
   const { favourites, addToFavourites } = useContext(TVShowsContext);
 
+  // Check if the show is in the favourites list
   const isFavourite = favourites.includes(show.id);
 
+  // Effect to handle side effects related to adding to favourites
   useEffect(() => {}, [addToFavourites]);
 
   return (

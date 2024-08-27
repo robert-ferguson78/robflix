@@ -7,6 +7,7 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 
+// Define styles for various components
 const styles = {
     chipSet: {
         display: "flex",
@@ -35,9 +36,11 @@ const styles = {
     },
 };
 
+// Define the FantasyMovieDetails component
 const FantasyMovieDetails: React.FC<FantasyMovieProps> = (movie) => {
     const navigate = useNavigate();
 
+    // Handle the back button click
     const handleBackClick = () => {
         navigate("/movies/fantasy-movies");
     };
@@ -45,17 +48,21 @@ const FantasyMovieDetails: React.FC<FantasyMovieProps> = (movie) => {
     return (
         <>
             <Grid container spacing={2}>
+                {/* Movie Poster */}
                 <Grid item xs={12} sm={4}>
                     <img src={movie.posterUrl} alt={`${movie.title} poster`} style={styles.poster} />
                 </Grid>
+                {/* Movie Details */}
                 <Grid item xs={12} sm={8}>
                     <Grid container sx={{ backgroundColor: "#ffffff", padding: 2 }}>
-                    <Grid item xs={12}>
-                        <Typography variant="h6" component="p">
-                            {movie.overview}
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={12}>
+                        {/* Movie Overview */}
+                        <Grid item xs={12}>
+                            <Typography variant="h6" component="p">
+                                {movie.overview}
+                            </Typography>
+                        </Grid>
+                        {/* Movie Genres */}
+                        <Grid item xs={12}>
                             <Paper component="ul" sx={styles.chipSet}>
                                 <li>
                                     <Chip label="Genres" sx={styles.chipLabel} color="primary" />
@@ -67,6 +74,7 @@ const FantasyMovieDetails: React.FC<FantasyMovieProps> = (movie) => {
                                 ))}
                             </Paper>
                         </Grid>
+                        {/* Movie Runtime and Release Date */}
                         <Grid item xs={12} sx={styles.chipSet}>
                             <Chip icon={<AccessTimeIcon />} label={`${movie.runtime} min.`} color="primary" />
                             <Chip label={`Released: ${movie.releaseDate}`} color="primary" />
@@ -74,6 +82,7 @@ const FantasyMovieDetails: React.FC<FantasyMovieProps> = (movie) => {
                     </Grid>
                 </Grid>
             </Grid>
+            {/* Back Button */}
             <Button variant="contained" color="primary" style={styles.button} onClick={handleBackClick}>
                 Back to Fantasy Movies
             </Button>

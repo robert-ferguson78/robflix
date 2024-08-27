@@ -8,13 +8,16 @@ import Spinner from "../components/spinner";
 import { MovieDetailsProps } from "../types/interfaces";
 import { useLanguage } from '../contexts/languageContext';
 
+// Component for writing a movie review
 const WriteReviewPage: React.FC = () => {
-    const location = useLocation();
-    const navigate = useNavigate();
-    const { language } = useLanguage();
+    const location = useLocation(); // Hook to access the current location
+    const navigate = useNavigate(); // Hook to navigate programmatically
+    const { language } = useLanguage(); // Get the current language from context
 
+    // Extract movieId from the location state
     const { movieId } = location.state || {};
 
+    // Effect to log location state and movieId, and handle missing movieId
     useEffect(() => {
         console.log("Location state:", location.state);
         console.log("Movie ID:", movieId);
@@ -25,6 +28,7 @@ const WriteReviewPage: React.FC = () => {
         }
     }, [movieId, navigate, location.state]);
 
+    // Fetch movie details using react-query
     const { data: movie, error, isLoading, isError } = useQuery<MovieDetailsProps, Error>(
         ["movie", movieId],
         () => getMovie(movieId, language),
@@ -33,14 +37,17 @@ const WriteReviewPage: React.FC = () => {
         }
     );
 
+    // Show spinner while loading
     if (isLoading) {
         return <Spinner />;
     }
 
+    // Show error message if there's an error
     if (isError) {
         return <h1>{error.message}</h1>;
     }
 
+    // Render the page template with the review form if movie data is available
     return (
         <>
             {movie ? (

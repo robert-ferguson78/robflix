@@ -18,6 +18,7 @@ import Avatar from "@mui/material/Avatar";
 import { MoviesContext } from "../../contexts/moviesContext";
 import { styled } from "@mui/system";
 
+// Define styles for various components
 const styles = {
   card: { maxWidth: "100%" },
   media: { objectFit: "contain", height: "auto" },
@@ -42,6 +43,7 @@ const styles = {
   },
 };
 
+// Define styled components for overlay effect
 const Overlay = styled('div')({
   position: 'absolute',
   top: 0,
@@ -68,22 +70,28 @@ const OverlayContainer = styled('div')({
   },
 });
 
+// Define the props for the MovieCard component
 interface MovieCardProps {
   movie: BaseMovieProps;
   action: (m: BaseMovieProps) => React.ReactNode;
 }
 
+// Define the MovieCard component
 const MovieCard: React.FC<MovieCardProps> = ({ movie, action }) => {
   const { favourites, addToFavourites } = useContext(MoviesContext);
 
+  // Check if the movie is in the favourites list
   const isFavourite = favourites.includes(movie.id);
 
+  // Effect to handle updates to the favourites list
   useEffect(() => {}, [addToFavourites]);
 
   return (
+    // Main card container
     <Card sx={styles.card}>
       <OverlayContainer>
         <CardActionArea>
+          {/* Movie poster */}
           <CardMedia
             sx={styles.media}
             component="img"
@@ -93,6 +101,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, action }) => {
                 : img
             }
           />
+          {/* Overlay with movie details */}
           <Overlay className="overlay">
             <CardHeader
               avatar={
@@ -125,7 +134,9 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, action }) => {
               </Grid>
             </CardContent>
             <CardActions disableSpacing>
+              {/* Custom action passed as prop */}
               {action(movie)}
+              {/* Link to movie details page */}
               <Link to={`/movies/${movie.id}`}>
                 <Button variant="outlined" size="medium" sx={styles.buttonStyle}>
                   More Info ...

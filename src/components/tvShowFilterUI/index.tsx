@@ -5,6 +5,7 @@ import Drawer from "@mui/material/Drawer";
 import Button from "@mui/material/Button";
 import { TVShowFilterUIProps } from "../../types/interfaces";
 
+// Define styles for the component
 const styles = {
     root: {
         backgroundColor: "#bfbfbf",
@@ -19,6 +20,7 @@ const styles = {
     },
 };
 
+// Main component for the TV show filter UI
 const TVShowFilterUI: React.FC<TVShowFilterUIProps> = ({
     onUserInput,
     titleFilter,
@@ -29,12 +31,14 @@ const TVShowFilterUI: React.FC<TVShowFilterUIProps> = ({
   }) => {
     const [drawerOpen, setDrawerOpen] = useState(false);
 
+    // Log the language prop whenever it changes
     useEffect(() => {
         console.log(`Language prop filterUI: ${language}`);
     }, [language]);
 
     return (
         <>
+            {/* Floating action button to open the filter drawer */}
             <Fab
                 variant="extended"
                 onClick={() => setDrawerOpen(true)}
@@ -42,6 +46,7 @@ const TVShowFilterUI: React.FC<TVShowFilterUIProps> = ({
             >
                 Filter
             </Fab>
+            {/* Drawer containing the filter card and reset button */}
             <Drawer
                 anchor="left"
                 open={drawerOpen}

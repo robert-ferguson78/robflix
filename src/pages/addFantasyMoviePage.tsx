@@ -7,6 +7,7 @@ import { auth } from '../firebase/firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
 import { styled } from '@mui/system';
 
+// List of allowed genres
 const allowedGenres = [
     { id: "0", name: "All" },
     { id: 28, name: "Action" },
@@ -30,8 +31,10 @@ const allowedGenres = [
     { id: 37, name: "Western" },
 ];
 
+// Type for actor fields
 type ActorField = 'name' | 'biography' | 'profileFile';
 
+// Styled container for the form
 const StyledContainer = styled(Container)({
     backgroundColor: 'white',
     marginTop: '50px',
@@ -40,6 +43,7 @@ const StyledContainer = styled(Container)({
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
 });
 
+// Component to add a fantasy movie
 const AddFantasyMoviePage = () => {
     const [title, setTitle] = useState('');
     const [runtime, setRuntime] = useState('');
@@ -55,6 +59,7 @@ const AddFantasyMoviePage = () => {
     const [loading, setLoading] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
 
+    // Effect to handle authentication state changes
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -67,6 +72,7 @@ const AddFantasyMoviePage = () => {
         return () => unsubscribe();
     }, []);
 
+    // Handle changes in actor fields
     const handleActorChange = (index: number, field: ActorField, value: string | File | undefined) => {
         const newActors = [...actors];
         const newActorPreviews = [...actorPreviews];
@@ -82,20 +88,24 @@ const AddFantasyMoviePage = () => {
         setActorPreviews(newActorPreviews);
     };
 
+    // Handle changes in genre selection
     const handleGenreChange = (event: SelectChangeEvent<string[]>) => {
         setGenres(event.target.value as string[]);
     };
 
+    // Handle changes in poster file
     const handlePosterChange = (file: File | undefined) => {
         setPosterFile(file);
         setPosterPreview(file ? URL.createObjectURL(file) : undefined);
     };
 
+    // Add a new actor field
     const addActorField = () => {
         setActors([...actors, { name: '', biography: '', profileFile: undefined }]);
         setActorPreviews([...actorPreviews, undefined]);
     };
 
+    // Remove an actor field
     const removeActorField = (index: number) => {
         const newActors = actors.filter((_, i) => i !== index);
         const newActorPreviews = actorPreviews.filter((_, i) => i !== index);
@@ -103,6 +113,7 @@ const AddFantasyMoviePage = () => {
         setActorPreviews(newActorPreviews);
     };
 
+    // Handle form submission
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         setLoading(true);

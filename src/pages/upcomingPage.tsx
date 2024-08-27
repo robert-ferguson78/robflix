@@ -6,12 +6,13 @@ import useFiltering from "../hooks/useFiltering";
 import { titleFilter, genreFilter, sortFilter } from "../filters";
 import MovieFilterUI from "../components/movieFilterUI";
 import { DiscoverMovies } from "../types/interfaces";
-import { useQuery } from "@tanstack/react-query"; // updated import
+import { useQuery } from "@tanstack/react-query";
 import Spinner from "../components/spinner";
 import AddToPlaylistIcon from "../components/cardIcons/addToPlaylist";
 import AddToFavouritesIcon from '../components/cardIcons/addToFavourites';
 import { useLanguage } from '../contexts/languageContext';
 
+// Function to create initial filter settings for movies
 const createFilters = () => {
   const titleFiltering = {
     name: "title",
@@ -37,31 +38,37 @@ const createFilters = () => {
   return [titleFiltering, genreFiltering, sortFiltering];
 };
 
+// Component to display the upcoming movies page
 const UpcomingMoviesPage: React.FC = () => {
-  const { language } = useLanguage();
-  const [page, setPage] = useState(1);
+  const { language } = useLanguage(); // Get the current language from context
+  const [page, setPage] = useState(1); // State to manage the current page
 
+  // Function to fetch upcoming movies based on the current page and language
   const fetchUpcomingMovies = (page = 1) => {
     console.log(`Fetching upcoming movies for page ${page} at ${new Date().toLocaleTimeString()}`);
     return upcomingMovies(language, page);
   };
 
+  // Query to fetch upcoming movies using react-query
   const { isLoading, isError, error, data, isFetching } = useQuery<DiscoverMovies, Error>({
     queryKey: ["upcoming", page, language],
     queryFn: () => fetchUpcomingMovies(page),
     staleTime: 300000 // 5 minutes cache before data is considered stale
   });
 
-  const { filterValues, setFilterValues, filterFunction } = useFiltering(createFilters());
+  const { filterValues, setFilterValues, filterFunction } = useFiltering(createFilters()); // Initialize filters
 
+  // Show spinner while loading
   if (isLoading) {
     return <Spinner />;
   }
 
+  // Show error message if there's an error
   if (isError) {
     return <h1>{error.message}</h1>;
   }
 
+  // Function to change filter values
   const changeFilterValues = (type: string, value: string) => {
     const updatedFilterSet = filterValues.map(filter => 
       filter.name === type ? { ...filter, value } : filter
@@ -69,15 +76,17 @@ const UpcomingMoviesPage: React.FC = () => {
     setFilterValues(updatedFilterSet);
   };
 
+  // Function to reset filters to initial values
   const resetFilters = () => {
     setFilterValues(createFilters());
   };
 
-  const movies = data ? data.results : [];
-  const displayedMovies = filterFunction(movies);
+  const movies = data ? data.results : []; // Get the movies from the query data
+  const displayedMovies = filterFunction(movies); // Apply filters to the movies
 
-  const totalPages = data ? Math.ceil(data.total_results / 20) : 1; // Assuming 20 movies per page
+  const totalPages = data ? Math.ceil(data.total_results / 20) : 1; // Calculate total pages assuming 20 movies per page
 
+  // Render the page template with the filtered movies and filter UI
   return (
     <>
       <PageTemplate

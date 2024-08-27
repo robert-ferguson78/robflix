@@ -9,8 +9,9 @@ import { MovieDetailsProps } from "../../types/interfaces";
 import Avatar from "@mui/material/Avatar";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 
+// Define styles for various components
 const styles = {
-    root: {  
+  root: {  
     display: "flex",
     justifyContent: "space-around",
     alignItems: "center",
@@ -26,30 +27,36 @@ const styles = {
   },
 };
 
+// Define the MovieHeader component
 const MovieHeader: React.FC<MovieDetailsProps> = (movie) => {
+  // Retrieve favourites from local storage
   const favourites = JSON.parse(localStorage.getItem("favourites") || '[]');
+  // Check if the current movie is in the favourites list
   const isFavourite = favourites.find((favourite: MovieDetailsProps) => favourite.id === movie.id);
   
   return (
+    // Container for the movie header
     <Paper component="div" sx={styles.root}>
+      {/* Back button */}
       <IconButton aria-label="go back">
         <ArrowBackIcon sx={styles.whiteColour} fontSize="large" />
       </IconButton>
-        {
-          isFavourite ? (
-                <Avatar sx={styles.avatar}>
-                  <FavoriteIcon />
-                </Avatar>
-              ) : null
-        }
+      {/* Favourite icon */}
+      {isFavourite ? (
+        <Avatar sx={styles.avatar}>
+          <FavoriteIcon />
+        </Avatar>
+      ) : null}
+      {/* Movie title and homepage link */}
       <Typography sx={styles.whiteColour} variant="h4" component="h3">
         {movie.title}{"   "}
         <a href={movie.homepage}>
-          <HomeIcon color="primary"  fontSize="large"/>
+          <HomeIcon color="primary" fontSize="large"/>
         </a>
         <br />
         <span>{`${movie.tagline}`} </span>
       </Typography>
+      {/* Forward button */}
       <IconButton aria-label="go forward">
         <ArrowForwardIcon sx={styles.whiteColour} fontSize="large" />
       </IconButton>

@@ -14,6 +14,7 @@ import { getTVGenres } from "../../api/tmdb-api";
 import { useQuery } from "react-query";
 import Spinner from '../spinner';
 
+// Define styles for various components
 const styles = {
   root: {
     maxWidth: 345,
@@ -26,35 +27,44 @@ const styles = {
   },
 };
 
+// Define the FilterTVShowsCard component
 const FilterTVShowsCard: React.FC<FilterTVShowsCardProps> = ({ titleFilter, genreFilter, sortOption, onUserInput, language }) => {
+  // Fetch genres using react-query
   const { data, error, isLoading, isError } = useQuery<Genre[], Error>(["tvGenres", language], () => getTVGenres(language));
   const [sortOptionState, setSortOptionState] = useState<string>(sortOption);
 
+  // Show spinner while loading
   if (isLoading) {
     return <Spinner />;
   }
+  // Show error message if there's an error
   if (isError) {
     return <h1>{(error as Error).message}</h1>;
   }
 
+  // Prepare genres data
   const genres: Genre[] = Array.isArray(data) ? data : [];
   if (genres.length > 0 && genres[0].name !== "All") {
     genres.unshift({ id: 0, name: "All" });
   }
 
+  // Handle changes in filter options
   const handleChange = (e: SelectChangeEvent, type: FilterOption, value: string) => {
     e.preventDefault();
     onUserInput(type, value);
   };
 
+  // Handle text input change
   const handleTextChange = (e: ChangeEvent<HTMLInputElement>) => {
     handleChange(e as unknown as SelectChangeEvent, "title", e.target.value);
   };
 
+  // Handle genre selection change
   const handleGenreChange = (e: SelectChangeEvent) => {
     handleChange(e, "genre", e.target.value);
   };
 
+  // Handle sort option change
   const handleSortChange = (e: SelectChangeEvent) => {
     setSortOptionState(e.target.value);
     handleChange(e, "sort", e.target.value);
@@ -62,6 +72,7 @@ const FilterTVShowsCard: React.FC<FilterTVShowsCardProps> = ({ titleFilter, genr
 
   return (
     <>
+      {/* Filter Card */}
       <Card sx={styles.root} variant="outlined">
         <CardContent>
           <Typography variant="h5" component="h1">
@@ -94,6 +105,7 @@ const FilterTVShowsCard: React.FC<FilterTVShowsCardProps> = ({ titleFilter, genr
           </FormControl>
         </CardContent>
       </Card>
+      {/* Sort Card */}
       <Card sx={styles.root} variant="outlined">
         <CardContent>
           <Typography variant="h5" component="h1">

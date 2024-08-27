@@ -1,6 +1,7 @@
 import { BaseMovieProps, BaseTVShowProps } from "../types/interfaces";
 import { useState } from "react";
 
+// Define the structure of a filter
 interface Filter<T> {
   name: string;
   value: string;
@@ -8,15 +9,19 @@ interface Filter<T> {
   type?: 'filter' | 'sort';
 }
 
+// Custom hook for filtering and sorting
 const useFiltering = <T,>(filters: Filter<T>[]) => {
+  // State to hold the current filter values
   const [filterValues, setFilterValues] = useState(filters.map(f => ({
     name: f.name,
     value: f.value,
   })));
 
+  // Separate filtering and sorting conditions
   const filteringConditions = filters.filter(f => f.type !== 'sort').map((f) => f.condition);
   const sortingConditions = filters.filter(f => f.type === 'sort').map((f) => f.condition);
 
+  // Function to apply filters and sorting to a collection
   const filterFunction = (collection: T[]) => {
     console.log("Collection before filtering:", collection);
     let filteredData = filteringConditions.reduce((data, conditionFn, index) => {
@@ -28,9 +33,9 @@ const useFiltering = <T,>(filters: Filter<T>[]) => {
       });
     }, collection);
 
+    // Apply sorting if any sorting conditions are present
     if (sortingConditions.length > 0) {
       filteredData = sortingConditions.reduce((data, conditionFn) => {
-        // Find the sort filter value, defaulting to an empty string if not found
         const sortFilter = filterValues.find(filter => filter.name === "sort")?.value || "";
         console.log(`Applying sort: ${sortFilter}`);
         return conditionFn(data, sortFilter) as T[];

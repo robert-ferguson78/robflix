@@ -36,27 +36,29 @@ const AddFantasyMoviePageWithAuth = withAuth(AddFantasyMoviePage);
 const FantasyMoviesPageWithAuth = withAuth(FantasyMoviesPage);
 const FantasyMovieDetailsPageWithAuth = withAuth(FantasyMovieDetailsPage);
 
+// Create a new QueryClient instance with default options
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 360000,
-      refetchInterval: 360000,
-      refetchOnWindowFocus: false
+      staleTime: 360000, // Data is considered stale after 6 minutes
+      refetchInterval: 360000, // Refetch data every 6 minutes
+      refetchOnWindowFocus: false // Do not refetch on window focus
     },
   },
 });
 
+// Main App component
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-      <LanguageProvider>
-        <BrowserRouter>
-        <NavigationHistoryProvider>
-          <SiteHeader />
-            <MoviesContextProvider>
-              <TVShowsContextProvider> {/* Wrap TVShowsContextProvider here */}
-                <Routes>
+      <AuthProvider> {/* Provide authentication context */}
+      <LanguageProvider> {/* Provide language context */}
+        <BrowserRouter> {/* Enable routing */}
+        <NavigationHistoryProvider> {/* Provide navigation history context */}
+          <SiteHeader /> {/* Render the site header */}
+            <MoviesContextProvider> {/* Provide movies context */}
+              <TVShowsContextProvider> {/* Provide TV shows context */}
+                <Routes> {/* Define application routes */}
                   <Route path="/reviews/form/:movieId" element={<AddMovieReviewPageWithAuth />} />
                   <Route path="/reviews/:id" element={<MovieReviewPageWithAuth />} />
                   <Route path="/user-reviews/:id" element={<MovieReviewPageWithAuth />} />
@@ -83,7 +85,7 @@ const App = () => {
         </BrowserRouter>
         </LanguageProvider>
       </AuthProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
+      <ReactQueryDevtools initialIsOpen={false} /> {/* React Query Devtools */}
     </QueryClientProvider>
   );
 };

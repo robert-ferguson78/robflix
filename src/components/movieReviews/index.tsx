@@ -13,14 +13,18 @@ import { excerpt } from "../../util";
 import { MovieDetailsProps, Review } from "../../types/interfaces";
 import { auth } from "../../firebase/firebaseConfig"; 
 
+// Define styles for the table
 const styles = {
     table: {
         minWidth: 550,
     },
 };
 
+// Define the MovieReviews component
 const MovieReviews: React.FC<MovieDetailsProps> = (movie) => { 
+    // State to store reviews fetched from the API
     const [reviews, setReviews] = useState<Review[]>([]);
+    // State to store user reviews fetched from the database
     const [userReviews, setUserReviews] = useState<Review[]>([]);
 
     useEffect(() => {
@@ -45,6 +49,7 @@ const MovieReviews: React.FC<MovieDetailsProps> = (movie) => {
     }, []);
 
     return (
+        // Table container for displaying reviews
         <TableContainer component={Paper}>
             <Table sx={styles.table} aria-label="reviews table">
                 <TableHead>
@@ -55,6 +60,7 @@ const MovieReviews: React.FC<MovieDetailsProps> = (movie) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
+                    {/* Map through the reviews fetched from the API */}
                     {reviews.map((r: Review) => (
                         <TableRow key={r.id}>
                             <TableCell component="th" scope="row">
@@ -74,6 +80,7 @@ const MovieReviews: React.FC<MovieDetailsProps> = (movie) => {
                             </TableCell>
                         </TableRow>
                     ))}
+                    {/* Map through the user reviews fetched from the database */}
                     {userReviews.map((r: Review) => (
                         <TableRow key={r.id}>
                             <TableCell component="th" scope="row">
