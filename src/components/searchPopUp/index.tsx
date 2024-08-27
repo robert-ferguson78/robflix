@@ -42,13 +42,6 @@ const SearchPopup: React.FC = () => {
       <CustomButton onClick={() => setOpen(true)}>Search</CustomButton>
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogContent>
-          <IconButton
-            aria-label="close"
-            onClick={() => setOpen(false)}
-            style={{ position: 'absolute', right: 8, top: 8 }}
-          >
-            <CloseIcon />
-          </IconButton>
           <Tabs value={tabValue} onChange={(_, newValue) => setTabValue(newValue)}>
             <Tab label="Movies" />
             <Tab label="TV Shows" />
@@ -62,7 +55,7 @@ const SearchPopup: React.FC = () => {
           />
         </DialogContent>
         <DialogActions>
-          <CustomButton onClick={handleSearch} color="primary">Search</CustomButton>
+          <CustomButton onClick={handleSearch} color="primary">Close Search</CustomButton>
         </DialogActions>
       </Dialog>
     </>
