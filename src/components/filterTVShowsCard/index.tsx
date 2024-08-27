@@ -27,16 +27,7 @@ const styles = {
 };
 
 const FilterTVShowsCard: React.FC<FilterTVShowsCardProps> = ({ titleFilter, genreFilter, sortOption, onUserInput, language }) => {
-  console.log(`Language prop tv show card: ${language}`); // Debugging log
-
-  const { data, error, isLoading, isError } = useQuery<Genre[], Error>(["genres", language], () => getTVGenres(language), {
-    onSuccess: (data) => {
-      console.log("Raw data from API:", data); // Log raw data
-    },
-    onError: (error) => {
-      console.error("Error fetching genres:", error); // Log any errors
-    }
-  });
+  const { data, error, isLoading, isError } = useQuery<Genre[], Error>(["tvGenres", language], () => getTVGenres(language));
   const [sortOptionState, setSortOptionState] = useState<string>(sortOption);
 
   if (isLoading) {
@@ -45,14 +36,11 @@ const FilterTVShowsCard: React.FC<FilterTVShowsCardProps> = ({ titleFilter, genr
   if (isError) {
     return <h1>{(error as Error).message}</h1>;
   }
-  console.log("Data before assigning to genres:", data);
-  const genres: Genre[] = data || [];
-  console.log("Fetched genres:", genres); // Log the genres
+
+  const genres: Genre[] = Array.isArray(data) ? data : [];
   if (genres.length > 0 && genres[0].name !== "All") {
     genres.unshift({ id: 0, name: "All" });
   }
-
-  console.log("Fetched genres:", genres); // Log the genres
 
   const handleChange = (e: SelectChangeEvent, type: FilterOption, value: string) => {
     e.preventDefault();
@@ -70,7 +58,6 @@ const FilterTVShowsCard: React.FC<FilterTVShowsCardProps> = ({ titleFilter, genr
   const handleSortChange = (e: SelectChangeEvent) => {
     setSortOptionState(e.target.value);
     handleChange(e, "sort", e.target.value);
-    console.log("Sort option selected:", e.target.value); // Debugging log
   };
 
   return (
@@ -98,13 +85,11 @@ const FilterTVShowsCard: React.FC<FilterTVShowsCardProps> = ({ titleFilter, genr
               value={genreFilter}
               onChange={handleGenreChange}
             >
-              {genres.map((genre) => {
-                return (
-                  <MenuItem key={genre.id} value={genre.id}>
-                    {genre.name}
-                  </MenuItem>
-                );
-              })}
+              {genres.map((genre) => (
+                <MenuItem key={genre.id} value={genre.id}>
+                  {genre.name}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </CardContent>

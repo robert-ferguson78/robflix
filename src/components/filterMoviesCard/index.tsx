@@ -20,7 +20,6 @@ const styles = {
     maxWidth: 345,
   },
   media: { height: 300 },
- 
   formControl: {
     margin: 1,
     minWidth: 220,
@@ -29,7 +28,7 @@ const styles = {
 };
 
 const FilterMoviesCard: React.FC<FilterMoviesCardProps> = ({ titleFilter, genreFilter, sortOption, onUserInput, language }) => {
-  const { data, error, isLoading, isError } = useQuery<GenreData, Error>(["genres", language], () => getGenres(language));
+  const { data, error, isLoading, isError } = useQuery<GenreData, Error>(["movieGenres", language], () => getGenres(language));
   const [sortOptionState, setSortOptionState] = useState<string>(sortOption);
 
   if (isLoading) {
@@ -38,8 +37,9 @@ const FilterMoviesCard: React.FC<FilterMoviesCardProps> = ({ titleFilter, genreF
   if (isError) {
     return <h1>{(error as Error).message}</h1>;
   }
-  const genres = data?.genres || [];
-  if (genres[0].name !== "All") {
+
+  const genres = Array.isArray(data?.genres) ? data.genres : [];
+  if (genres.length > 0 && genres[0].name !== "All") {
     genres.unshift({ id: 0, name: "All" });
   }
 
@@ -59,7 +59,6 @@ const FilterMoviesCard: React.FC<FilterMoviesCardProps> = ({ titleFilter, genreF
   const handleSortChange = (e: SelectChangeEvent) => {
     setSortOptionState(e.target.value);
     handleChange(e, "sort", e.target.value);
-    console.log("Sort option selected:", e.target.value); // Debugging log
   };
 
   return (
@@ -87,13 +86,11 @@ const FilterMoviesCard: React.FC<FilterMoviesCardProps> = ({ titleFilter, genreF
               value={genreFilter}
               onChange={handleGenreChange}
             >
-              {genres.map((genre) => {
-                return (
-                  <MenuItem key={genre.id} value={genre.id}>
-                    {genre.name}
-                  </MenuItem>
-                );
-              })}
+              {genres.map((genre) => (
+                <MenuItem key={genre.id} value={genre.id}>
+                  {genre.name}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </CardContent>
