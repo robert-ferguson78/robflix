@@ -287,3 +287,31 @@ export const fetchUpcomingTVShows = (language: string, page: number = 1) => {
       throw error;
     });
 };
+
+export const searchMovies = (query: string, language: string, page: number) => {
+  return fetch(
+    `https://api.themoviedb.org/3/search/movie?api_key=${import.meta.env.VITE_TMDB_KEY}&language=${language}&query=${query}&include_adult=false&page=${page}`
+  ).then((response) => {
+    if (!response.ok) {
+      throw new Error(`Failed to get movie data. Response status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .catch((error) => {
+    throw error;
+  });
+};
+
+export const searchTVShows = (query: string, language: string, page: number) => {
+  return fetch(
+    `https://api.themoviedb.org/3/search/tv?api_key=${import.meta.env.VITE_TMDB_KEY}&language=${language}&query=${query}&include_adult=false&page=${page}`
+  ).then((response) => {
+    if (!response.ok) {
+      throw new Error(`Failed to get movie data. Response status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .catch((error) => {
+    throw error;
+  });
+};

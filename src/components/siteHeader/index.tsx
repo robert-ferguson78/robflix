@@ -15,6 +15,7 @@ import logo from "../../images/robflix.png";
 import { auth } from '../../firebase/firebaseConfig';
 import { signOut } from 'firebase/auth';
 import { useLanguage } from '../../contexts/languageContext';
+import SearchPopup from '../searchPopUp';
 
 const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
 
@@ -293,6 +294,7 @@ const SiteHeader: React.FC = () => {
               <div style={{ display: 'flex', marginLeft: '20px' }}>
                 {renderSubMenu()}
               </div>
+              <SearchPopup />
               <CustomButton
                 onClick={isAuthenticated ? handleLogout : () => handleMenuSelect('/login', '')}
                 sx={{ marginLeft: "auto" }}

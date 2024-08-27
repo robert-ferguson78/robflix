@@ -24,6 +24,7 @@ import { QueryClientProvider, QueryClient } from "react-query";
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { AuthProvider } from './contexts/authContext';
 import withAuth from './hoc/withAuth';
+import SearchResultsPage from './pages/searchResultsPage';
 
 // Wrap components with withAuth HOC (Higher Order Component) to create new components that require authentication
 const AddMovieReviewPageWithAuth = withAuth(AddMovieReviewPage);
@@ -74,6 +75,7 @@ const App = () => {
                   <Route path="/tv-shows/:id" element={<TVPage />} />
                   <Route path="*" element={<Navigate to="/" />} />
                   <Route path="/login" element={<LoginPage />} />
+                  <Route path="/search/:type" element={<SearchResultsPage />} />
                 </Routes>
               </TVShowsContextProvider>
             </MoviesContextProvider>
