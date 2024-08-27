@@ -198,17 +198,6 @@ const SiteHeader: React.FC = () => {
           >
             Favorites
           </MenuItem>
-          <MenuItem
-            onClick={() => handleMenuSelect("/tv-shows/playlist", "playlist", "Must Watch TV Shows")}
-            sx={{
-              borderBottom: selectedSubMenu === 'playlist' ? '2px solid red' : 'none',
-              '&:hover': {
-                borderBottom: '2px solid red',
-              },
-            }}
-          >
-            Must Watch
-          </MenuItem>
         </>
       );
     }
