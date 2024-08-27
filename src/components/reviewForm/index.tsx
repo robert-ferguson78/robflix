@@ -72,7 +72,7 @@ const ReviewForm: React.FC<BaseMovieProps> = (movie) => {
     };
     
     return (
-        <Box component="div" sx={styles.root}>
+        <Box component="div" sx={{ ...styles.root, backgroundColor: "white", padding: "15px" }}>
           <Typography component="h2" variant="h3">
             Write a review
           </Typography>
