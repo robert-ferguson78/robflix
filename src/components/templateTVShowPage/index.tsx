@@ -7,6 +7,7 @@ import { getFeaturedTVShowImage } from "../../api/tmdb-api";
 import { TVShowImage, TVShowDetailsProps } from "../../types/interfaces";
 import { useQuery } from "react-query";
 import Spinner from '../spinner';
+import img from '../../images/film-poster-placeholder.png';
 
 interface TemplateTVShowPageProps {
     show: TVShowDetailsProps;
@@ -33,15 +34,13 @@ const TemplateTVShowPage: React.FC<TemplateTVShowPageProps> = ({ show, children 
             <TVShowHeader {...show} />
 
             <Grid container spacing={5} style={{ padding: "15px" }}>
-                {featuredImage && (
-                    <Grid item xs={4}>
-                        <img
-                            src={`https://image.tmdb.org/t/p/w500/${featuredImage.file_path}`}
-                            alt={`Featured ${show.name} Poster`}
-                            style={{ width: '100%', height: 'auto' }}
-                        />
-                    </Grid>
-                )}
+                <Grid item xs={4}>
+                    <img
+                        src={featuredImage?.file_path ? `https://image.tmdb.org/t/p/w500/${featuredImage.file_path}` : img}
+                        alt={`Featured ${show.name} Poster`}
+                        style={{ width: '100%', height: 'auto' }}
+                    />
+                </Grid>
                 <Grid item xs={8}>
                     {children}
                 </Grid>

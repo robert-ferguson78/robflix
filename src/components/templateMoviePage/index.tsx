@@ -9,6 +9,7 @@ import { useQuery } from "react-query";
 import Spinner from '../spinner';
 import Slider from "react-slick";
 import Button from "@mui/material/Button";
+import img from '../../images/film-poster-placeholder.png';
 
 interface TemplateMoviePageProps {
     movie: MovieDetailsProps;
@@ -52,7 +53,7 @@ const TemplateMoviePage: React.FC<TemplateMoviePageProps> = ({ movie, children }
         { enabled: false } // Disable automatic query execution
     );
 
-    const { data: featuredImage, error: featuredImageError, isLoading: isFeaturedImageLoading, isError: isFeaturedImageError } = useQuery<MovieImage, Error>(
+    const { data: featuredImage, error: featuredImageError, isLoading: isFeaturedImageLoading, isError: isFeaturedImageError } = useQuery<MovieImage | null, Error>(
         ["featuredImage", movie.id],
         () => getFeaturedMovieImage(movie.id)
     );
@@ -87,15 +88,13 @@ const TemplateMoviePage: React.FC<TemplateMoviePageProps> = ({ movie, children }
             <MovieHeader {...movie} />
 
             <Grid container spacing={5} style={{ padding: "15px" }}>
-                {featuredImage && (
-                    <Grid item xs={4}>
-                        <img
-                            src={`https://image.tmdb.org/t/p/w500/${featuredImage.file_path}`}
-                            alt={`Featured ${movie.title} Poster`}
-                            style={{ width: '100%', height: 'auto' }}
-                        />
-                    </Grid>
-                )}
+                <Grid item xs={4}>
+                    <img
+                        src={featuredImage ? `https://image.tmdb.org/t/p/w500/${featuredImage.file_path}` : img}
+                        alt={`Featured ${movie.title} Poster`}
+                        style={{ width: '100%', height: 'auto' }}
+                    />
+                </Grid>
                 <Grid item xs={8}>
                     {children}
                 </Grid>

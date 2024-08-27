@@ -8,7 +8,7 @@ const fetchWithLanguage = (url: string, language: string) => {
 
 export const getMovies = (language: string, page: number = 1) => {
   return fetchWithLanguage(
-    `https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_TMDB_KEY}&include_adult=false&include_video=false&page=${page}`,
+    `https://api.themoviedb.org/3/movie/now_playing?api_key=${import.meta.env.VITE_TMDB_KEY}&include_adult=false&include_video=false&page=${page}`,
     language
   ).then((response) => {
     if (!response.ok)
@@ -88,7 +88,7 @@ export const getFeaturedMovieImage = (id: string | number) => {
     .then((json) => {
       const posters = json.posters;
       if (posters.length === 0) {
-        throw new Error("No posters found");
+        return null; // Return null if no posters are found
       }
       // Assuming the featured poster is the one with the highest vote count
       const featuredPoster = posters.reduce((prev: Poster, current: Poster) => {
@@ -149,7 +149,7 @@ export const upcomingMovies = async (language: string, page: number = 1) => {
 
 export const fetchPopularTVShows = (language: string, page: number = 1) => {
   return fetch(
-    `https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_TMDB_KEY}&language=${language}&include_adult=false&include_video=false&page=${page}`
+    `https://api.themoviedb.org/3/trending/tv/week?api_key=${import.meta.env.VITE_TMDB_KEY}&language=${language}&include_adult=false&include_video=false&page=${page}`
   ).then((response) => {
     if (!response.ok)
       throw new Error(`Unable to fetch TV shows. Response status: ${response.status}`);
@@ -167,7 +167,7 @@ export const fetchPopularTVShows = (language: string, page: number = 1) => {
 
 export const fetchTVShow = (id: string, language: string) => {
   return fetch(
-    `https://api.themoviedb.org/3/tv/${id}?api_key=${import.meta.env.VITE_TMDB_KEY}&language=${language}`
+    `https://api.themoviedb.org/3/discover/tv${id}?api_key=${import.meta.env.VITE_TMDB_KEY}&language=${language}`
   ).then((response) => {
     if (!response.ok) {
       throw new Error(`Failed to get TV show data. Response status: ${response.status}`);
@@ -181,7 +181,7 @@ export const fetchTVShow = (id: string, language: string) => {
 
 export const getTVShows = (language: string, page: number = 1) => {
   return fetch(
-      `https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_TMDB_KEY}&language=${language}&include_adult=false&include_video=false&page=${page}`
+      `https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_TMDB_KEY}&language=${language}&include_adult=false&include_video=false&page=${page}&sort_by=vote_average.desc`
     ).then((response) => {
       if (!response.ok) {
         throw new Error(`Failed to get TV show data. Response status: ${response.status}`);
@@ -256,11 +256,9 @@ export const getFeaturedTVShowImage = (id: string | number) => {
       return response.json();
     })
     .then((show) => {
-      if (!show.poster_path) {
-        throw new Error("No poster found");
-      }
+      const filePath = show.poster_path || show.backdrop_path || null;
       return {
-        file_path: show.poster_path,
+        file_path: filePath,
         vote_count: show.vote_count,
       };
     })
