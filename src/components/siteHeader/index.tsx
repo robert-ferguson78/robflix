@@ -12,8 +12,8 @@ import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import logo from "../../images/robflix.png";
-import { auth } from '../../firebase/firebaseConfig'; // Import auth
-import { signOut } from 'firebase/auth'; // Import signOut from firebase/auth
+import { auth } from '../../firebase/firebaseConfig';
+import { signOut } from 'firebase/auth';
 import { useLanguage } from '../../contexts/languageContext';
 
 const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
@@ -43,7 +43,7 @@ const SiteHeader: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [selectedMenu, setSelectedMenu] = useState<'movies' | 'tv'>('movies');
   const [selectedSubMenu, setSelectedSubMenu] = useState<string>('');
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // State to track authentication status
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const open = Boolean(anchorEl);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
@@ -56,9 +56,16 @@ const SiteHeader: React.FC = () => {
     return () => unsubscribe();
   }, []);
 
-  const handleMenuSelect = (pageURL: string, subMenu: string) => {
+  useEffect(() => {
+    const title = selectedSubMenu
+      ? selectedSubMenu.charAt(0).toUpperCase() + selectedSubMenu.slice(1)
+      : selectedMenu === 'movies' ? 'Movies' : 'TV Shows';
+    document.title = title;
+  }, [selectedMenu, selectedSubMenu]);
+
+  const handleMenuSelect = (pageURL: string, subMenu: string, customTitle?: string) => {
     navigate(pageURL);
-    setSelectedSubMenu(subMenu);
+    setSelectedSubMenu(customTitle || subMenu);
     setAnchorEl(null);
   };
 
@@ -87,7 +94,7 @@ const SiteHeader: React.FC = () => {
       return (
         <>
           <MenuItem
-            onClick={() => handleMenuSelect("/movies/upcoming", "upcoming")}
+            onClick={() => handleMenuSelect("/movies/upcoming", "upcoming", "Upcoming Movies")}
             sx={{
               borderBottom: selectedSubMenu === 'upcoming' ? '2px solid red' : 'none',
               '&:hover': {
@@ -98,7 +105,7 @@ const SiteHeader: React.FC = () => {
             Upcoming
           </MenuItem>
           <MenuItem
-            onClick={() => handleMenuSelect("/movies/favourites", "favourites")}
+            onClick={() => handleMenuSelect("/movies/favourites", "favourites", "Favorite Movies")}
             sx={{
               borderBottom: selectedSubMenu === 'favourites' ? '2px solid red' : 'none',
               '&:hover': {
@@ -109,7 +116,7 @@ const SiteHeader: React.FC = () => {
             Favorites
           </MenuItem>
           <MenuItem
-            onClick={() => handleMenuSelect("/movies/playlist", "playlist")}
+            onClick={() => handleMenuSelect("/movies/playlist", "playlist", "Must Watch Movies")}
             sx={{
               borderBottom: selectedSubMenu === 'playlist' ? '2px solid red' : 'none',
               '&:hover': {
@@ -120,7 +127,7 @@ const SiteHeader: React.FC = () => {
             Must Watch
           </MenuItem>
           <MenuItem
-            onClick={() => handleMenuSelect("/movies/fantasy-movie-upload", "fantasy-movie-upload")}
+            onClick={() => handleMenuSelect("/movies/fantasy-movie-upload", "fantasy-movie-upload", "Add Fantasy Movie")}
             sx={{
               borderBottom: selectedSubMenu === 'fantasy-movie-upload' ? '2px solid red' : 'none',
               '&:hover': {
@@ -131,7 +138,7 @@ const SiteHeader: React.FC = () => {
             Add Fantasy Movie
           </MenuItem>
           <MenuItem
-            onClick={() => handleMenuSelect("/movies/fantasy-movies", "fantasy-movies")}
+            onClick={() => handleMenuSelect("/movies/fantasy-movies", "fantasy-movies", "Fantasy Movies")}
             sx={{
               borderBottom: selectedSubMenu === 'fantasy-movies' ? '2px solid red' : 'none',
               '&:hover': {
@@ -147,7 +154,7 @@ const SiteHeader: React.FC = () => {
       return (
         <>
           <MenuItem
-            onClick={() => handleMenuSelect("/tv-shows/upcoming", "upcoming")}
+            onClick={() => handleMenuSelect("/tv-shows/upcoming", "upcoming", "Upcoming TV Shows")}
             sx={{
               borderBottom: selectedSubMenu === 'upcoming' ? '2px solid red' : 'none',
               '&:hover': {
@@ -158,7 +165,7 @@ const SiteHeader: React.FC = () => {
             Upcoming
           </MenuItem>
           <MenuItem
-            onClick={() => handleMenuSelect("/tv-shows/popular", "popular")}
+            onClick={() => handleMenuSelect("/tv-shows/popular", "popular", "Popular TV Shows")}
             sx={{
               borderBottom: selectedSubMenu === 'popular' ? '2px solid red' : 'none',
               '&:hover': {
@@ -169,7 +176,7 @@ const SiteHeader: React.FC = () => {
             Popular TV
           </MenuItem>
           <MenuItem
-            onClick={() => handleMenuSelect("/tv-shows/favourites", "favourites")}
+            onClick={() => handleMenuSelect("/tv-shows/favourites", "favourites", "Favorite TV Shows")}
             sx={{
               borderBottom: selectedSubMenu === 'favourites' ? '2px solid red' : 'none',
               '&:hover': {
@@ -180,7 +187,7 @@ const SiteHeader: React.FC = () => {
             Favorites
           </MenuItem>
           <MenuItem
-            onClick={() => handleMenuSelect("/tv-shows/playlist", "playlist")}
+            onClick={() => handleMenuSelect("/tv-shows/playlist", "playlist", "Must Watch TV Shows")}
             sx={{
               borderBottom: selectedSubMenu === 'playlist' ? '2px solid red' : 'none',
               '&:hover': {

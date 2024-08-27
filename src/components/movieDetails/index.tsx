@@ -16,6 +16,7 @@ import { styled } from '@mui/material/styles';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import GoBackButton from '../goBackButton';
 
 const styles = {
     chipSet: {
@@ -84,10 +85,12 @@ const MovieDetails: React.FC<MovieDetailsProps> = (movie) => {
     return (
         <>
             <Grid container sx={{ backgroundColor: "#ffffff", padding: 2 }}>
+                <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <GoBackButton />
+                </Grid>
                 <Typography variant="h5" component="h3">
-                    Overview
-                </Typography>
-
+                        Overview
+                    </Typography>
                 <Typography variant="h6" component="p">
                     {movie.overview}
                 </Typography>

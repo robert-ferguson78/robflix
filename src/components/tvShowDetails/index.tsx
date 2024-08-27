@@ -11,6 +11,7 @@ import Drawer from "@mui/material/Drawer";
 import Grid from "@mui/material/Grid";
 import TVShowReviews from '../tvReviews';
 import { styled } from '@mui/material/styles';
+import GoBackButton from '../goBackButton';
 
 const styles = {
     chipSet: {
@@ -59,6 +60,9 @@ const TVShowDetails: React.FC<TVShowDetailsProps> = (show) => {
     return (
         <>
             <Grid container sx={{ backgroundColor: "#ffffff", padding: 2 }}>
+            <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <GoBackButton />
+                </Grid>
                 <Typography variant="h5" component="h3">
                     Overview
                 </Typography>
