@@ -1,30 +1,217 @@
-# React + TypeScript + Vite
+# MovieAPP React App Assignment
+Full Stack Development 2, HDip in Computer Science
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This repository contains my submission for the Movie assignment which was to the update the Full Stack 2 labs Movie Application.
 
-Currently, two official plugins are available:
+**Name**: Robert Ferguson 
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+**Student ID**: 20104121
 
-## Expanding the ESLint configuration
+**Video Demo**: 
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+**Deployed URL**: https://robflix-peach.vercel.app/
 
-- Configure the top-level `parserOptions` property like this:
+## Features
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+**Login Page:**
+- I used Firebase Authentication for all Login\Sign-Up.
+- Users can
+  - Login (signInWithEmailAndPassword) with email and password
+  - Sign-up (createUserWithEmailAndPassword) with email and password
+  - Login\Sign-Up with Google Popup (signInWithPopup).
+  - Redirected on sucessfull login to the home page (the movie page is the default home page).
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+**Home Page:**
+- Fetches a list of currently playing movies in Theaters
+- Can be filtered by genre, free text search, and sort by popularity, Alphabetical, release date, ratings highest and lowest.
+- Page is paginated (120 movies per page), arrows at top move to next and previous page listings.
+
+**Site Menu:**
+- Sub menuu for the site is switched based on the main menu selection of Movies or TV, current page is also highlightde with underline and main menu selection with red background (Movies or TV).
+- Language switcher (English, French and German) which is sent in api calls as language parameter globally for all content fetched by API.
+
+**Popup Search**
+- Search button in menu opens a popup search box, where user can search for a movie by title and results are upadted in realtime as you type.
+- Ability to switch between movie and tv shows search.
+- Filter is switched depending on serach type (movie filter for movies and TV filter for TV shows).
+- Movies and TV Shows can be filtered by genre, free text search, and sort by popularity, Alphabetical, release date, ratings highest and lowest.
+
+**Upcoming Movies Page**
+- Fetches a list of upcoming movies.
+- Can be filtered by genre, free text search, and sort by popularity, Alphabetical, release date, ratings highest and lowest.
+- Page is paginated (120 movies per page), arrows at top move to next and previous page listings.
+
+**Movie Favourites Page**
+- Favourites are stored in local storage which is populated by the movie favourites saved in Firebase which adds persistent storage.
+- Adding and reomving favourites to local storage also adds and removes from Firebase.
+- Can be filtered by genre, free text search, and sort by popularity, Alphabetical, release date, ratings highest and lowest.
+
+**Movie Must Watch Page**
+- Must Watch movies are stored in local storage which is populated by the movie playlist saved in Firebase which adds persistent storage.
+- Adding and reomving Must Watch movies to local storage also adds and removes from Firebase.
+- Can be filtered by genre, free text search, and sort by popularity, Alphabetical, release date, ratings highest and lowest.
+
+**Add Fantasy Movie Page**
+- Add Movie title, runtime, Gneres, production company, release date, overview, and poster image.
+- Add multiple actors to the movie with name, biography and profile image.
+- Poster and actor profile image upload preview in form.
+
+**Fantasy Movie Page**
+- Lists all fantasy movies created.
+- Deatils display for each fantasy movie is title, relase date and more info button to go to fantasy movie details page.
+
+**Tv Page**
+- Fetches a list of TV shows sorted by vote average.
+- Page is paginated (120 movies per page), arrows at top move to next and previous page listings.
+- Can be filtered by genre, free text search, and sort by popularity, Alphabetical, release date, ratings highest and lowest.
+
+**Tv Upcoming Page**
+- Fetches a list of upcoming TV shows.
+- Page is paginated (120 movies per page), arrows at top move to next and previous page listings.
+- Can be filtered by genre, free text search, and sort by popularity, Alphabetical, release date, ratings highest and lowest.
+
+**TV Favourites Page**
+- Favourites are stored in local storage which is populated by the TV Show favourites saved in Firebase which adds persistent storage.
+- Adding and reomving favourites to local storage also adds and removes from Firebase.
+- Can be filtered by genre, free text search, and sort by popularity, Alphabetical, release date, ratings highest and lowest.
+
+**TV And Movie Cardse**
+- Upadted the design to 4 coulmns with hover effect that displays the movie title and release date, rating and favourite button.
+
+**Movie Detail Page**
+- Display fetaured image by vote count.
+- Display back button to return to previous page.
+- Display movie title, release date, vote average, runtime, genres, overview.
+- Display production company logos with production company name and country code as image alt text.
+- Dynamic button that display poster art is there are more than 1 poster for film in slider.
+- Slider of Youtube trailer videos that load only when they are in view making the page load faster.
+- Display of reviews from API and also user reviews from Firebase database.
+
+**TV Detail Page**
+- Display fetaured image by vote count.
+- Display back button to return to previous page.
+- Display movie title, runtime, genres, vote average, overview, first air date.
+- Display production company logos with production company name and country code as image alt text.
+- Reviews for TV show is not working.
+
+**Adding User Movie Reviews**
+- Ability to add user reviews to a movie which is stores in Firebase database for persistent storage.
+
+**Back Button**
+- Track browser history for page url and title.
+- Back button uses the previous page url saved and title set by the main navigation buttons to give custom button text (Go Back To Movies or TV Shows and more).
+
+## Clone this Repository
+<pre>
+<code>
+git clone <a href="https://github.com/robert-ferguson78/robflix.git" target="_blank">https://github.com/robert-ferguson78/robflix.git</a>
+</code>
+</pre>
+To get a copy of the project running on your system, navigate to the project directory in a command prompt/shell and run the following:
+<pre>
+<code>
+  npm install
+</code>
+</pre>
+This will install all dependencies in package-lock.json
+
+Start the development server:
+<pre>
+<code>
+npm run dev
+</code>
+</pre>
+Build for production:
+<pre>
+<code>
+npm run build
+</code>
+</pre>
+Preview production build:
+<pre>
+<code>
+npm run preview
+</code>
+</pre>
+This will load the application and start a local server on port 3000.
+<pre>
+<code>
+http://localhost:3000/
+</code>
+</pre>
+
+## Environment Variables for ENV file
+**VITE_TMDB_KEY** = YOUR_TMDB_API_KEY
+**VITE_API_KEY** = YOUR_API_KEY
+**VITE_AUTH_DOMAIN** = YOUR_AUTH_DOMAIN
+**VITE_PROJECT_ID** = YOUR_PROJECT_ID
+**VITE_STORAGE_BUCKET** = YOUR_STORAGE_BUCKET
+**VITE_MESSAGING_SENDER_ID** = YOUR_MESSAGING_SENDER_ID
+**VITE_APP_ID** = YOUR_APP_ID
+
+
+## API Endpoints
+
+### Movie Endpoints
+- **/movie/now_playing**: Fetches a list of currently playing movies.
+- **/movie/{movie_id}**: Fetches detailed information about a specific movie by ID.
+- **/genre/movie/list**: Fetches a list of movie genres.
+- **/movie/{movie_id}/images**: Fetches images related to a specific movie by ID.
+- **/movie/{movie_id}/images**: Fetches the featured image for a specific movie by ID.
+- **/movie/{movie_id}/reviews**: Fetches reviews for a specific movie by ID.
+- **/review/{review_id}**: Fetches a specific review by review ID.
+- **/movie/upcoming**: Fetches a list of upcoming movies.
+
+### TV Show Endpoints
+- **/trending/tv/week**: Fetches a list of popular TV shows.
+- **/discover/tv/{id}**: Fetches detailed information about a specific TV show by ID.
+- **/discover/tv**: Fetches a list of TV shows sorted by vote average.
+- **/genre/tv/list**: Fetches a list of TV show genres.
+- **/tv/{id}/reviews**: Fetches reviews for a specific TV show by ID.
+- **/tv/{id}**: Fetches detailed information about a specific TV show by ID.
+- **/tv/{id}**: Fetches the featured image for a specific TV show by ID.
+- **/tv/on_the_air**: Fetches a list of upcoming TV shows.
+
+### Search Endpoints
+- **/search/movie**: Searches for movies based on a query string.
+- **/search/tv**: Searches for TV shows based on a query string.
+
+## ROUTING
+
+Below are both Public and Protected Routes, along with all routes within them.
+
+### Public Routes
+
+- **/**: Home Page which contains the Movie/TV Show Search.
+- **/login**: Login Page.
+
+#### Movies
+
+- **/movies/:id**: Get detailed information about a specific movie.
+- **/movies/upcoming**: Get a list of upcoming movies.
+- **/movies/fantasy-movies**: Get a list of fantasy movies.
+- **/movies/fantasy-movies/:id**: Get detailed information about a specific fantasy movie.
+
+#### TV Shows
+
+- **/tv-shows**: Get a list of TV shows.
+- **/tv-shows/:id**: Get detailed information about a specific TV show.
+- **/tv-shows/upcoming**: Get a list of upcoming TV shows.
+- **/tv-shows/popular**: Get a list of popular TV shows.
+
+#### Reviews
+
+- **/reviews/:id**: Get detailed information about a specific review.
+- **/user-reviews/:id**: Get detailed information about a specific user review.
+
+#### Search
+
+- **/search/:type**: Get search results based on the type (movies or TV shows).
+
+### Protected Routes
+
+- **/reviews/form/:movieId**: Add a review for a specific movie (requires authentication).
+- **/movies/favourites**: Get a list of favourite movies (requires authentication).
+- **/movies/playlist**: Get a list of movies in the playlist (requires authentication).
+- **/movies/fantasy-movie-upload**: Upload a fantasy movie (requires authentication).
+- **/tv-shows/favourites**: Get a list of favourite TV shows (requires authentication).
