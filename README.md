@@ -7,7 +7,7 @@ This repository contains my submission for the Movie assignment which was to the
 
 **Student ID**: 20104121
 
-**Video Demo**: 
+**Video Demo**: https://youtu.be/KJZ17L65Pk0
 
 **Deployed URL**: https://robflix-peach.vercel.app/
 
