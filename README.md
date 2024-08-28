@@ -24,7 +24,7 @@ This repository contains my submission for the Movie assignment which was to the
 **Home Page:**
 - Fetches a list of currently playing movies in Theaters
 - Can be filtered by genre, free text search, and sort by popularity, Alphabetical, release date, ratings highest and lowest.
-- Page is paginated (120 movies per page), arrows at top move to next and previous page listings.
+- Page is paginated (20 movies per page), arrows at top move to next and previous page listings.
 
 **Site Menu:**
 - Sub menuu for the site is switched based on the main menu selection of Movies or TV, current page is also highlightde with underline and main menu selection with red background (Movies or TV).
@@ -39,7 +39,7 @@ This repository contains my submission for the Movie assignment which was to the
 **Upcoming Movies Page**
 - Fetches a list of upcoming movies.
 - Can be filtered by genre, free text search, and sort by popularity, Alphabetical, release date, ratings highest and lowest.
-- Page is paginated (120 movies per page), arrows at top move to next and previous page listings.
+- Page is paginated (20 movies per page), arrows at top move to next and previous page listings.
 
 **Movie Favourites Page**
 - Favourites are stored in local storage which is populated by the movie favourites saved in Firebase which adds persistent storage.
@@ -67,7 +67,7 @@ This repository contains my submission for the Movie assignment which was to the
 
 **Tv Upcoming Page**
 - Fetches a list of upcoming TV shows.
-- Page is paginated (120 movies per page), arrows at top move to next and previous page listings.
+- Page is paginated (20 movies per page), arrows at top move to next and previous page listings.
 - Can be filtered by genre, free text search, and sort by popularity, Alphabetical, release date, ratings highest and lowest.
 
 **TV Favourites Page**
