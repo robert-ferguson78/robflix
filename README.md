@@ -176,7 +176,7 @@ http://localhost:3000/
 - **/search/movie**: Searches for movies based on a query string.
 - **/search/tv**: Searches for TV shows based on a query string.
 
-## ROUTING
+## Routing
 
 Below are both Public and Protected Routes, along with all routes within them.
 
@@ -215,3 +215,63 @@ Below are both Public and Protected Routes, along with all routes within them.
 - **/movies/playlist**: Get a list of movies in the playlist (requires authentication).
 - **/movies/fantasy-movie-upload**: Upload a fantasy movie (requires authentication).
 - **/tv-shows/favourites**: Get a list of favourite TV shows (requires authentication).
+
+## Third Party Components/Integration
+
+**API Integration with TMDB:**
+- Pagination Robust integration with TMDb API to fetch detailed information on movies, TV shows, and actors.
+- Use of multiple API endpoints to provide users with a rich browsing experience.
+- Documentation: https://developer.themoviedb.org/reference/intro/getting-started
+
+**Firebase Backend Services:**
+- Firebase Authentication to manage user sign-in and security for protected routes.
+- Firebase Storage to store Fantasy Movie Images and Actors Profile Images.
+- Firebase Database for retrieval of user-specific data such as Favorites for Movies and TV Shows, playlists which is my Must Watch Movies list.
+- Documentation: https://firebase.google.com/docs
+
+**@tanstack/react-query:**
+- A powerful data-fetching library for React, providing hooks for fetching, caching, and updating asynchronous data.
+- Documentation: [TanStack React Query](https://tanstack.com/query/v4/docs/framework/react/overview)
+
+**React Intersection Observer**
+- Description: A React hook to observe when a component enters or leaves the viewport, useful for lazy loading and infinite scrolling.
+- Documentation: https://www.npmjs.com/package/react-intersection-observer
+
+
+**React Slick:**
+- Description: A carousel component built with React, providing a flexible and customizable slider.
+- Documentation: [React Slick](https://react-slick.neostack.com/)
+
+**slick-carousel:**
+- Description: A dependency for react-slick, providing the core carousel functionality.
+- Documentation: [Slick Carousel](https://kenwheeler.github.io/slick/)
+
+**Updated Dependencies from Labs:**
+- react: Updated from ^18.2.0 to ^18.3.1
+- react-dom: Updated from ^18.2.0 to ^18.3.1
+- @chromatic-com/storybook: Updated from ^1.4.0 to ^1.6.1
+- @storybook/addon-essentials: Updated from ^8.1.3 to ^8.2.5
+- @storybook/addon-interactions: Updated from ^8.1.3 to ^8.2.5
+- @storybook/addon-links: Updated from ^8.1.3 to ^8.2.5
+- @storybook/addon-onboarding: Updated from ^8.1.3 to ^8.2.5
+- @storybook/blocks: Updated from ^8.1.3 to ^8.2.5
+- @storybook/react: Updated from ^8.1.3 to ^8.2.5
+- @storybook/react-vite: Updated from ^8.1.3 to ^8.2.5
+- @storybook/test: Updated from ^8.1.3 to ^8.2.5
+- storybook: Updated from ^8.1.3 to ^8.2.5
+
+## Independent Learning
+
+Vercel Deployment: https://medium.com/@abdulmuizzayo6/how-to-host-your-react-app-on-vercel-effectively-7ae35b259044 shared in slack channel by Pat.
+
+Firebase Authentication, storage set up with outline of building a React Movie app: https://www.youtube.com/watch?v=2hR-uWjBAgw 
+
+React Udemy courses I bought:
+https://www.udemy.com/course/react-the-complete-guide-incl-redux/
+https://www.udemy.com/course/react-typescript-the-practical-guide/
+
+List of genres:  https://www.themoviedb.org/talk/644a4b69f794ad04fe3cf1b9
+
+Slicker slider: https://react-slick.neostack.com/docs/get-started
+
+MUI System: https://mui.com/system/getting-started/
