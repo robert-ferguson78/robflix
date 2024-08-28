@@ -275,3 +275,13 @@ List of genres:  https://www.themoviedb.org/talk/644a4b69f794ad04fe3cf1b9
 Slicker slider: https://react-slick.neostack.com/docs/get-started
 
 MUI System: https://mui.com/system/getting-started/
+
+## AI Declaration
+I built this project in Visual Studio and i have GitHub Copilot Extension installed and I used it in this prokect to help me with:
+
+- Troubleshooting: I used Copilot to help me with troubleshooting Typescript errors I was getting and also to explain errors I was getting when i made adjustemtns in development and broke the application.
+- Commenting & Documentation: I used Copilot to help me with commenting my code and also to help me with the documentation for the project.
+
+I also used ChatGPT to help me with:
+
+- Explanations of code i used from tutorials in Udemy courses and Youtube tutorials
